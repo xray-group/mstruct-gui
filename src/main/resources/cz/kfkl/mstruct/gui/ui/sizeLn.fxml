@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fillWidth="true" spacing="4" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ReflectionProfileSizeLnController">
+	<children>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="Name:" />
+					<TextField fx:id="componentNameTextField" prefHeight="19.0" prefWidth="149.0">
+					</TextField>
+	            <Label layoutX="10.0" layoutY="17.0" text="Type:" >
+	            	<HBox.margin>
+						<Insets left="8.0" />
+					</HBox.margin>
+	            </Label>
+	            <Label fx:id="componentTypeLabel" layoutX="202.0" layoutY="17.0">
+	               <font>
+	                  <Font name="System Bold Italic" size="12.0" />
+	               </font>
+	            </Label>
+			</children>
+		</HBox>
+		
+		<GridPane hgap="8" VBox.vgrow="ALWAYS">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="460.0" />
+			</columnConstraints>
+			<children>
+				<Label text="M:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+				<Label text="Sigma:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+				<HBox fx:id="mParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<HBox fx:id="sigmaParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+			</children>
+		</GridPane>
+	</children>
+</VBox>

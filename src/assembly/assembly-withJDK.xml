@@ -1,0 +1,46 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+	<id>dist-withJDK</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>${artifact}</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/MStructGUI_libs</outputDirectory>
+			<unpack>false</unpack>
+			<excludes>
+				<exclude>${artifact}</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<directory>src/assembly</directory>
+			<outputDirectory>/</outputDirectory>
+			<useDefaultExcludes>false</useDefaultExcludes>
+			<excludes>
+				<exclude>assembly*</exclude>
+				<exclude>assembly*/*</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>src/assembly/assembly-withJDK</directory>
+			<outputDirectory>/</outputDirectory>
+			<useDefaultExcludes>false</useDefaultExcludes>
+		</fileSet>
+		<fileSet>
+			<directory>c:\CDE\java\bellsoft-liberika-jdk11.0.11+9-windows-amd64</directory>
+			<outputDirectory>/bellsoft-liberika-jdk11.0.11+9-windows-amd64</outputDirectory>
+			<useDefaultExcludes>false</useDefaultExcludes>
+		</fileSet>
+	</fileSets>
+
+</assembly>

@@ -1,0 +1,39 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.titled-pane > .content > * {
+    -fx-padding: 0px;
+}
+
+.custom-box-border {
+    -fx-background-color: -fx-box-border,-fx-background;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 1.0;
+}
+
+.custom-box-border:focused {
+    -fx-background-color: -fx-focus-color, -fx-box-border, -fx-background;
+    -fx-background-insets: -1.4, 0, 1;
+}
+
+/*
+
+.scroll-pane > * > .scroll-bar:horizontal {
+    -fx-background-insets: 0, 1 0 0 0;
+    -fx-padding: 0.0 0.0 0.0 0.0;
+}
+
+.scroll-pane > * > .scroll-bar:vertical {
+    -fx-background-insets: 0, 0 0 0 1;
+    -fx-padding: 0.0 0.0 0.0 0.0;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: -fx-box-border, -fx-base;
+    -fx-background-insets: 0, 1 0 0 1;
+}
+
+.scroll-pane:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+ */

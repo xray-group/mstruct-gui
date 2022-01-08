@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<head>
+<title>MStruct Chart</title>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script>
+var fitToCurve = function(curveX, curveY, toFitX) {
+	var fittedY = [];
+	if (toFitX.length > 0) {
+		var maxIndex = curveX.length;
+
+		toFitX.forEach( function (item, index) {
+			var itemNum = Number(item);
+			var rI = Plotly.d3.bisect(curveX, itemNum, index, maxIndex);
+			var yF ;
+
+			if (rI <= 0) {
+				yF = curveY[0];
+			} else if (rI >= maxIndex) {
+				yF = curveY[maxIndex-1];
+			} else {
+				yF = Plotly.d3.interpolateNumber(curveY[rI -1], curveY[rI])((itemNum - curveX[rI-1]) / (curveX[rI] - curveX[rI-1]));
+			}
+			fittedY.push(yF);
+			//console.log(item + ": " + rI + "   " + curveX[rI] + " F: "  + yF);
+		})
+	}
+    return fittedY;
+};
+
+var createAnnotations = function(textX, textY, labels) {
+	var annotations = [];
+
+    //for more annotation:
+    //  https://plotly.com/javascript/reference/layout/annotations/#layout-annotations
+	labels.forEach(function (text, index) {
+		if (index < textX.length && index < textY.length) {
+			annotations.push({
+				x: textX[index],
+				y: textY[index],
+				yshift: 10,
+				xanchor: 'center',
+				yanchor: 'bottom',
+				textangle: -90,
+				font: {
+					color: 'grey',
+					size: 10
+				},
+				xref: 'x',
+				yref: 'y',
+				text: text,
+				showarrow: false
+			});
+		}
+	})
+	return annotations;
+};
+
+var signSqrt = function(values) {
+	if (values instanceof Array) {
+		var ret = [];
+		values.forEach(function (v, i) {
+            ret.push(Math.sign(v)*Math.sqrt(Math.abs(v)));
+		})
+		return ret;
+	} else {
+		var v = Number(values);
+		return Math.sign(v)*Math.sqrt(Math.abs(v));
+	}
+};
+
+</script>
+</head>
+
+<body style="height:100vh;margin:0">
+<div id="graphDivId" style="height:100%"></div>
+
+
+<script>
+// remove the X in order to activate the placeholders
+var hkl = [${hkl_Labels}];
+var Theta =[${hkl_2Theta}];
+var Fhkl = [${hkl_fhkl^2}];
+var Ihkl = [${hkl_Ihkl}];
+var FWHM = [${hkl_FWHM}];
+var B = [${hkl_B}];
+
+var tt = [${dat_2Theta/TOF}];
+var Iobs = this.signSqrt([${dat_Iobs}]);
+var ICalc = this.signSqrt([${dat_ICalc}]);
+//var ii = [${Xdat_Iobs-Icalc}];
+//var Weight = [${Xdat_Weight];
+//var Comp0 =[${Xdat_Comp0}];
+
+//For scatter type of traces see here:
+//  https://plotly.com/javascript/reference/scatter/
+
+
+var traceFhkl = {
+  x: Theta,
+  y: Fhkl,
+  yaxis: 'y2',
+  mode: 'markers',
+  name: '|Fhkl|^2 (y2)'
+};
+
+var traceIhkl = {
+  x: Theta,
+  y: Ihkl,
+  text: hkl,
+  textposition: 'top',
+  yaxis: 'y2',
+  mode: 'markers+text',
+  name: 'Ihkl (y2)'
+};
+
+var IhklFitted = this.fitToCurve(tt, ICalc, Theta);
+var annotations = this.createAnnotations(Theta, IhklFitted, hkl);
+
+var traceIhklFittedToIcalc = {
+  x: Theta,
+  y: IhklFitted,
+  marker: {
+    color: 'grey',
+    symbol: 'circle-open'
+  },
+  text: hkl,
+  textposition: 'top',
+  mode: 'markers',
+  name: 'Ihkl Fitted'
+};
+
+
+
+var traceFWHM = {
+  x: Theta,
+  y: FWHM,
+  yaxis: 'y3',
+  mode: 'markers',
+  name: 'FWHM(deg) '
+};
+
+var traceB = {
+  x: Theta,
+  y: B,
+  yaxis: 'y3',
+  mode: 'scatter',
+  //fill: 'tozeroy',
+  name: ' B(deg)'
+};
+
+var traceIobs = {
+  x: tt,
+  y: Iobs,
+  marker: {
+    color: 'red',
+    symbol: 'circle-open'
+  },
+  mode: 'markers',
+  name: 'Iobs'
+};
+
+var traceICalc = {
+  x: tt,
+  y: ICalc,
+  marker: {
+    color: 'blue'
+  },
+  mode: 'area',
+  name: 'ICalc'
+};
+
+
+ var layout = {
+		margin: { t: 35},
+		autosize: true,
+		font: {
+			family: "tahoma,arial,verdana,sans-serif",
+			size: 12
+		},
+		legend: {
+			y: '0.6',
+			xanchor: 'middle'
+		},
+		xaxis: {
+			domain: [0, 0.8]
+		},
+		yaxis2: {
+			title: 'y2',
+			titlefont: {color: 'rgb(148, 103, 189)'},
+			tickfont: {color: 'rgb(148, 103, 189)'},
+			overlaying: 'y',
+			side: 'right',
+			position: 0.9
+		},
+		yaxis3: {
+			title: 'deg',
+			titlefont: {color: 'rgb(148, 103, 189)'},
+			tickfont: {color: 'rgb(148, 103, 189)'},
+			overlaying: 'y',
+			side: 'right'
+		},
+		annotations : annotations
+	};
+	
+var config = {
+	responsive: true,
+	displaylogo: false
+};
+	
+Plotly.newPlot( document.getElementById('graphDivId'), [traceFhkl, 	traceIhkl, traceIhklFittedToIcalc, traceFWHM, traceB, traceIobs, traceICalc], layout, config);
+</script>
+</body>

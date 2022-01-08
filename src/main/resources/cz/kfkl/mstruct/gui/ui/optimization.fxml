@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="topBorderPanel" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.OptimizationController">
+	<top>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" BorderPane.alignment="CENTER">
+			<children>
+				<Label text="Job:" />
+				<ChoiceBox fx:id="jobTypeChoiceBox" maxWidth="130.0" minWidth="80" prefWidth="-Infinity" HBox.hgrow="ALWAYS" />
+				<Label text="Iteractions:">
+					<HBox.margin>
+						<Insets left="4.0" />
+					</HBox.margin>
+				</Label>
+				<Spinner fx:id="iteractionsSpinner" editable="true" prefHeight="25.0" prefWidth="63.0" />
+				<Label text="Output Folder:">
+					<HBox.margin>
+						<Insets left="4.0" />
+					</HBox.margin>
+				</Label>
+				<TextField fx:id="outputFolderNameTextField" maxWidth="180.0" minWidth="100" prefWidth="-Infinity" HBox.hgrow="ALWAYS" />
+				<HBox alignment="CENTER_RIGHT" spacing="8.0" HBox.hgrow="ALWAYS">
+					<CheckBox fx:id="showConsoleOutputCheckBox" mnemonicParsing="false" selected="true" text="Show Console" />
+					<CheckBox fx:id="keepOutputFilesCheckBox" mnemonicParsing="false" selected="false" text="Keep Files">
+						<HBox.margin>
+							<Insets left="4.0" />
+						</HBox.margin>
+					</CheckBox>
+					<Button fx:id="runButton" mnemonicParsing="false" onAction="#runButtonAction" text="Run">
+						<HBox.margin>
+							<Insets left="4.0" />
+						</HBox.margin>
+					</Button>
+					<HBox.margin>
+						<Insets left="4.0" />
+					</HBox.margin>
+				</HBox>
+			</children>
+			<BorderPane.margin>
+				<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+			</BorderPane.margin>
+		</HBox>
+	</top>
+	<left>
+		<TitledPane animated="false" collapsible="false" maxHeight="Infinity" prefWidth="210.0" text="Results">
+			<content>
+				<VBox alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" prefWidth="-Infinity">
+					<children>
+						<ListView fx:id="jobsListView" maxHeight="Infinity" maxWidth="Infinity" prefWidth="-Infinity" VBox.vgrow="ALWAYS" />
+						<HBox alignment="CENTER" prefHeight="30.0" spacing="8.0">
+							<children>
+								<Button fx:id="terminateButton" mnemonicParsing="false" onAction="#terminateJob" text="Terminate">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="@images/stop.png" />
+											</image>
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="removeButton" mnemonicParsing="false" onAction="#removeJob" text="Remove">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="@images/delete.png" />
+											</image>
+										</ImageView>
+									</graphic>
+								</Button>
+							</children>
+							<padding>
+								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+							</padding>
+						</HBox>
+					</children>
+					<padding>
+						<Insets bottom="0.0" left="0.0" right="0.0" top="0.0" />
+					</padding>
+				</VBox>
+			</content>
+			<BorderPane.margin>
+				<Insets />
+			</BorderPane.margin>
+		</TitledPane>
+	</left>
+	<center>
+		<TabPane fx:id="jobTabPane" maxHeight="Infinity" maxWidth="Infinity" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+			<tabs>
+				<Tab fx:id="outputTab" text="Output">
+					<content>
+						<VBox>
+							<children>
+								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
+									<children>
+										<Label layoutX="10.0" layoutY="10.0" text="Iterations (TODO):">
+											<HBox.margin>
+												<Insets />
+											</HBox.margin>
+										</Label>
+										<StackPane prefHeight="68.0" prefWidth="80.0">
+											<children>
+												<ProgressBar fx:id="jobProgressBar" prefWidth="100.0" progress="0.0" />
+												<Label fx:id="jobProgressLabel" text="0 / 0">
+													<font>
+														<Font name="System Bold" size="12.0" />
+													</font>
+												</Label>
+											</children>
+										</StackPane>
+										<Label layoutX="92.0" layoutY="17.0" text="Status:">
+											<HBox.margin>
+												<Insets left="4.0" />
+											</HBox.margin>
+										</Label>
+										<Label fx:id="jobStatusLabel" layoutX="10.0" layoutY="10.0" text="Starting">
+											<font>
+												<Font name="System Bold" size="12.0" />
+											</font>
+											<graphic>
+												<ImageView fx:id="jobStatusImageView" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
+											</graphic>
+										</Label>
+										<HBox alignment="CENTER_RIGHT" prefHeight="30.0" spacing="4.0" HBox.hgrow="ALWAYS">
+											<children>
+												<Label text="Rw (TODO):" />
+												<Label fx:id="jobRwFactorLabel" text="N/A">
+													<font>
+														<Font name="System Bold" size="12.0" />
+													</font>
+												</Label>
+												<Label text="Parameters Refined:" textAlignment="RIGHT">
+													<HBox.margin>
+														<Insets left="4.0" />
+													</HBox.margin>
+												</Label>
+												<Label fx:id="jobParamsRefinedLabel" text="N/A">
+													<font>
+														<Font name="System Bold" size="12.0" />
+													</font>
+												</Label>
+											</children>
+											<HBox.margin>
+												<Insets left="4.0" />
+											</HBox.margin>
+										</HBox>
+									</children>
+									<padding>
+										<Insets bottom="4" left="4.0" right="4.0" top="4" />
+									</padding>
+								</HBox>
+								<TitledPane collapsible="false" maxHeight="Infinity" minHeight="30" text="MStruct Console" VBox.vgrow="ALWAYS">
+									<content>
+										<TextArea fx:id="consoleTextArea" editable="false" />
+									</content>
+								</TitledPane>
+								<TitledPane maxHeight="Infinity" minHeight="30" text="Job Logs">
+									<content>
+										<TextArea fx:id="jobsLogsTextArea" editable="false" />
+									</content>
+								</TitledPane>
+							</children>
+						</VBox>
+					</content>
+				</Tab>
+				<Tab fx:id="fittedParamsTab" text="Fitted Params" />
+				<Tab fx:id="outputDataTab" text="Output Data">
+					<content>
+						<VBox>
+							<children>
+								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
+									<children>
+										<Button fx:id="exportHtmlButton" mnemonicParsing="false" onAction="#exportDatAsHtml" text="Export HTML Chart">
+											<HBox.margin>
+												<Insets left="4.0" />
+											</HBox.margin>
+										</Button>
+
+										<HBox alignment="CENTER_RIGHT" prefHeight="30.0" spacing="4.0" HBox.hgrow="ALWAYS">
+											<children>
+												<Label text="Rows:" textAlignment="RIGHT">
+													<HBox.margin>
+														<Insets left="4.0" />
+													</HBox.margin>
+												</Label>
+												<Label fx:id="datRowsCountLabel" text="N/A">
+													<font>
+														<Font name="System Bold" size="12.0" />
+													</font>
+												</Label>
+											</children>
+											<HBox.margin>
+												<Insets left="4.0" />
+											</HBox.margin>
+										</HBox>
+									</children>
+									<padding>
+										<Insets bottom="4" left="4.0" right="4.0" top="4" />
+									</padding>
+								</HBox>
+								<TableView fx:id="outputDataTableView" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" />
+							</children>
+						</VBox>
+					</content>
+				</Tab>
+				<Tab fx:id="outputHklTab" text="Output HKL">
+					<content>
+						<BorderPane>
+							<center>
+								<TableView fx:id="outputHklTableView" BorderPane.alignment="CENTER" />
+							</center>
+						</BorderPane>
+					</content>
+				</Tab>
+				<Tab fx:id="chartTab" text="Chart">
+					<content>
+						<VBox>
+							<children>
+								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
+									<children>
+										<Button fx:id="exportHtmlButton" mnemonicParsing="false" onAction="#exportDatAsHtml" text="Export HTML Chart">
+											<HBox.margin>
+												<Insets left="4.0" />
+											</HBox.margin>
+										</Button>
+									</children>
+									<padding>
+										<Insets bottom="4" left="4.0" right="4.0" top="4" />
+									</padding>
+								</HBox>
+								<BorderPane fx:id="chartTabTitledPane" VBox.vgrow="ALWAYS" styleClass="custom-box-border"/>
+							</children>
+						</VBox>
+					</content>
+				</Tab>
+			</tabs>
+		</TabPane>
+	</center>
+</BorderPane>

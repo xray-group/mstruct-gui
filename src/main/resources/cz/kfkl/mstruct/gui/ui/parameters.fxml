@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/16"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ParametersController">
+	<left>
+		<VBox prefWidth="170.0" BorderPane.alignment="CENTER">
+			<children>
+				<TitledPane animated="false" text="Filters">
+					<content>
+						<VBox spacing="8.0">
+							<children>
+								<VBox>
+									<children>
+										<Label text="Name starts with:" />
+										<TextField fx:id="paramFilterNameTextField" />
+									</children>
+								</VBox>
+								<CheckBox fx:id="paramFilterRefinedCheckBox" allowIndeterminate="true" indeterminate="true"
+									mnemonicParsing="false" text="Refined" />
+								<CheckBox fx:id="paramFilterLimitedCheckBox" allowIndeterminate="true" indeterminate="true" layoutX="20.0"
+									layoutY="20.0" mnemonicParsing="false" text="Limited" />
+								<CheckBox fx:id="paramFilterBackgroundCheckBox" allowIndeterminate="true" indeterminate="true" layoutX="20.0"
+									layoutY="95.0" mnemonicParsing="false" text="backgrounds... TODO" />
+								<CheckBox fx:id="paramFilterFittedCheckBox" allowIndeterminate="true" indeterminate="true" layoutX="20.0"
+									layoutY="20.0" mnemonicParsing="false" text="Fitted" visible="false" />
+								<Button mnemonicParsing="false" onAction="#clearFilters" text="Clear Filters">
+									<VBox.margin>
+										<Insets top="8.0" />
+									</VBox.margin>
+								</Button>
+							</children>
+							<padding>
+								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+							</padding>
+						</VBox>
+					</content>
+				</TitledPane>
+				<TitledPane animated="false" text="Bulk Actions" VBox.vgrow="ALWAYS" maxHeight="Infinity">
+					<content>
+						<VBox spacing="8.0">
+							<children>
+								<Button mnemonicParsing="false" onAction="#selectFiltered" text="Select All Filtered" />
+								<Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#unselectFiltered"
+									text="Unselect All Filtered" />
+								<Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#unselectAll" text="Unselect All" />
+								<Label text="On Selected (and Visible):">
+									<VBox.margin>
+										<Insets top="8.0" />
+									</VBox.margin>
+									<font>
+										<Font name="System Bold" size="12.0" />
+									</font>
+								</Label>
+								<Button layoutX="20.0" layoutY="53.0" mnemonicParsing="false" onAction="#checkRefined" text="Check Refined" />
+								<Button layoutX="20.0" layoutY="127.0" mnemonicParsing="false" onAction="#uncheckRefined" text="Uncheck Refined" />
+								<Button layoutX="20.0" layoutY="160.0" mnemonicParsing="false" onAction="#checkLimited" text="Check Limited" />
+								<Button layoutX="20.0" layoutY="193.0" mnemonicParsing="false" onAction="#uncheckLimited" text="Uncheck Limited" />
+								<Button fx:id="copyFittedValuesButton" mnemonicParsing="false" onAction="#copyFittedValues"
+									text="Copy Fitted Values" visible="false" />
+								<VBox spacing="8.0" VBox.vgrow="ALWAYS" alignment="BOTTOM_CENTER">
+									<HBox alignment="CENTER_RIGHT" prefHeight="26.0" spacing="4" HBox.hgrow="ALWAYS">
+										<children>
+											<Label text="Parameters (refined):" textAlignment="RIGHT">
+												<font>
+													<Font name="System Italic" size="12.0" />
+												</font>
+											</Label>
+											<Label fx:id="parametersCounts" text="0 (0)">
+												<font>
+													<Font name="System Bold Italic" size="12.0" />
+												</font>
+											</Label>
+										</children>
+										<HBox.margin>
+											<Insets right="4.0" />
+										</HBox.margin>
+									</HBox>
+								</VBox>
+							</children>
+							<padding>
+								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+							</padding>
+						</VBox>
+					</content>
+				</TitledPane>
+			</children>
+			<BorderPane.margin>
+				<Insets />
+			</BorderPane.margin>
+		</VBox>
+	</left>
+	<center>
+		<TreeTableView fx:id="parametersTreeTableView" editable="true" showRoot="false" BorderPane.alignment="CENTER">
+			<columns>
+				<TreeTableColumn fx:id="nameTreeTableColumn" minWidth="130.0" prefWidth="330.0" maxWidth="500"
+					sortable="false" text="Name" />
+				<TreeTableColumn fx:id="fittedTreeTableColumn" editable="false" minWidth="30.0" prefWidth="30.0" maxWidth="70"
+					sortable="false" text="Fitted" visible="false" />
+				<TreeTableColumn fx:id="fittedValueTreeTableColumn" editable="false" minWidth="40.0" prefWidth="70.0"
+					maxWidth="100" sortable="false" text="Fitted Value" visible="false" />
+				<TreeTableColumn fx:id="valueTreeTableColumn" editable="true" minWidth="40.0" prefWidth="70.0" maxWidth="100"
+					sortable="false" text="Value" />
+				<TreeTableColumn fx:id="refinedTreeTableColumn" editable="true" minWidth="30.0" prefWidth="49.0" maxWidth="70"
+					sortable="false" text="Refined" />
+				<TreeTableColumn fx:id="limitedTreeTableColumn" editable="true" minWidth="30.0" prefWidth="51.0" maxWidth="70"
+					sortable="false" text="Limited" />
+				<TreeTableColumn fx:id="minTreeTableColumn" editable="true" minWidth="40.0" prefWidth="40.0" maxWidth="100"
+					sortable="false" text="Min" />
+				<TreeTableColumn fx:id="maxTreeTableColumn" editable="true" minWidth="40.0" prefWidth="100.0" maxWidth="100"
+					sortable="false" text="Max" />
+			</columns>
+		</TreeTableView>
+	</center>
+</BorderPane>

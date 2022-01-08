@@ -1,0 +1,26 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+	<id>only-externals</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>src/assembly/assembly-externals</directory>
+			<outputDirectory>/</outputDirectory>
+			<useDefaultExcludes>false</useDefaultExcludes>
+		</fileSet>
+		<fileSet>
+			<directory>d:\Work_Projects\MStruct UI\Fox-2017-06-28</directory>
+			<outputDirectory>/Fox-2017-06-28</outputDirectory>
+			<useDefaultExcludes>false</useDefaultExcludes>
+		</fileSet>
+		<fileSet>
+			<directory>d:\Work_Projects\MStruct UI\mstruct_xml_proto1</directory>
+			<outputDirectory>/mstruct_xml</outputDirectory>
+			<useDefaultExcludes>false</useDefaultExcludes>
+		</fileSet>
+	</fileSets>
+
+</assembly>

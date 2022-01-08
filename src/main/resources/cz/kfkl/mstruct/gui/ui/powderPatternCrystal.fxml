@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fillWidth="true" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="cz.kfkl.mstruct.gui.ui.PowderPatternCrystalController">
+	<children>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="Name:" />
+				<TextField fx:id="powderPatternCrystalNameTextField" prefHeight="19.0" prefWidth="149.0" />
+				<Label text="Crystal:">
+					<HBox.margin>
+						<Insets left="8.0" />
+					</HBox.margin>
+				</Label>
+				<ComboBox fx:id="powderPatternCrystalNameComboBox" prefWidth="150.0" />
+			</children>
+		</HBox>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<CheckBox fx:id="ignoreImagScattFactCheckBox" mnemonicParsing="false" text="Ignore Imag Scatt Fact" />
+			</children>
+		</HBox>
+		<GridPane hgap="8" VBox.vgrow="ALWAYS">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="460.0" />
+			</columnConstraints>
+			<children>
+				<Label text="Global Biso:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+				<HBox fx:id="globalBisoParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="0" />
+			</children>
+		</GridPane>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="Scale:" />
+				<TextField fx:id="powderPatternComponentScaleTextField" prefHeight="19.0" prefWidth="80.0" />
+			</children>
+			<VBox.margin>
+				<Insets bottom="8.0" />
+			</VBox.margin>
+		</HBox>
+		<TitledPane text="Absorption Correction">
+			<content>
+				<VBox>
+					<children>
+						<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+							<children>
+								<Label text="Name:" />
+								<TextField fx:id="absoptionCorrectionNameTextField" />
+							</children>
+						</HBox>
+						<HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0" prefHeight="30.0" spacing="4.0">
+							<children>
+								<Label text="Depth: " />
+								<TextField fx:id="absoptionDepthTextField" />
+								<Label text="Thickness:">
+									<padding>
+										<Insets left="8.0" />
+									</padding>
+								</Label>
+								<TextField fx:id="absoptionThicknessTextField" />
+							</children>
+						</HBox>
+						<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+							<children>
+								<Label text="Absorption Factor:" />
+								<TextField fx:id="absoptionFactorTextField" />
+							</children>
+						</HBox>
+					</children>
+				</VBox>
+			</content>
+			<font>
+				<Font name="System Bold" size="12.0" />
+			</font>
+		</TitledPane>
+		<TitledPane text="Reflection Profile (Broadening Effects, Components?)" minHeight="316">
+			<content>
+				<BorderPane>
+					<padding>
+						<Insets bottom="0" left="0" right="0" top="0" />
+					</padding>
+					<left>
+						<VBox BorderPane.alignment="CENTER">
+							<children>
+								<ListView fx:id="reflectionProfileListView" prefWidth="140.0" VBox.vgrow="ALWAYS" />
+								<HBox alignment="TOP_CENTER" spacing="8.0">
+									<children>
+										<Button fx:id="reflectionProfileAddButton" onAction="#onReflectionProfileAddButton" mnemonicParsing="false"
+											text="Add">
+											<graphic>
+												<ImageView>
+													<image>
+														<Image url="@images/add.png" />
+													</image>
+												</ImageView>
+											</graphic>
+										</Button>
+										<Button fx:id="reflectionProfileRemoveButton" onAction="#onReflectionProfileRemoveButton" layoutX="10.0"
+											layoutY="10.0" mnemonicParsing="false" text="Remove">
+											<graphic>
+												<ImageView>
+													<image>
+														<Image url="@images/delete.png" />
+													</image>
+												</ImageView>
+											</graphic>
+										</Button>
+									</children>
+									<padding>
+										<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+									</padding>
+								</HBox>
+							</children>
+						</VBox>
+					</left>
+					<center>
+						<ScrollPane fx:id="reflectionProfileCenterPane" fitToWidth="true" BorderPane.alignment="CENTER">
+							<padding>
+								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+							</padding>
+						</ScrollPane>
+					</center>
+				</BorderPane>
+			</content>
+			<font>
+				<Font name="System Bold" size="12.0" />
+			</font>
+			<VBox.margin>
+				<Insets top="12.0" />
+			</VBox.margin>
+		</TitledPane>
+	</children>
+</VBox>

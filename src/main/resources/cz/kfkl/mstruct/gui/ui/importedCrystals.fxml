@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="4.0"
+	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"	fx:controller="cz.kfkl.mstruct.gui.ui.ImportedCrystalsController">
+	  
+	<children>
+		<Label text="Select crystals to import:" />
+		<TableView fx:id="importedCrystalsTableView" prefHeight="250.0" prefWidth="260.0">
+			<columns>
+				<TableColumn fx:id="importedCrystalsImportTableColumn" prefWidth="50.0" text="Import" />
+				<TableColumn fx:id="importedCrystalsNameTableColumn" prefWidth="150.0" text="Crystal Name" />
+				<TableColumn fx:id="importedCrystalsExistsTableColumn" prefWidth="40.0" text="Exists" />
+			</columns>
+		</TableView>
+		
+		<HBox alignment="CENTER"  prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="If Exists:"/>
+				<RadioButton mnemonicParsing="false"  text="Rename New" selected="true" >
+					<userData>RENAME_NEW</userData>
+					<toggleGroup>
+						<ToggleGroup fx:id="ifExistsToggleGroup" />
+					</toggleGroup>
+				</RadioButton>
+				<RadioButton mnemonicParsing="false" text="Replace" toggleGroup="$ifExistsToggleGroup">
+					<userData>REPLACE</userData>
+				</RadioButton>
+			</children>
+		</HBox>
+
+	</children>
+</VBox>

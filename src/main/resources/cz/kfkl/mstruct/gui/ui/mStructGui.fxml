@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="topBorderPanel" maxHeight="Infinity" maxWidth="Infinity" minHeight="350" minWidth="400"
+	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="cz.kfkl.mstruct.gui.ui.MStructGuiController">
+	<top>
+		<MenuBar fx:id="menuBar" prefHeight="27.0" BorderPane.alignment="CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="File">
+					<items>
+						<MenuItem mnemonicParsing="false" onAction="#openFile" text="Open...">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#saveFile" text="Save">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false" onAction="#saveFileAs" text="Save As...">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem mnemonicParsing="false" onAction="#saveFileAsTest" text="Save As TEST">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeFile" text="Close">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Crystals">
+					<items>
+						<MenuItem mnemonicParsing="false" onAction="#importCrystalsFromCif" text="Import CIF..." />
+						<MenuItem mnemonicParsing="false" onAction="#importCrystalsFromXml" text="Import XML..." />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Help (TODO)">
+					<items>
+						<MenuItem mnemonicParsing="false" text="About" />
+					</items>
+				</Menu>
+			</menus>
+			<BorderPane.margin>
+				<Insets />
+			</BorderPane.margin>
+			<padding>
+				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+			</padding>
+		</MenuBar>
+	</top>
+	<bottom>
+		<HBox alignment="CENTER_LEFT" prefHeight="26.0" spacing="4">
+			<children>
+				<Label fx:id="bottomLabel" text="Welcome to MStruct UI!">
+					<opaqueInsets>
+						<Insets />
+					</opaqueInsets>
+					<HBox.margin>
+						<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+					</HBox.margin>
+				</Label>
+			</children>
+		</HBox>
+	</bottom>
+	<center>
+		<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+			<tabs>
+				<Tab fx:id="tabCrystals" text="Crystals">
+					<content>
+						<BorderPane>
+							<left>
+								<ListView fx:id="crystalsListView" prefHeight="377.0" prefWidth="143.0" BorderPane.alignment="CENTER" />
+							</left>
+							<center>
+								<ScrollPane fx:id="tabCrystalsCenterPane" fitToHeight="true" fitToWidth="true" hvalue="1.0" prefHeight="352.0"
+									prefWidth="618.0" BorderPane.alignment="CENTER">
+									<padding>
+										<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+									</padding>
+								</ScrollPane>
+							</center>
+						</BorderPane>
+					</content>
+				</Tab>
+				<Tab fx:id="tabDiffractions" text="Diffractions">
+					<content>
+						<BorderPane>
+							<left>
+								<ListView fx:id="diffractionsListView" prefWidth="143.0" BorderPane.alignment="CENTER" />
+							</left>
+							<center>
+								<ScrollPane fx:id="tabDiffractionsCenterPane" fitToHeight="true" fitToWidth="true" hvalue="1.0"
+									prefHeight="352.0" prefWidth="618.0" BorderPane.alignment="TOP_LEFT">
+									<padding>
+										<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+									</padding>
+								</ScrollPane>
+							</center>
+						</BorderPane>
+					</content>
+				</Tab>
+				<Tab fx:id="tabParameters" text="Parameters">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" />
+					</content>
+				</Tab>
+				<Tab fx:id="tabInputData" text="Data">
+					<content>
+						<BorderPane>
+							<center>
+								<TableView fx:id="inputDataTableView" BorderPane.alignment="CENTER"/>
+							</center>
+						</BorderPane>
+					</content>
+				</Tab>
+				<Tab fx:id="tabOptimization" text="Optimization">
+				</Tab>
+			</tabs>
+		</TabPane>
+	</center>
+</BorderPane>

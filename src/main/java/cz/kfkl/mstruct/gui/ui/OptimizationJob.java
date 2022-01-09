@@ -36,7 +36,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private static final String HKL_FILE_NAME = "phase1_par.txt";
 	private static final String DAT_FILE_NAME = "pattern0_xml.dat";
 
-	private static final String[] DATA_TABLE_COLUMNS = new String[] { "2Theta/TOF", "Iobs", "ICalc", "Iobs-Icalc", "Weight",
+	public static final String[] DATA_TABLE_COLUMNS = new String[] { "2Theta/TOF", "Iobs", "ICalc", "Iobs-Icalc", "Weight",
 			"Comp0" };
 
 	private static final String[] HKL_TABLE_COLUMNS = new String[] { "h", "k", "l", "2Theta", "|Fhkl|^2", "Ihkl", "FWHM(deg)",
@@ -267,8 +267,8 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private void updateChartTab(BorderPane pane) {
 
 		BindingUtils.doWhenPropertySet(t -> {
-			PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getContext(), getDatTableProperty(),
-					getHklTableProperty());
+			PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getContext());
+			chartGenerator.forJob(this);
 			chartGenerator.useGuiTemplate();
 
 			String errMessage = chartGenerator.nothingToExportMessage();
@@ -276,7 +276,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 				WebView webView = new WebView();
 				WebEngine webEngine = webView.getEngine();
-				webEngine.loadContent(chartGenerator.generateHtml());
+				webEngine.loadContent(chartGenerator.exportedData());
 				webView.setMaxHeight(Double.POSITIVE_INFINITY);
 
 				pane.setCenter(webView);

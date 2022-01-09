@@ -65,7 +65,7 @@
 		</HBox>
 	</top>
 	<left>
-		<TitledPane animated="false" collapsible="false" maxHeight="Infinity" prefWidth="210.0" text="Results">
+		<TitledPane animated="false" collapsible="false" maxHeight="Infinity" prefWidth="210.0" text="Results" styleClass="no-padding-content">
 			<content>
 				<VBox alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" prefWidth="-Infinity">
 					<children>
@@ -171,12 +171,12 @@
 										<Insets bottom="4" left="4.0" right="4.0" top="4" />
 									</padding>
 								</HBox>
-								<TitledPane collapsible="false" maxHeight="Infinity" minHeight="30" text="MStruct Console" VBox.vgrow="ALWAYS">
+								<TitledPane collapsible="false" maxHeight="Infinity" minHeight="30" text="MStruct Console" VBox.vgrow="ALWAYS" styleClass="no-padding-content">
 									<content>
 										<TextArea fx:id="consoleTextArea" editable="false" />
 									</content>
 								</TitledPane>
-								<TitledPane maxHeight="Infinity" minHeight="30" text="Job Logs">
+								<TitledPane maxHeight="Infinity" minHeight="30" text="Job Logs" styleClass="no-padding-content">
 									<content>
 										<TextArea fx:id="jobsLogsTextArea" editable="false" />
 									</content>
@@ -192,7 +192,13 @@
 							<children>
 								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
 									<children>
-										<Button fx:id="exportHtmlButton" mnemonicParsing="false" onAction="#exportDatAsHtml" text="Export HTML Chart">
+										<Button fx:id="exportOutputCsvButton" mnemonicParsing="false" onAction="#exportOutputDataAsCsv" text="Export CSV">
+											<HBox.margin>
+												<Insets left="4.0" />
+											</HBox.margin>
+										</Button>
+
+										<Button fx:id="exportOutputDatButton" mnemonicParsing="false" onAction="#exportOutputDataAsDat" text="Export DAT">
 											<HBox.margin>
 												<Insets left="4.0" />
 											</HBox.margin>

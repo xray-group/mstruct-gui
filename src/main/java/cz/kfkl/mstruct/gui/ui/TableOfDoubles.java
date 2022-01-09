@@ -3,8 +3,6 @@ package cz.kfkl.mstruct.gui.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jfree.data.xy.XYSeries;
-
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
@@ -46,14 +44,6 @@ public class TableOfDoubles {
 		return list;
 	}
 
-	public XYSeries getXYSeries(String name, int xColIndex, int yColIndex) {
-		XYSeries xySeries = new XYSeries(name);
-		for (double[] row : rows) {
-			xySeries.add(row[xColIndex], row[yColIndex]);
-		}
-		return xySeries;
-	}
-
 	public double[] getColumnData(int colIndex) {
 		double[] values = new double[rows.size()];
 
@@ -68,9 +58,9 @@ public class TableOfDoubles {
 		String[] values = new String[rows.size()];
 
 		for (int i = 0; i < rows.size(); i++) {
-			double[] rowVals = new double[colIndexes.length];
+			Object[] rowVals = new String[colIndexes.length];
 			for (int cI = 0; cI < colIndexes.length; cI++) {
-				rowVals[cI] = rows.get(i)[cI];
+				rowVals[cI] = JvStringUtils.toStringNoDotZero(rows.get(i)[cI]);
 			}
 			values[i] = JvStringUtils.join(delim, rowVals);
 		}

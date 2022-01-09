@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
+import cz.kfkl.mstruct.gui.utils.ic.TableReportBuilder;
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 
@@ -52,15 +53,13 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 			+ "))"
 	// + "[\\x00-\\x20]*" // Optional trailing "whitespace"
 	);
-	private static DoubleTextFormatter INSTANCE;
 
 	private static Pattern validEditingState = Pattern.compile(fpRegex);
 
-	public synchronized static DoubleTextFormatter getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new DoubleTextFormatter();
-		}
-		return INSTANCE;
+	// note that singleton didn't work, when used it throws
+	// "java.lang.IllegalStateException: Formatter is already used in other control"
+	public DoubleTextFormatter() {
+		super(converter, null, filter);
 	}
 
 	private static UnaryOperator<TextFormatter.Change> filter = c -> {
@@ -87,23 +86,25 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 
 		@Override
 		public String toString(Double d) {
-			return d == null ? null : toStringConverter(d);
+			return JvStringUtils.toStringNoDotZero(d);
 		}
 
 	};
 
-	private static String toStringConverter(Double d) {
-		int i = (int) d.doubleValue();
-		return d == i ? String.valueOf(i) : String.valueOf(d);
-
-		// return d.toString();
+	private static String toStringNoDotZero(Double d) {
+		if (d == null) {
+			return null;
+		} else {
+			int i = (int) d.doubleValue();
+			return d == i ? String.valueOf(i) : String.valueOf(d);
+		}
 	}
 
 	public static StringConverter<String> stringDoubleConverter = new StringConverter<String>() {
 		@Override
 		public String fromString(String s) {
 			Double d = converter.fromString(s);
-			return d == null ? null : d.toString();
+			return converter.toString(d);
 		}
 
 		@Override
@@ -111,12 +112,6 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 			return d;
 		}
 	};
-
-	TextFormatter<Double> textFormatter = new TextFormatter<>(converter, null, filter);
-
-	public DoubleTextFormatter() {
-		super(converter, null, filter);
-	}
 
 	public static void main(String[] args) {
 		System.out.println(validEditingState.matcher("1.5e8").matches());
@@ -128,19 +123,23 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 		System.out.println(validEditingState.matcher("").matches());
 //		DecimalFormat df = new DecimalFormat("#.#");
 
-		DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-		df.setMaximumFractionDigits(30); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
+		DecimalFormat df20 = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		df20.setMaximumFractionDigits(20); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
 
-		for (Double d : Arrays.asList(5.1, 1.5, 1234567890.123456, 8.0, 7E-57, 2E-20)) {
-			System.out.println(Double.toString(d));
-			System.out.println(d.toString());
-//			System.out.println(df.format(d));
-			System.out.println(String.format("%g", d));
-			System.out.println(String.format("%s", d));
-			System.out.println(String.format("%e", d));
-			System.out.println(String.format("%f", d));
-			System.out.println(df.format(d));
+		DecimalFormat df4 = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		df4.setMaximumFractionDigits(4); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
+
+		TableReportBuilder trb = TableReportBuilder.create(25, 25, 25, 25, 25, 32, 32, 32, 32, 32, 32, 32, 32);
+		trb.appendLine("Double.toString(d)", "String.valueOf(d)", "String.format(\"%s\", d)", "String.format(\"%g\", d)",
+				"String.format(\"%e\", d)", "String.format(\"%f\", d)", "df20.format(d)", "df4.format(d)", "toStringNoDotZero");
+
+		for (Double d : Arrays.asList(5.1, 7654321.0, 87654321.0, 87600000.0, 8765432.1, 8765432.12345678, 7000000.0, 80000000.0,
+				1234567890.123456789, 1600000000000000.0, 17000000000000000.0, 8.0, 7E-77, 2E-12, 2E22, 12E12)) {
+			trb.appendLine(Double.toString(d), String.valueOf(d), String.format("%s", d), String.format("%g", d),
+					String.format("%e", d), String.format("%f", d), df20.format(d), df4.format(d), toStringNoDotZero(d));
 		}
+
+		System.out.println(trb.format());
 	}
 
 }

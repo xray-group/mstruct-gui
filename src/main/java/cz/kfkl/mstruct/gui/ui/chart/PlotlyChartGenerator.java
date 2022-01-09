@@ -9,11 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
+import cz.kfkl.mstruct.gui.ui.Job;
+import cz.kfkl.mstruct.gui.ui.OptimizationJob;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
-import javafx.beans.property.ObjectProperty;
 
-public class PlotlyChartGenerator {
+public class PlotlyChartGenerator implements JobOutputExporter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PlotlyChartGenerator.class);
 
@@ -45,12 +46,31 @@ public class PlotlyChartGenerator {
 	private TableOfDoubles datTable;
 	private TableOfDoubles hklTable;
 
-	public PlotlyChartGenerator(AppContext appContext, ObjectProperty<TableOfDoubles> datTableProperty,
-			ObjectProperty<TableOfDoubles> hklTableProperty) {
+	private Job job;
 
+	public PlotlyChartGenerator(AppContext appContext) {
 		this.appContext = appContext;
-		this.datTable = datTableProperty.get();
-		this.hklTable = hklTableProperty.get();
+	}
+
+	@Override
+	public String getFileChooserTitle() {
+		return "Export HTML Chart";
+	}
+
+	@Override
+	public String getInitialFileName() {
+		return job.getName() + ".html";
+	}
+
+	@Override
+	public void forJob(Job job) {
+		this.job = job;
+		if (job instanceof OptimizationJob) {
+			OptimizationJob optJob = (OptimizationJob) job;
+			this.datTable = optJob.getDatTableProperty().get();
+			this.hklTable = optJob.getHklTableProperty().get();
+		}
+
 	}
 
 	public void useGuiTemplate() {
@@ -61,6 +81,7 @@ public class PlotlyChartGenerator {
 		template = appContext.loadExportTemplate();
 	}
 
+	@Override
 	public String nothingToExportMessage() {
 		return template == null ? "no HTML template defined" : (haveData() ? null : "there are no data");
 	}
@@ -73,7 +94,8 @@ public class PlotlyChartGenerator {
 		return table != null && !table.getRows().isEmpty();
 	}
 
-	public String generateHtml() {
+	@Override
+	public String exportedData() {
 		String res = template;
 		res = replacePlaceholders(res, datTable, datPlaceholders);
 		res = replacePlaceholders(res, hklTable, hklPlaceholders);

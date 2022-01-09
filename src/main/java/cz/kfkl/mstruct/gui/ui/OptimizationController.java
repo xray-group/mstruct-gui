@@ -21,6 +21,7 @@ import com.google.common.io.MoreFiles;
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.ui.chart.JobOutputExporter;
 import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.ListCellWithIcon;
@@ -87,6 +88,11 @@ public class OptimizationController extends BaseController<OptimizaitonModel> {
 	private Button terminateButton;
 	@FXML
 	private Button removeButton;
+
+	@FXML
+	private Button exportOutputCsvButton;
+	@FXML
+	private Button exportOutputDatButton;
 	@FXML
 	private Button exportHtmlButton;
 
@@ -282,55 +288,59 @@ public class OptimizationController extends BaseController<OptimizaitonModel> {
 	}
 
 	@FXML
+	public void exportOutputDataAsCsv() {
+		exportJobOutput(new CsvOutputDataExporter(getAppContext()));
+	}
+
+	@FXML
+	public void exportOutputDataAsDat() {
+		exportJobOutput(new DatOutputDataExporter(getAppContext()));
+	}
+
+	@FXML
 	public void exportDatAsHtml() {
-		Job selectedJob = jobsListView.getSelectionModel().getSelectedItem();
-		if (selectedJob instanceof OptimizationJob) {
-			OptimizationJob job = (OptimizationJob) selectedJob;
+		PlotlyChartGenerator htmlChartGenerator = new PlotlyChartGenerator(getAppContext());
+		htmlChartGenerator.useExportTemplate();
 
-			AppContext appContext = getAppContext();
-			job.getDatTableProperty();
+		File selectedFile = exportJobOutput(htmlChartGenerator);
 
-			PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(appContext, job.getDatTableProperty(),
-					job.getHklTableProperty());
-			chartGenerator.useExportTemplate();
-
-			String errMessage = chartGenerator.nothingToExportMessage();
-			validateIsNull(errMessage, "Cannot create export as %s", errMessage);
-
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Export HTML Chart");
-
-			fileChooser.setInitialFileName(selectedJob.getName() + ".html");
-
-			configureHtmlExtensionFilters(fileChooser);
-
-			fileChooser.setInitialDirectory(appContext.getLastSelectedFileDirectoryOrDefault());
-			File selectedFile = fileChooser.showSaveDialog(topBorderPanel.getScene().getWindow());
-
-			if (selectedFile != null) {
-				appContext.setLastSelectedFileDirectory(selectedFile.getParentFile());
-
-				saveOutputDataHtmlFile(selectedFile, chartGenerator);
-
-				String oldName = this.openedFileProperty.get().getName();
-				this.openedFileProperty.set(selectedFile);
-				mainController.setBottomLabelText("Data exported to [%s].", selectedFile);
+		if (selectedFile != null) {
+			if (getAppContext().showExportedChart()) {
+				showHtmlInNewWindow(htmlChartGenerator.exportedData(), selectedFile.getName());
 			}
-
 		}
 	}
 
-	private void saveOutputDataHtmlFile(File outFile, PlotlyChartGenerator chartGenerator) {
-		try (FileWriter fw = new FileWriter(outFile)) {
-			String htmlText = chartGenerator.generateHtml();
-			if (getAppContext().showExportedChart()) {
-				showHtmlInNewWindow(htmlText, outFile.getName());
-			}
-			fw.append(htmlText);
-		} catch (Exception e) {
-			throw new PopupErrorException(e, "Failed to save the html file [%s]", outFile);
-		}
+	private File exportJobOutput(JobOutputExporter jobExporter) {
+		Job selectedJob = jobsListView.getSelectionModel().getSelectedItem();
 
+		AppContext appContext = getAppContext();
+		jobExporter.forJob(selectedJob);
+
+		String errMessage = jobExporter.nothingToExportMessage();
+		validateIsNull(errMessage, "Cannot create export as %s", errMessage);
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle(jobExporter.getFileChooserTitle());
+
+		fileChooser.setInitialFileName(jobExporter.getInitialFileName());
+
+		configureHtmlExtensionFilters(fileChooser);
+
+		fileChooser.setInitialDirectory(appContext.getLastSelectedFileDirectoryOrDefault());
+		File selectedFile = fileChooser.showSaveDialog(topBorderPanel.getScene().getWindow());
+
+		if (selectedFile != null) {
+			appContext.setLastSelectedFileDirectory(selectedFile.getParentFile());
+
+			try (FileWriter fw = new FileWriter(selectedFile)) {
+				fw.append(jobExporter.exportedData());
+				mainController.setBottomLabelText("Data exported to [%s].", selectedFile);
+			} catch (Exception e) {
+				throw new PopupErrorException(e, "Failed to %s to file [%s]", jobExporter.getFileChooserTitle(), selectedFile);
+			}
+		}
+		return selectedFile;
 	}
 
 	private void showHtmlInNewWindow(String htmlText, String fileName) {

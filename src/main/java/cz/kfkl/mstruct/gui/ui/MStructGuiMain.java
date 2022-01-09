@@ -21,7 +21,7 @@ public class MStructGuiMain extends Application {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MStructGuiMain.class);
 
-	public static final String M_STRUCT_UI_TITLE = "MStruct UI";
+	public static final String M_STRUCT_UI_TITLE = "MStruct GUI";
 	private AppContext context = new AppContext();
 
 	@Override

@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.jfree.chart.util.ObjectUtils;
-
 public class JvStringUtils {
 
 	private static final char APOSTROPHE = '\'';
@@ -147,12 +145,13 @@ public class JvStringUtils {
 		StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (Object d : values) {
-			sb.append(d);
 			if (isFirst) {
 				isFirst = false;
 			} else {
 				sb.append(delim);
 			}
+
+			sb.append(d);
 		}
 
 		return sb.toString();
@@ -162,13 +161,13 @@ public class JvStringUtils {
 		StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (Object d : values) {
-			sb.append(d);
 			if (isFirst) {
 				isFirst = false;
 			} else {
-
 				sb.append(delim);
 			}
+
+			sb.append(d);
 		}
 
 		return sb.toString();
@@ -299,9 +298,9 @@ public class JvStringUtils {
 	}
 
 	/**
-	 * Transforms array of Object to array of String using
-	 * {@link ObjectUtils#toString(Object)} method (i.e. result of
-	 * {@link Object#toString()} method or empty string for nulls).
+	 * Transforms array of Object to array of String using {@link #toString(Object)}
+	 * method (i.e. result of {@link Object#toString()} method or empty string for
+	 * nulls).
 	 * 
 	 * @return object array transformed to strings, null if the array was null
 	 */
@@ -319,6 +318,20 @@ public class JvStringUtils {
 
 	public static String toString(Object object) {
 		return object == null ? null : object.toString();
+	}
+
+	/**
+	 * A bit nicer pretty print of doubles. For d == null return null. Otherwise if
+	 * d is integer (d == (int) d ) then return Integer.valueOf((int) d) otherwise
+	 * uses the d.toString().
+	 */
+	public static String toStringNoDotZero(Double d) {
+		if (d == null) {
+			return null;
+		} else {
+			int i = (int) d.doubleValue();
+			return d == i ? Integer.toString(i) : d.toString();
+		}
 	}
 
 }

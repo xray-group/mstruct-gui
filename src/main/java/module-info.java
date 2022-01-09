@@ -15,8 +15,6 @@ module MStructGUI {
 	requires javafx.fxml;
 	requires javafx.graphics;
 	requires jdom2;
-	requires org.jfree.chart.fx;
-	requires org.jfree.jfreechart;
 	requires com.google.common;
 	requires org.slf4j;
 	requires javafx.web;

@@ -7,7 +7,7 @@ It is a desktop application providing a graphical interface for calling MStruct 
 ## Installation
 
 ##### The minimal distribution - `mstructgui-0.2-dist-min.zip`
-1. Download the mstructgui-0.2-dist-min.zip. If not provided in other way it could be obtained from github (Code / Download ZIP / locate the file in the target folder).
+1. Download the [mstructgui-0.2-dist-min.zip](released/mstruct-gui-0.2-dist-min.zip). If not provided in other way it could be obtained from github (Code / Download ZIP / locate the file in the target folder).
 2. Extract the content of the zip file to a “base directory”
 3. Download and install a suitable JDK, i.e. JDK version 11 or newer. It is recommended to use  [BellSoft's Liberica JDK 11 LTS](https://bell-sw.com/pages/downloads/#/java-11-lts) as it was used for testing.
 4. Open the `MStructGUI.bat` for editing and change the `java_home` variable to a location where the JDK is installed.

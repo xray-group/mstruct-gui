@@ -9,7 +9,7 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 @XmlElementName("RefractionCorr")
 public class ReflectionProfileRefractionCorrElement extends ReflectionProfileModel<ReflectionProfileRefractionCorrController> {
 
-	private static final String FXML_FILE_NAME = "refractionCorr.fxml";
+	private static final String FXML_FILE_NAME = "reflectionProfileRefractionCorr.fxml";
 
 	@XmlUniqueElement
 	public OptionUniqueElement chi0SourceOption = new OptionUniqueElement("chi0.source", 1, "value", "crystal", "formula");

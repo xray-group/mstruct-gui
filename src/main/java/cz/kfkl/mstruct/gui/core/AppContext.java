@@ -2,24 +2,25 @@ package cz.kfkl.mstruct.gui.core;
 
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
-import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 
 public class AppContext {
 
+	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 	private static final Logger LOG = LoggerFactory.getLogger(AppContext.class);
 	private final static boolean IS_TEST_RUN = true;
 
@@ -215,12 +216,15 @@ public class AppContext {
 
 	public static String readResourceAsString(String path) {
 		try {
-			URL resource = PlotlyChartGenerator.class.getResource(path);
-			assertNotNull(resource, "No resource found for path [%s]", path);
-			return new String(Files.readAllBytes(Paths.get(resource.toURI())));
+			InputStream resourceAsStream = AppContext.class.getResourceAsStream(path);
+			assertNotNull(resourceAsStream, "No resource found for path [%s]", path);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			resourceAsStream.transferTo(bos);
+
+			return bos.toString(UTF8_CHARSET);
 
 		} catch (Exception e) {
-			throw new UnexpectedException(e, "Failed to read HTML chart pattern from [%s]", path);
+			throw new UnexpectedException(e, "Failed to read resource from [%s]", path);
 		}
 	}
 

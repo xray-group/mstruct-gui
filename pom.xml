@@ -125,8 +125,10 @@
 				<configuration>
 					<descriptors>
 						<descriptor>src/assembly/assembly-min.xml</descriptor>
+						<!-- 
 						<descriptor>src/assembly/assembly-withJDK.xml</descriptor>
 						<descriptor>src/assembly/assembly-externals.xml</descriptor>
+						 -->
 					</descriptors>
 					<formats>zip</formats>
 					<archive>

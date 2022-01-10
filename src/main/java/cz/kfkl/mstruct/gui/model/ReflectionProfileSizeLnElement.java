@@ -9,7 +9,7 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 @XmlElementName("SizeLn")
 public class ReflectionProfileSizeLnElement extends ReflectionProfileModel<ReflectionProfileSizeLnController> {
 
-	private static final String FXML_FILE_NAME = "sizeLn.fxml";
+	private static final String FXML_FILE_NAME = "reflectionProfileSizeLn.fxml";
 
 	@XmlUniqueElement
 	public ParUniqueElement mPar = new ParUniqueElement("M");

@@ -9,7 +9,7 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 @XmlElementName("pVoigtA")
 public class ReflectionProfilePVoigtAElement extends ReflectionProfileModel<ReflectionProfilePVoigtAController> {
 
-	private static final String FXML_FILE_NAME = "pVoigtA.fxml";
+	private static final String FXML_FILE_NAME = "reflectionProfilePVoigtA.fxml";
 
 	@XmlUniqueElement
 	public ParUniqueElement uPar = new ParUniqueElement("U");

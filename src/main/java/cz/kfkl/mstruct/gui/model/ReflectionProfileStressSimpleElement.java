@@ -9,7 +9,7 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 @XmlElementName("StressSimple")
 public class ReflectionProfileStressSimpleElement extends ReflectionProfileModel<ReflectionProfileStressSimpleController> {
 
-	private static final String FXML_FILE_NAME = "ReflectionProfileStressSimple.fxml";
+	private static final String FXML_FILE_NAME = "reflectionProfileStressSimple.fxml";
 
 	@XmlUniqueElement
 	public ParUniqueElement stressPar = new ParUniqueElement("Stress");

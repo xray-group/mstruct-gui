@@ -35,7 +35,7 @@
 		<GridPane hgap="8" VBox.vgrow="ALWAYS">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="460.0" />
+				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="400.0" />
 			</columnConstraints>
 			<children>
 				<Label text="relDensity:" GridPane.columnIndex="0" GridPane.rowIndex="0" />

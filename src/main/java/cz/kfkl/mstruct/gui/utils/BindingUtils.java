@@ -47,8 +47,8 @@ public final class BindingUtils {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BindingUtils.class);
 
-	private static final int MIN_MAX_FIELD_MIN_WIDTH = 30;
-	private static final int VALUE_FIELD_MIN_WIDTH = 70;
+	private static final int MIN_MAX_FIELD_MIN_WIDTH = 25;
+	private static final int VALUE_FIELD_MIN_WIDTH = 65;
 
 	private BindingUtils() {
 	}

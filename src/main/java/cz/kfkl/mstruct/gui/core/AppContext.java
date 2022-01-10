@@ -24,6 +24,11 @@ public class AppContext {
 	private static final Logger LOG = LoggerFactory.getLogger(AppContext.class);
 	private final static boolean IS_TEST_RUN = true;
 
+//	private static final String PLOTLY_JS_PATH = "/cz/kfkl/mstruct/gui/ui/chart/plotly-latest.min.js";
+//
+//	private static final String DEFAULT_HTML_GUI_TEMPLATE_PATH = "/cz/kfkl/mstruct/gui/ui/chart/DefaultPlotlyChartTemplate_GUI.html";
+//	private static final String DEFAULT_HTML_EXPORT_TEMPLATE_PATH = "/cz/kfkl/mstruct/gui/ui/chart/DefaultPlotlyChartTemplate_Export.html";
+
 	private static final String PLOTLY_JS_PATH = "/js/plotly-latest.min.js";
 
 	private static final String DEFAULT_HTML_GUI_TEMPLATE_PATH = "/DefaultPlotlyChartTemplate_GUI.html";

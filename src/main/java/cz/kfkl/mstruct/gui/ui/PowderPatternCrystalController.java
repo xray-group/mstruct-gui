@@ -74,7 +74,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		XmlLinkedModelElement parentModelElement = model.getParentModelElement().getParentModelElement();
 		if (parentModelElement instanceof ObjCrystModel) {
 			ObjCrystModel ocm = (ObjCrystModel) parentModelElement;
-			powderPatternCrystalNameComboBox.getItems().addAll(ocm.crystals);
+			powderPatternCrystalNameComboBox.setItems(ocm.crystals);
 			powderPatternCrystalNameComboBox.getSelectionModel().select(ocm.getCrystal(model.crystalProperty.get()));
 			// TODO bind the selection back the model
 		}

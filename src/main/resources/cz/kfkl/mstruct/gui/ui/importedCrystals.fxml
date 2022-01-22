@@ -23,7 +23,7 @@
 			<columns>
 				<TableColumn fx:id="importedCrystalsImportTableColumn" prefWidth="50.0" text="Import" />
 				<TableColumn fx:id="importedCrystalsNameTableColumn" prefWidth="150.0" text="Crystal Name" />
-				<TableColumn fx:id="importedCrystalsExistsTableColumn" prefWidth="40.0" text="Exists" />
+				<TableColumn fx:id="importedCrystalsExistsTableColumn" prefWidth="40.0" text="Exists" editable="false" />
 			</columns>
 		</TableView>
 		

@@ -22,7 +22,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
@@ -234,32 +233,15 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private void updateDataTableTab(OptimizationController optimizationController) {
 		optimizationController.datRowsCountLabel.setText("N/A");
 
-		TableView<TableOfDoubles.RowIndex> dataTableView = optimizationController.outputDataTableView;
-		dataTableView.getItems().clear();
+		BindingUtils.initTableView(optimizationController.outputDataTableView, DATA_TABLE_COLUMNS);
 
-		dataTableView.getColumns().clear();
-		for (int colIndex = 0; colIndex < DATA_TABLE_COLUMNS.length; colIndex++) {
-			TableColumn<RowIndex, Number> column = new TableColumn<>(DATA_TABLE_COLUMNS[colIndex]);
-			column.setUserData(colIndex);
-
-			column.setCellValueFactory((cdf) -> cdf.getValue().getObservableValue((Integer) cdf.getTableColumn().getUserData()));
-			dataTableView.getColumns().add(column);
-		}
-
-		BindingUtils.doWhenPropertySet(t -> dataTableView.getItems().addAll(t.getRowIndexes()), datTableProperty);
+		BindingUtils.doWhenPropertySet(t -> optimizationController.outputDataTableView.getItems().addAll(t.getRowIndexes()),
+				datTableProperty);
 	}
 
 	private void updateHklTableTab(TableView<RowIndex> dataTableView) {
-		dataTableView.getItems().clear();
 
-		dataTableView.getColumns().clear();
-		for (int colIndex = 0; colIndex < HKL_TABLE_COLUMNS.length; colIndex++) {
-			TableColumn<RowIndex, Number> column = new TableColumn<>(HKL_TABLE_COLUMNS[colIndex]);
-			column.setUserData(colIndex);
-
-			column.setCellValueFactory((cdf) -> cdf.getValue().getObservableValue((Integer) cdf.getTableColumn().getUserData()));
-			dataTableView.getColumns().add(column);
-		}
+		BindingUtils.initTableView(dataTableView, HKL_TABLE_COLUMNS);
 
 		BindingUtils.doWhenPropertySet(t -> dataTableView.getItems().addAll(t.getRowIndexes()), hklTableProperty);
 	}

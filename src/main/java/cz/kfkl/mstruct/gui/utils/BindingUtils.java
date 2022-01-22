@@ -15,6 +15,7 @@ import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiMain;
 import cz.kfkl.mstruct.gui.ui.SingleModelInstanceController;
+import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -35,6 +36,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -392,6 +394,19 @@ public final class BindingUtils {
 	public static <T> void autoHeight(TableView<T> table) {
 		table.setFixedCellSize(25);
 		table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(26));
+	}
+
+	public static void initTableView(TableView<RowIndex> tableView, String[] columnNames) {
+		tableView.getColumns().clear();
+		tableView.getItems().clear();
+
+		for (int colIndex = 0; colIndex < columnNames.length; colIndex++) {
+			TableColumn<RowIndex, Number> column = new TableColumn<>(columnNames[colIndex]);
+			column.setUserData(colIndex);
+
+			column.setCellValueFactory((cdf) -> cdf.getValue().getObservableValue((Integer) cdf.getTableColumn().getUserData()));
+			tableView.getColumns().add(column);
+		}
 	}
 
 	public static <T> void doWhenPropertySet(Consumer<T> propertyValueConsumer, ObjectProperty<T> objectProperty) {

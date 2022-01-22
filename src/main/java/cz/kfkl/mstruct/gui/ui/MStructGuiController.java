@@ -63,7 +63,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
@@ -141,8 +140,8 @@ public class MStructGuiController implements HasAppContext {
 	public void init() {
 
 		LOG.debug("TITLE: {}", titleProperty.get());
-		titleProperty.bind(
-				Bindings.createStringBinding(() -> MStructGuiMain.M_STRUCT_UI_TITLE + formatOpenedFileName(), openedFileProperty));
+		titleProperty.bind(Bindings.createStringBinding(() -> MStructGuiMain.M_STRUCT_UI_TITLE + formatOpenedFileName(),
+				openedFileProperty));
 
 		saveMenuItem.disableProperty().bind(openedFileProperty.isNull());
 		saveAsMenuItem.disableProperty().bind(openedFileProperty.isNull());
@@ -268,20 +267,14 @@ public class MStructGuiController implements HasAppContext {
 	private void configInputDataTable(String data) {
 
 		TableView<RowIndex> dataTableView = inputDataTableView;
+		String[] columnNames = DATA_TABLE_COLUMNS;
 
-		for (int colIndex = 0; colIndex < DATA_TABLE_COLUMNS.length; colIndex++) {
-			TableColumn<RowIndex, Number> column = new TableColumn<>(DATA_TABLE_COLUMNS[colIndex]);
-			column.setUserData(colIndex);
-
-			column.setCellValueFactory((cdf) -> cdf.getValue().getObservableValue((Integer) cdf.getTableColumn().getUserData()));
-			dataTableView.getColumns().add(column);
-		}
+		BindingUtils.initTableView(dataTableView, columnNames);
 
 		TabularDataParser parser = new TabularDataParser();
 		TableOfDoubles tabularData = parser.parse(data);
 
 		dataTableView.getItems().addAll(tabularData.getRowIndexes());
-
 	}
 
 	public ParametersController initParametersTab(Tab tabParameters) {

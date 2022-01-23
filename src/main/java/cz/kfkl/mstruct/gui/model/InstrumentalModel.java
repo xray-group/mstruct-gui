@@ -17,20 +17,7 @@ abstract public class InstrumentalModel<C extends BaseController<?>> extends Xml
 		implements FxmlFileNameProvider<C>, ParamContainer {
 
 	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty("test");
-
-	public String getName() {
-		return nameProperty.get();
-	}
-
-	public void setName(String name) {
-		this.nameProperty.set(name);
-
-	}
-
-	public StringProperty getNameProperty() {
-		return nameProperty;
-	}
+	public StringProperty nameProperty = new SimpleStringProperty();
 
 	public Set<? extends String> findUsedCrystals() {
 		return Collections.emptySet();

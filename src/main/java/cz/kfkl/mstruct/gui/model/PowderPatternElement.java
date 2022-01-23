@@ -18,8 +18,9 @@ import javafx.collections.ObservableList;
 
 @XmlElementName("PowderPattern")
 public class PowderPatternElement extends InstrumentalModel<PowderPatternController> {
-
 	private static final String FXML_FILE_NAME = "powderPattern.fxml";
+
+	private static final String DEFAULT_PATTERN_NAME = "pattern0";
 
 	@XmlAttributeProperty("SpaceGroup")
 	public StringProperty spaceGroupProperty = new SimpleStringProperty();
@@ -52,6 +53,10 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@XmlElementList
 	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
 
+	public PowderPatternElement() {
+		this.nameProperty.set(DEFAULT_PATTERN_NAME);
+	}
+
 	@Override
 	public Set<? extends String> findUsedCrystals() {
 		Set<String> usedCrystalNames = new LinkedHashSet<String>();
@@ -71,7 +76,7 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 
 	@Override
 	public String formatParamContainerName() {
-		return "Powder Pattern: " + getName();
+		return "Powder Pattern: " + nameProperty.get();
 	}
 
 	@Override
@@ -82,22 +87,6 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 		list.addAll(powderPatternCrystals);
 
 		return list;
-	}
-
-	@Override
-	public String getName() {
-		return nameProperty.get();
-	}
-
-	@Override
-	public void setName(String name) {
-		this.nameProperty.set(name);
-
-	}
-
-	@Override
-	public StringProperty getNameProperty() {
-		return nameProperty;
 	}
 
 	@Override

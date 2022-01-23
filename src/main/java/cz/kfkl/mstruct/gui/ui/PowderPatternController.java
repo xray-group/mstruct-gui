@@ -91,7 +91,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	public void bindToInstance() {
 		PowderPatternElement model = getModelInstance();
 
-		powderPatternName.textProperty().bindBidirectional(model.getNameProperty());
+		powderPatternName.textProperty().bindBidirectional(model.nameProperty);
 		BindingUtils.doWhenNodeFocusedLost(powderPatternName, () -> getAppContext().getMainController().instrumentNameUpdated());
 
 		BindingUtils.bindAndBuildParFieldsNoName(zeroParContainer, model.zeroPar);

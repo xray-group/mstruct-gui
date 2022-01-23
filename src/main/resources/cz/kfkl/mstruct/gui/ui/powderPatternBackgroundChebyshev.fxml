@@ -49,8 +49,9 @@
       		</HBox>
       <TableView fx:id="coefficientsTableView" prefHeight="250.0" prefWidth="250.0">
          <columns>
-           <TableColumn fx:id="coefficientIndexTableColumn" prefWidth="45.0" text="Index" />
-           <TableColumn fx:id="coefficientValueTableColumn" prefWidth="180.0" text="Coefficient Value" />
+           <TableColumn fx:id="coefficientIndexTableColumn" prefWidth="49.0" text="Index" />
+           <TableColumn fx:id="coefficientValueTableColumn" prefWidth="115.0" text="Coefficient Value" />
+           <TableColumn fx:id="coefficientRefinedTableColumn" prefWidth="62.0" text="Refined" />
          </columns>
        </TableView>
       </VBox>

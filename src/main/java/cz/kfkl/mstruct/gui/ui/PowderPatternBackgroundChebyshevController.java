@@ -13,6 +13,7 @@ import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
@@ -40,6 +41,8 @@ public class PowderPatternBackgroundChebyshevController
 	private TableColumn<ParUniqueElement, Integer> coefficientIndexTableColumn;
 	@FXML
 	private TableColumn<ParUniqueElement, String> coefficientValueTableColumn;
+	@FXML
+	private TableColumn<ParUniqueElement, Boolean> coefficientRefinedTableColumn;
 
 	@Override
 	public void init() {
@@ -82,6 +85,10 @@ public class PowderPatternBackgroundChebyshevController
 		// coefficientValueTableColumn.setOnEditCommit(event -> parseFormula());
 
 		coefficientValueTableColumn.setEditable(true);
+
+		coefficientRefinedTableColumn.setCellValueFactory(cdf -> cdf.getValue().refinedProperty);
+		coefficientRefinedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(coefficientRefinedTableColumn));
+		coefficientRefinedTableColumn.setEditable(true);
 	}
 
 	public static StringConverter<String> converter = new StringConverter<String>() {

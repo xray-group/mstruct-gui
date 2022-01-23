@@ -1,14 +1,17 @@
 package cz.kfkl.mstruct.gui.model;
 
-import java.util.Arrays;
 import java.util.List;
+
+import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.PowderPatternController;
+import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,13 +20,14 @@ import javafx.beans.property.StringProperty;
 @XmlElementName("PowderPatternCrystal")
 public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 		implements FxmlFileNameProvider<PowderPatternController>, ParamContainer {
+	private static final String DIFF_DATA_PREFIX = "diffData_";
+
 	private static final String FXML_FILE_NAME = "powderPatternCrystal.fxml";
 
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty();
 
-	// <PowderPatternCrystal Name="diffData_Anatase" Crystal="Anatase"
-	// IgnoreImagScattFact="1">
+	public StringProperty userNameProperty = new SimpleStringProperty();
 
 	@XmlAttributeProperty("Crystal")
 	public StringProperty crystalProperty = new SimpleStringProperty();
@@ -42,6 +46,23 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 
 	@XmlUniqueElement
 	public AbsorptionCorrElement absorptionCorrElement = new AbsorptionCorrElement();
+
+	@Override
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+
+		String xmlValue = nameProperty.getValue();
+		if (xmlValue != null && xmlValue.startsWith(DIFF_DATA_PREFIX)) {
+			userNameProperty.set(JvStringUtils.substringAfter(xmlValue, DIFF_DATA_PREFIX));
+		} else {
+			// TODO: some validation error
+			userNameProperty.set(xmlValue);
+		}
+
+		nameProperty.bind(Bindings.concat(DIFF_DATA_PREFIX,
+				Bindings.when(userNameProperty.isEmpty()).then(crystalProperty).otherwise(userNameProperty)));
+
+	}
 
 	@Override
 	public XmlIndentingStyle getXmlIndentingStyle() {

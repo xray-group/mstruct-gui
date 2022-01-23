@@ -62,6 +62,55 @@ public class JvStringUtils {
 
 	/**
 	 * A simulation of Apache's method...
+	 * 
+	 * <p>
+	 * Gets the substring after the first occurrence of a separator. The separator
+	 * is not returned.
+	 * </p>
+	 *
+	 * <p>
+	 * A <code>null</code> string input will return <code>null</code>. An empty ("")
+	 * string input will return the empty string. A <code>null</code> separator will
+	 * return the empty string if the input string is not <code>null</code>.
+	 * </p>
+	 *
+	 * <p>
+	 * If nothing is found, the empty string is returned.
+	 * </p>
+	 *
+	 * <pre>
+	 * StringUtils.substringAfter(null, *)      = null
+	 * StringUtils.substringAfter("", *)        = ""
+	 * StringUtils.substringAfter(*, null)      = ""
+	 * StringUtils.substringAfter("abc", "a")   = "bc"
+	 * StringUtils.substringAfter("abcba", "b") = "cba"
+	 * StringUtils.substringAfter("abc", "c")   = ""
+	 * StringUtils.substringAfter("abc", "d")   = ""
+	 * StringUtils.substringAfter("abc", "")    = "abc"
+	 * </pre>
+	 *
+	 * @param str       the String to get a substring from, may be null
+	 * @param separator the String to search for, may be null
+	 * @return the substring after the first occurrence of the separator,
+	 *         <code>null</code> if null String input
+	 * @since 2.0
+	 */
+	public static String substringAfter(String str, String separator) {
+		if (isEmpty(str)) {
+			return str;
+		}
+		if (separator == null) {
+			return "";
+		}
+		int pos = str.indexOf(separator);
+		if (pos < 0) {
+			return "";
+		}
+		return str.substring(pos + separator.length());
+	}
+
+	/**
+	 * A simulation of Apache's method...
 	 * <p>
 	 * Checks if a String is empty ("") or null.
 	 * </p>

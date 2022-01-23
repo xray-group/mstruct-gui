@@ -10,12 +10,14 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -26,14 +28,24 @@
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>
-				<Label text="Name:" />
-				<TextField fx:id="powderPatternCrystalNameTextField" prefHeight="19.0" prefWidth="149.0" />
-				<Label text="Crystal:">
+				<Label text="Crystal:"/>
+				<ComboBox fx:id="powderPatternCrystalNameComboBox" prefWidth="150.0" />
+				<Label text="Name:" >
 					<HBox.margin>
 						<Insets left="8.0" />
 					</HBox.margin>
 				</Label>
-				<ComboBox fx:id="powderPatternCrystalNameComboBox" prefWidth="150.0" />
+				<TextField fx:id="powderPatternCrystalUserNameTextField" prefHeight="19.0" prefWidth="90.0" >
+					<tooltip>
+						<Tooltip text="If left empty the crystal name is used" />
+					</tooltip>
+				</TextField>
+				<Label text="Internal Name:" >
+					<HBox.margin>
+						<Insets left="8.0" />
+					</HBox.margin>
+				</Label>
+				<TextField fx:id="powderPatternCrystalInternalNameTextField" prefHeight="19.0" prefWidth="130.0" disable="true" />
 			</children>
 		</HBox>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
@@ -41,7 +53,7 @@
 				<CheckBox fx:id="ignoreImagScattFactCheckBox" mnemonicParsing="false" text="Ignore Imag Scatt Fact" />
 			</children>
 		</HBox>
-		<GridPane hgap="8" VBox.vgrow="ALWAYS">
+		<GridPane hgap="8">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
 				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="400.0" />
@@ -61,7 +73,7 @@
 				<Insets bottom="8.0" />
 			</VBox.margin>
 		</HBox>
-		<TitledPane text="Absorption Correction">
+		<TitledPane animated="false" text="Absorption Correction">
 			<content>
 				<VBox>
 					<children>
@@ -96,7 +108,7 @@
 				<Font name="System Bold" size="12.0" />
 			</font>
 		</TitledPane>
-		<TitledPane text="Reflection Profile (Broadening Effects, Components?)" minHeight="316">
+		<TitledPane animated="false" text="Reflection Profile (Broadening Effects, Components?)" minHeight="316" maxHeight="Infinity" VBox.vgrow="ALWAYS">
 			<content>
 				<BorderPane>
 					<padding>
@@ -137,11 +149,18 @@
 						</VBox>
 					</left>
 					<center>
-						<ScrollPane fx:id="reflectionProfileCenterPane" fitToWidth="true" BorderPane.alignment="CENTER">
+					<!-- 
+						<ScrollPane fx:id="reflectionProfileStackPane" fitToWidth="true" BorderPane.alignment="CENTER">
 							<padding>
 								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
 							</padding>
 						</ScrollPane>
+						 -->
+						<StackPane fx:id="reflectionProfileStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity">
+							<padding>
+								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+							</padding>
+						</StackPane>
 					</center>
 				</BorderPane>
 			</content>

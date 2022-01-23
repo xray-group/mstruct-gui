@@ -21,17 +21,18 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 public class PowderPatternCrystalController extends BaseController<PowderPatternCrystalsModel> {
 
 	@FXML
-	private TextField powderPatternCrystalNameTextField;
-
-	@FXML
 	private ComboBox<CrystalModel> powderPatternCrystalNameComboBox;
+	@FXML
+	private TextField powderPatternCrystalUserNameTextField;
+	@FXML
+	private TextField powderPatternCrystalInternalNameTextField;
 
 	@FXML
 	private CheckBox ignoreImagScattFactCheckBox;
@@ -62,21 +63,30 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 	private Button reflectionProfileRemoveButton;
 
 	@FXML
-	private ScrollPane reflectionProfileCenterPane;
+	private StackPane reflectionProfileStackPane;
 
 	@Override
 	public void bindToInstance() {
 		PowderPatternCrystalsModel model = getModelInstance();
 
-		powderPatternCrystalNameTextField.textProperty().bindBidirectional(model.nameProperty);
-//		BindingUtils.doWhenNodeFocusedLost(powderPatternComponentName,
-//				() -> getAppContext().getMainController().getDiffractionsListView().refresh());
+		powderPatternCrystalInternalNameTextField.textProperty().bind(model.nameProperty);
+		powderPatternCrystalUserNameTextField.textProperty().bindBidirectional(model.userNameProperty);
+
+		BindingUtils.doWhenNodeFocusedLost(powderPatternCrystalUserNameTextField,
+				() -> getAppContext().getMainController().phaseNameUpdated());
+
 		XmlLinkedModelElement parentModelElement = model.getParentModelElement().getParentModelElement();
 		if (parentModelElement instanceof ObjCrystModel) {
 			ObjCrystModel ocm = (ObjCrystModel) parentModelElement;
 			powderPatternCrystalNameComboBox.setItems(ocm.crystals);
 			powderPatternCrystalNameComboBox.getSelectionModel().select(ocm.getCrystal(model.crystalProperty.get()));
-			// TODO bind the selection back the model
+			powderPatternCrystalNameComboBox.getSelectionModel().selectedItemProperty()
+					.addListener((observable, oldValue, newValue) -> {
+						if (newValue != null) {
+							model.crystalProperty.set(newValue.getName());
+							getAppContext().getMainController().phaseNameUpdated();
+						}
+					});
 		}
 		BindingUtils.bindlBooleanPropertyToInteger(ignoreImagScattFactCheckBox.selectedProperty(),
 				model.ignoreImagScattFactProperty);
@@ -94,7 +104,9 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		absoptionFactorTextField.textProperty().bindBidirectional(model.absorptionCorrElement.absorptionFactorPoperty);
 
 		reflectionProfileListView.setItems(model.reflectionProfile.reflectionProfilesList);
-		BindingUtils.setupListViewListener(reflectionProfileListView, reflectionProfileCenterPane, getAppContext());
+//		BindingUtils.setupListViewListener(reflectionProfileListView, reflectionProfileStackPane, getAppContext());
+		BindingUtils.setupSelectionToChildrenListener(reflectionProfileListView.getSelectionModel().selectedItemProperty(),
+				reflectionProfileStackPane.getChildren(), getAppContext());
 		BindingUtils.autoHeight(reflectionProfileListView);
 
 		reflectionProfileRemoveButton.disableProperty()

@@ -2,21 +2,19 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -37,20 +35,26 @@
 
 		<HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="30.0" spacing="4.0">
 			<children>
-				<Label text="Space Group:" />
-				<TextField fx:id="spaceGroup" prefHeight="19.0" prefWidth="149.0"/>
+				<Label text="Space Group:">
+               <tooltip>
+                  <Tooltip text="Crystal's space group" />
+               </tooltip></Label>
+				<TextField fx:id="spaceGroup" prefHeight="19.0" prefWidth="149.0">
+               <tooltip>
+                  <Tooltip text="Space group code, usually keep imported value" />
+               </tooltip></TextField>
 			</children>
 		</HBox>
 		
 		<HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="53.0" prefHeight="30.0" spacing="8.0">
 			<children>
-				<Label text="Constrain Lattice to SpaceGroup Symmetry:"/>
+				<Label text="Constrain Lattice to SpaceGroup Symmetry:" />
 				<RadioButton mnemonicParsing="false" text="Yes">
 					<toggleGroup>
 						<ToggleGroup fx:id="constrainLatticeToggleGroup" />
 					</toggleGroup>
 				</RadioButton>
-				<RadioButton mnemonicParsing="false" text="No" toggleGroup="$constrainLatticeToggleGroup"/>
+				<RadioButton mnemonicParsing="false" text="No" toggleGroup="$constrainLatticeToggleGroup" />
 			</children>
 		</HBox>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0">
@@ -114,6 +118,12 @@
 				<HBox fx:id="bParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 				<HBox fx:id="cParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 			</children>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
 		</GridPane>
 		
 		
@@ -121,7 +131,7 @@
 			<content>
 				<VBox alignment="TOP_CENTER">
 					<padding>
-	                	<Insets top="0" right="0" left="0" bottom="0"/>                 
+	                	<Insets bottom="0" left="0" right="0" top="0" />                 
 	                </padding>
 					<children>
 						<TableView fx:id="scatPowersTableView" prefHeight="400.0" prefWidth="579.0" tableMenuButtonVisible="true">
@@ -159,7 +169,7 @@
 			<content>
 				<VBox alignment="TOP_CENTER">
 					<padding>
-	                	<Insets top="4" right="4" left="4" bottom="4	"/>                 
+	                	<Insets bottom="4 " left="4" right="4" top="4" />                 
 	                </padding>
 					<children>
 						<TableView fx:id="atomsTableView" tableMenuButtonVisible="true">

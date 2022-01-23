@@ -8,11 +8,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.kfkl.mstruct.gui.model.GeometryElement;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundType;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -20,8 +22,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
@@ -64,6 +68,14 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 
 	@FXML
 	private TextField geometryOmegaTextField;
+	@FXML
+	private RadioButton geometryToggleBB;
+	@FXML
+	private RadioButton geometryToggleBBVS;
+	@FXML
+	private RadioButton geometryTogglePB;
+	@FXML
+	private ToggleGroup geometryToggleGroup;
 
 	@FXML
 	private ListView<PowderPatternBackgroundModel> powderPatternComponentsListView;
@@ -111,8 +123,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		BindingUtils.doubleTextField(maxSinThetaOvLambdaTextField);
 		maxSinThetaOvLambdaTextField.textProperty().bindBidirectional(model.maxSinThetaOvLambdaElement.valueProperty);
 
-		BindingUtils.doubleTextField(geometryOmegaTextField);
-		geometryOmegaTextField.textProperty().bindBidirectional(model.geometryElement.omegaProperty);
+		initGeometryTogles(model.geometryElement);
 
 		powderPatternComponentsListView.setItems(model.powderPatternComponents);
 //		BindingUtils.setupListViewListener(powderPatternComponentsListView, powderPatternComponentsCenterPane, getAppContext());
@@ -124,7 +135,39 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 
 		powderPatternComponentsRemoveButton.disableProperty()
 				.bind(powderPatternComponentsListView.getSelectionModel().selectedItemProperty().isNull());
+	}
 
+	private void initGeometryTogles(GeometryElement geometryElement) {
+		Double omegaCode = geometryElement.decodeOmega();
+		if (omegaCode == GeometryElement.OMEGA_BBVS_CONSTANT) {
+			geometryToggleGroup.selectToggle(geometryToggleBBVS);
+		} else if (omegaCode == GeometryElement.OMEGA_BB_CONSTANT) {
+			geometryToggleGroup.selectToggle(geometryToggleBB);
+		} else {
+			geometryToggleGroup.selectToggle(geometryTogglePB);
+		}
+
+		BindingUtils.doubleTextField(geometryOmegaTextField);
+		geometryOmegaTextField.textProperty().bindBidirectional(geometryElement.omegaProperty);
+		geometryOmegaTextField.disableProperty().bind(Bindings.not(geometryTogglePB.selectedProperty()));
+		geometryToggleBB.selectedProperty().addListener(BindingUtils.newChanged((newValue) -> {
+			if (newValue) {
+				geometryOmegaTextField.textProperty().set("-1");
+			}
+		}));
+		geometryToggleBBVS.selectedProperty().addListener(BindingUtils.newChanged((newValue) -> {
+			if (newValue) {
+				geometryOmegaTextField.textProperty().set("-2");
+			}
+		}));
+		geometryTogglePB.selectedProperty().addListener(BindingUtils.newChanged((newValue) -> {
+			if (newValue) {
+				Double omegaD = geometryElement.decodeOmega();
+				if (omegaD != null && omegaD < 0) {
+					geometryOmegaTextField.textProperty().set(GeometryElement.DEFAULT_POSITIVE_OMEGA.toString());
+				}
+			}
+		}));
 	}
 
 	@FXML

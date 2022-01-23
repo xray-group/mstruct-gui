@@ -6,9 +6,11 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -102,7 +104,30 @@
 		</HBox>
 		<HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="30.0" spacing="4.0">
 			<children>
-				<Label text="Geometry - Omega:" />
+				<Label text="Geometry:" />
+				<RadioButton fx:id="geometryToggleBB" mnemonicParsing="false" text="Bragg-Brentano">
+					<toggleGroup>
+						<ToggleGroup fx:id="geometryToggleGroup" />
+					</toggleGroup>
+					<HBox.margin>
+						<Insets left="4.0" />
+					</HBox.margin>
+				</RadioButton>
+				<RadioButton fx:id="geometryToggleBBVS" mnemonicParsing="false" text="Bragg-Brentano with Variable Slits" toggleGroup="$geometryToggleGroup" >
+					<HBox.margin>
+						<Insets left="4.0" />
+					</HBox.margin>
+				</RadioButton>
+				<RadioButton fx:id="geometryTogglePB" mnemonicParsing="false" text="Parallel Beam" toggleGroup="$geometryToggleGroup" >
+					<HBox.margin>
+						<Insets left="4.0" />
+					</HBox.margin>
+				</RadioButton>
+				<Label text="Omega:" >
+					<HBox.margin>
+						<Insets left="4.0" />
+					</HBox.margin>
+				</Label>
 				<TextField fx:id="geometryOmegaTextField" prefHeight="19.0" prefWidth="149.0"/>
 			</children>
 		</HBox>

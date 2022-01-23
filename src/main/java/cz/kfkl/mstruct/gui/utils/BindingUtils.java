@@ -430,4 +430,15 @@ public final class BindingUtils {
 		}
 	}
 
+	public static <T> ChangeListener<T> newChanged(Consumer<T> consumer) {
+		return new ChangeListener<T>() {
+			@Override
+			public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
+				if (newValue != null) {
+					consumer.accept(newValue);
+				}
+			}
+		};
+	}
+
 }

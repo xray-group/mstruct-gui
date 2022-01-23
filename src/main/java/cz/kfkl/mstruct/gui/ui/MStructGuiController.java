@@ -199,6 +199,8 @@ public class MStructGuiController implements HasAppContext {
 
 		removePhaseButton.disableProperty().bind(phasesListView.getSelectionModel().selectedItemProperty().isNull());
 
+		crystalsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
 		configOptimizationTab();
 	}
 

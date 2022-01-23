@@ -7,7 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class ReflectionProfileRefractionCorrController extends BaseController<ReflectionProfileRefractionCorrElement> {
+public class ReflectionProfileRefractionCorrController
+		extends BaseController<ReflectionProfileRefractionCorrElement, PowderPatternCrystalController> {
 
 	@FXML
 	private TextField componentNameTextField;
@@ -25,6 +26,7 @@ public class ReflectionProfileRefractionCorrController extends BaseController<Re
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());
 		componentTypeLabel.textProperty().set(model.getType().toString());
+		BindingUtils.doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
 
 		BindingUtils.bindAndBuildRadioButtonsOption(chi0SourceOptionContainer, model.chi0SourceOption);
 		BindingUtils.bindAndBuildParFieldsNoName(relDensityParContainer, model.relDensityPar);

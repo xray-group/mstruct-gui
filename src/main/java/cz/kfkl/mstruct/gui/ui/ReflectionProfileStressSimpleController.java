@@ -15,7 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 
-public class ReflectionProfileStressSimpleController extends BaseController<ReflectionProfileStressSimpleElement> {
+public class ReflectionProfileStressSimpleController
+		extends BaseController<ReflectionProfileStressSimpleElement, PowderPatternCrystalController> {
 
 	@FXML
 	private TextField componentNameTextField;
@@ -45,6 +46,7 @@ public class ReflectionProfileStressSimpleController extends BaseController<Refl
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());
 		componentTypeLabel.textProperty().set(model.getType().toString());
+		BindingUtils.doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
 
 		BindingUtils.bindAndBuildParFieldsNoName(stressParContainer, model.stressPar);
 		BindingUtils.bindAndBuildParFieldsNoName(rvWeightParContainer, model.xECsReussVoigt.rvWeightPar);

@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class PowderPatternBackgroundInvXController extends BaseController<PowderPatternBackgroundInvX> {
+public class PowderPatternBackgroundInvXController extends BaseController<PowderPatternBackgroundInvX, PowderPatternController> {
 
 	@FXML
 	private TextField powderPatternComponentName;
@@ -27,8 +27,8 @@ public class PowderPatternBackgroundInvXController extends BaseController<Powder
 		powderPatternComponentName.textProperty().bindBidirectional(model.getNameProperty());
 		powderPatternComponentTypeLabel.textProperty().set(model.getType().getTypeName());
 
-//		BindingUtils.doWhenNodeFocusedLost(powderPatternComponentName,
-//				() -> getAppContext().getMainController().getinstrumentalListView().refresh());
+		BindingUtils.doWhenFocuseLost(powderPatternComponentName,
+				() -> getParentController().powderPatternComponentNameChanged());
 
 		BindingUtils.bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 

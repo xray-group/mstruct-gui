@@ -200,7 +200,7 @@ public class UseCellUtils {
 			cell.commitEdit(converter.fromString(textField.getText()));
 //			event.consume();
 		});
-		BindingUtils.doWhenNodeFocusedLost(textField, () -> cell.commitEdit(converter.fromString(textField.getText())));
+		BindingUtils.doWhenFocuseLost(textField, () -> cell.commitEdit(converter.fromString(textField.getText())));
 
 		textField.setOnKeyReleased(t -> {
 			if (t.getCode() == KeyCode.TAB) {

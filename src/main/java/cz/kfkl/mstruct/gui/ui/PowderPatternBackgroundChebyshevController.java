@@ -17,7 +17,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 
-public class PowderPatternBackgroundChebyshevController extends BaseController<PowderPatternBackgroundChebyshev> {
+public class PowderPatternBackgroundChebyshevController
+		extends BaseController<PowderPatternBackgroundChebyshev, PowderPatternController> {
 
 	@FXML
 	private TextField powderPatternComponentName;
@@ -47,10 +48,8 @@ public class PowderPatternBackgroundChebyshevController extends BaseController<P
 		powderPatternComponentName.textProperty().bindBidirectional(model.getNameProperty());
 		powderPatternComponentTypeLabel.textProperty().set(model.getType().getTypeName());
 
-//		BindingUtils.doWhenNodeFocusedLost(powderPatternComponentName,
-//				() -> getAppContext().getMainController().getinstrumentalListView().refresh());
-		// https://stackoverflow.com/questions/19154711/javafx-custom-controller-factory
-		// https://docs.oracle.com/javase/8/javafx/api/javafx/fxml/FXMLLoader.html#setControllerFactory-javafx.util.Callback-
+		BindingUtils.doWhenFocuseLost(powderPatternComponentName,
+				() -> getParentController().powderPatternComponentNameChanged());
 
 		BindingUtils.bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 

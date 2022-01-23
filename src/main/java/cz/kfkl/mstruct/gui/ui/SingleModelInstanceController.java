@@ -2,9 +2,9 @@ package cz.kfkl.mstruct.gui.ui;
 
 import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
 
-public interface SingleModelInstanceController<T extends FxmlFileNameProvider> {
+public interface SingleModelInstanceController<M extends FxmlFileNameProvider> {
 
 	public void init();
 
-	void setModelInstance(T modelInstance);
+	void setModelInstance(M modelInstance);
 }

@@ -15,7 +15,7 @@ import javafx.beans.property.StringProperty;
 
 @XmlMappedSubclasses({ ReflectionProfilePVoigtAElement.class, ReflectionProfileSizeLnElement.class,
 		ReflectionProfileRefractionCorrElement.class, ReflectionProfileStressSimpleElement.class })
-abstract public class ReflectionProfileModel<C extends BaseController<?>> extends XmlLinkedModelElement
+abstract public class ReflectionProfileModel<C extends BaseController<?, ?>> extends XmlLinkedModelElement
 		implements FxmlFileNameProvider<C>, ParamContainer {
 
 	@XmlAttributeProperty("Name")

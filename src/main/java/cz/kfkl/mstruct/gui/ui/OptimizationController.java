@@ -58,7 +58,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-public class OptimizationController extends BaseController<OptimizaitonModel> {
+public class OptimizationController extends BaseController<OptimizaitonModel, MStructGuiController> {
 
 	private static final String TIME_STAMP_PLACEHOLDER = "${timeStamp}";
 	private static final String FILE_NAME_PLACEHOLDER = "${fileName}";

@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @XmlMappedSubclasses({ PowderPatternBackgroundInvX.class, PowderPatternBackgroundChebyshev.class })
-abstract public class PowderPatternBackgroundModel<C extends BaseController<?>> extends XmlLinkedModelElement
+abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?>> extends XmlLinkedModelElement
 		implements FxmlFileNameProvider<C>, ParamContainer {
 
 	@XmlAttributeProperty("Name")

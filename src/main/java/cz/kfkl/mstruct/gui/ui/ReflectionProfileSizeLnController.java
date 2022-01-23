@@ -7,7 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class ReflectionProfileSizeLnController extends BaseController<ReflectionProfileSizeLnElement> {
+public class ReflectionProfileSizeLnController
+		extends BaseController<ReflectionProfileSizeLnElement, PowderPatternCrystalController> {
 
 	@FXML
 	private TextField componentNameTextField;
@@ -25,6 +26,7 @@ public class ReflectionProfileSizeLnController extends BaseController<Reflection
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());
 		componentTypeLabel.textProperty().set(model.getType().toString());
+		BindingUtils.doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
 
 		BindingUtils.bindAndBuildParFieldsNoName(mParContainer, model.mPar);
 		BindingUtils.bindAndBuildParFieldsNoName(sigmaParContainer, model.sigmaPar);

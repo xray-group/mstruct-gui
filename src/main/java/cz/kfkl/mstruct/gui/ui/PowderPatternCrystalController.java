@@ -26,7 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
-public class PowderPatternCrystalController extends BaseController<PowderPatternCrystalsModel> {
+public class PowderPatternCrystalController extends BaseController<PowderPatternCrystalsModel, MStructGuiController> {
 
 	@FXML
 	private ComboBox<CrystalModel> powderPatternCrystalNameComboBox;
@@ -73,7 +73,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		powderPatternCrystalInternalNameTextField.textProperty().bind(model.nameProperty);
 		powderPatternCrystalUserNameTextField.textProperty().bindBidirectional(model.userNameProperty);
 
-		BindingUtils.doWhenNodeFocusedLost(powderPatternCrystalUserNameTextField,
+		BindingUtils.doWhenFocuseLost(powderPatternCrystalUserNameTextField,
 				() -> getAppContext().getMainController().phaseNameUpdated());
 
 		XmlLinkedModelElement parentModelElement = model.getParentModelElement().getParentModelElement();
@@ -109,7 +109,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 
 		reflectionProfileListView.setItems(model.reflectionProfile.reflectionProfilesList);
 //		BindingUtils.setupListViewListener(reflectionProfileListView, reflectionProfileStackPane, getAppContext());
-		BindingUtils.setupSelectionToChildrenListener(reflectionProfileListView.getSelectionModel().selectedItemProperty(),
+		BindingUtils.setupSelectionToChildrenListener(this, reflectionProfileListView.getSelectionModel().selectedItemProperty(),
 				reflectionProfileStackPane.getChildren(), getAppContext());
 		BindingUtils.autoHeight(reflectionProfileListView);
 
@@ -160,6 +160,10 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 			}
 
 		}
+	}
+
+	public void componentNameChanged() {
+		reflectionProfileListView.refresh();
 	}
 
 }

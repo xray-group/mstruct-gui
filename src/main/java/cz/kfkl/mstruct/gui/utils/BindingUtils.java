@@ -13,6 +13,7 @@ import cz.kfkl.mstruct.gui.model.OptionChoice;
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
+import cz.kfkl.mstruct.gui.ui.HasParentController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiMain;
 import cz.kfkl.mstruct.gui.ui.SingleModelInstanceController;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
@@ -287,7 +288,7 @@ public final class BindingUtils {
 		container.getChildren().add(choices);
 	}
 
-	public static void doWhenNodeFocusedLost(javafx.scene.Node node, Runnable action) {
+	public static void doWhenFocuseLost(javafx.scene.Node node, Runnable action) {
 		ChangeListener<Boolean> list = new ChangeListener<Boolean>() {
 
 			@Override
@@ -300,12 +301,13 @@ public final class BindingUtils {
 		node.focusedProperty().addListener(list);
 	}
 
-	public static <T extends FxmlFileNameProvider> void setupListViewListener(ListView<T> listView, ScrollPane scrollPane,
-			AppContext appContext) {
-		updateContentWhenSelected(listView.getSelectionModel().selectedItemProperty(), () -> scrollPane.setContent(null), (n) -> {
-			scrollPane.setContent(n);
-			adjustVerticalScrollSpeed(scrollPane);
-		}, appContext);
+	public static <M extends FxmlFileNameProvider, P> void setupListViewListener(P parentController, ListView<M> listView,
+			ScrollPane scrollPane, AppContext appContext) {
+		updateContentWhenSelected(parentController, listView.getSelectionModel().selectedItemProperty(),
+				() -> scrollPane.setContent(null), (n) -> {
+					scrollPane.setContent(n);
+					adjustVerticalScrollSpeed(scrollPane);
+				}, appContext);
 	}
 
 	private static void adjustVerticalScrollSpeed(ScrollPane scrollPane) {
@@ -331,23 +333,25 @@ public final class BindingUtils {
 		});
 	}
 
-	public static <T extends FxmlFileNameProvider> void setupSelectionToChildrenListener(
-			ReadOnlyObjectProperty<T> readOnlyObjectProperty, ObservableList<Node> children, AppContext appContext) {
-		updateContentWhenSelected(readOnlyObjectProperty, () -> children.clear(), (n) -> children.add(n), appContext);
+	public static <M extends FxmlFileNameProvider, P> void setupSelectionToChildrenListener(P parentController,
+			ReadOnlyObjectProperty<M> readOnlyObjectProperty, ObservableList<Node> children, AppContext appContext) {
+		updateContentWhenSelected(parentController, readOnlyObjectProperty, () -> children.clear(), (n) -> children.add(n),
+				appContext);
 	}
 
-	public static <T extends FxmlFileNameProvider> void updateContentWhenSelected(ReadOnlyObjectProperty<T> selectedItemProperty,
-			Runnable cleanContent, Consumer<Node> setContent, AppContext appContext) {
+	public static <M extends FxmlFileNameProvider, P> void updateContentWhenSelected(P parentController,
+			ReadOnlyObjectProperty<M> selectedItemProperty, Runnable cleanContent, Consumer<Node> setContent,
+			AppContext appContext) {
 
-		selectedItemProperty.addListener(new ChangeListener<T>() {
+		selectedItemProperty.addListener(new ChangeListener<M>() {
 			@Override
-			public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
+			public void changed(ObservableValue<? extends M> observable, M oldValue, M newValue) {
 				LOG.debug("Selected item [{}]", newValue);
 
 				if (newValue == null) {
 					cleanContent.run();
 				} else {
-					loadViewAndInitController(appContext, newValue, (parent) -> {
+					loadViewAndInitController(parentController, appContext, newValue, (parent) -> {
 						cleanContent.run();
 						setContent.accept(parent);
 					});
@@ -358,7 +362,7 @@ public final class BindingUtils {
 		});
 	}
 
-	public static <C extends BaseController<?>> C loadViewAndInitController(AppContext appContext,
+	public static <C extends BaseController<?, ?>, P> C loadViewAndInitController(P parentController, AppContext appContext,
 			FxmlFileNameProvider<C> modelInstance, Consumer<Parent> viewConsumer) {
 		Parent parent = null;
 		try {
@@ -376,6 +380,11 @@ public final class BindingUtils {
 				cc.setModelInstance(modelInstance);
 				cc.init();
 			}
+
+			if (controller instanceof HasParentController<?>) {
+				((HasParentController<P>) controller).setParenController(parentController);
+			}
+
 			viewConsumer.accept(parent);
 			return controller;
 		} catch (IOException e) {

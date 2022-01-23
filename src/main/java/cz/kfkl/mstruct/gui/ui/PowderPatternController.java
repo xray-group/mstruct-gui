@@ -25,7 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
-public class PowderPatternController extends BaseController<PowderPatternElement> {
+public class PowderPatternController extends BaseController<PowderPatternElement, MStructGuiController> {
 	private static final Logger LOG = LoggerFactory.getLogger(PowderPatternController.class);
 
 	@FXML
@@ -88,7 +88,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		PowderPatternElement model = getModelInstance();
 
 		powderPatternName.textProperty().bindBidirectional(model.nameProperty);
-		BindingUtils.doWhenNodeFocusedLost(powderPatternName, () -> getAppContext().getMainController().instrumentNameUpdated());
+		BindingUtils.doWhenFocuseLost(powderPatternName, () -> getAppContext().getMainController().instrumentNameUpdated());
 
 		BindingUtils.bindAndBuildParFieldsNoName(zeroParContainer, model.zeroPar);
 		BindingUtils.bindAndBuildParFieldsNoName(thetaDisplacementParContainer, model.thetaDisplacementPar);
@@ -117,7 +117,8 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		powderPatternComponentsListView.setItems(model.powderPatternComponents);
 //		BindingUtils.setupListViewListener(powderPatternComponentsListView, powderPatternComponentsCenterPane, getAppContext());
 
-		BindingUtils.setupSelectionToChildrenListener(powderPatternComponentsListView.getSelectionModel().selectedItemProperty(),
+		BindingUtils.setupSelectionToChildrenListener(this,
+				powderPatternComponentsListView.getSelectionModel().selectedItemProperty(),
 				powderPatternComponentsStackPane.getChildren(), getAppContext());
 		BindingUtils.autoHeight(powderPatternComponentsListView);
 
@@ -169,6 +170,10 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 			}
 
 		}
+	}
+
+	public void powderPatternComponentNameChanged() {
+		powderPatternComponentsListView.refresh();
 	}
 
 }

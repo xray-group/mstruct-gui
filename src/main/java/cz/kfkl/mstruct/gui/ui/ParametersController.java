@@ -33,7 +33,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 
-public class ParametersController extends BaseController<ParametersModel> {
+public class ParametersController extends BaseController<ParametersModel, MStructGuiController> {
 	private static final Logger LOG = LoggerFactory.getLogger(ParametersController.class);
 
 	@FXML

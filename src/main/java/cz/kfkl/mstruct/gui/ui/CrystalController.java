@@ -12,7 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
-public class CrystalController extends BaseController<CrystalModel> {
+public class CrystalController extends BaseController<CrystalModel, MStructGuiController> {
 
 	@FXML
 	private TextField crystalName;
@@ -61,7 +61,7 @@ public class CrystalController extends BaseController<CrystalModel> {
 	public void init() {
 		CrystalModel crystalModel = getModelInstance();
 		crystalName.textProperty().bindBidirectional(crystalModel.getNameProperty());
-		BindingUtils.doWhenNodeFocusedLost(crystalName,
+		BindingUtils.doWhenFocuseLost(crystalName,
 				() -> getAppContext().getMainController().getCrystalsListView().refresh());
 		spaceGroup.textProperty().bindBidirectional(crystalModel.getSpaceGroupProperty());
 

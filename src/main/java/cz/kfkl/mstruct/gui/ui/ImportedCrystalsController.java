@@ -20,7 +20,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class ImportedCrystalsController extends BaseController<ImportedCrystalsModel> {
+public class ImportedCrystalsController extends BaseController<ImportedCrystalsModel, MStructGuiController> {
 
 	private static final String CRYSTAL_EL_NAME = "Crystal";
 

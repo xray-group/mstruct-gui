@@ -277,9 +277,9 @@ public class MStructGuiController implements HasAppContext {
 	}
 
 	private void processSelectedFile(File selectedFile) {
-		BindingUtils.setupListViewListener(crystalsListView, tabCrystalsCenterPane, getAppContext());
-		BindingUtils.setupListViewListener(instrumentalListView, tabInstrumentalCenterPane, getAppContext());
-		BindingUtils.setupListViewListener(phasesListView, tabPhasesCenterPane, getAppContext());
+		BindingUtils.setupListViewListener(this, crystalsListView, tabCrystalsCenterPane, getAppContext());
+		BindingUtils.setupListViewListener(this, instrumentalListView, tabInstrumentalCenterPane, getAppContext());
+		BindingUtils.setupListViewListener(this, phasesListView, tabPhasesCenterPane, getAppContext());
 
 		parseMStructXml(selectedFile);
 	}
@@ -344,7 +344,7 @@ public class MStructGuiController implements HasAppContext {
 		ParametersModel parametersModel = new ParametersModel(rootModel);
 		parametersModel.fittedParamsProperty = fittedParamsProperty;
 		parametersModel.refinedParams = refinedParams;
-		ParametersController controller = BindingUtils.loadViewAndInitController(getAppContext(), parametersModel,
+		ParametersController controller = BindingUtils.loadViewAndInitController(this, getAppContext(), parametersModel,
 				(view) -> tabParameters.setContent(view));
 
 		tabParameters.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -358,7 +358,7 @@ public class MStructGuiController implements HasAppContext {
 
 	private void configOptimizationTab() {
 		OptimizaitonModel parametersModel = new OptimizaitonModel();
-		optimizationController = BindingUtils.loadViewAndInitController(getAppContext(), parametersModel,
+		optimizationController = BindingUtils.loadViewAndInitController(this, getAppContext(), parametersModel,
 				(view) -> tabOptimization.setContent(view));
 
 	}
@@ -505,7 +505,8 @@ public class MStructGuiController implements HasAppContext {
 		crystalSelectionDialog.setTitle("Crystals Import");
 
 //				ImportedCrystalsController importXmlController = 
-		BindingUtils.loadViewAndInitController(getAppContext(), importedCrystalsModel, (view) -> dialogPane.setContent(view));
+		BindingUtils.loadViewAndInitController(this, getAppContext(), importedCrystalsModel,
+				(view) -> dialogPane.setContent(view));
 
 		dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		crystalSelectionDialog.showAndWait();

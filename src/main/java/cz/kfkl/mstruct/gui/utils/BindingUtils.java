@@ -300,13 +300,12 @@ public final class BindingUtils {
 		node.focusedProperty().addListener(list);
 	}
 
-	public static <T extends FxmlFileNameProvider> void setupListViewListener(ListView<T> diffractionsListView,
-			ScrollPane scrollPane, AppContext appContext) {
-		updateContentWhenSelected(diffractionsListView.getSelectionModel().selectedItemProperty(),
-				() -> scrollPane.setContent(null), (n) -> {
-					scrollPane.setContent(n);
-					adjustVerticalScrollSpeed(scrollPane);
-				}, appContext);
+	public static <T extends FxmlFileNameProvider> void setupListViewListener(ListView<T> listView, ScrollPane scrollPane,
+			AppContext appContext) {
+		updateContentWhenSelected(listView.getSelectionModel().selectedItemProperty(), () -> scrollPane.setContent(null), (n) -> {
+			scrollPane.setContent(n);
+			adjustVerticalScrollSpeed(scrollPane);
+		}, appContext);
 	}
 
 	private static void adjustVerticalScrollSpeed(ScrollPane scrollPane) {

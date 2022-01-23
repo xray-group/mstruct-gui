@@ -33,10 +33,12 @@ import com.google.common.io.MoreFiles;
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.core.HasAppContext;
 import cz.kfkl.mstruct.gui.model.CrystalModel;
-import cz.kfkl.mstruct.gui.model.DiffractionModel;
+import cz.kfkl.mstruct.gui.model.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParametersModel;
+import cz.kfkl.mstruct.gui.model.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
@@ -54,6 +56,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -64,7 +67,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -109,11 +111,20 @@ public class MStructGuiController implements HasAppContext {
 	private ScrollPane tabCrystalsCenterPane;
 
 	@FXML
-	private Tab tabDiffractions;
+	private Tab tabInstrumental;
 	@FXML
-	private ListView<DiffractionModel> diffractionsListView;
+	private ListView<InstrumentalModel> instrumentalListView;
 	@FXML
-	private ScrollPane tabDiffractionsCenterPane;
+	private ScrollPane tabInstrumentalCenterPane;
+
+	@FXML
+	private Tab tabPhases;
+	@FXML
+	private ComboBox<InstrumentalModel> instrumentalComboBox;
+	@FXML
+	private ListView<PowderPatternCrystalsModel> phasesListView;
+	@FXML
+	private ScrollPane tabPhasesCenterPane;
 
 	@FXML
 	private Tab tabParameters;
@@ -147,6 +158,22 @@ public class MStructGuiController implements HasAppContext {
 		saveAsMenuItem.disableProperty().bind(openedFileProperty.isNull());
 		closeMenuItem.disableProperty().bind(openedFileProperty.isNull());
 
+		instrumentalListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null) {
+				instrumentalComboBox.getSelectionModel().select(newValue);
+			}
+		});
+
+		instrumentalComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null) {
+				if (newValue instanceof PowderPatternElement) {
+					PowderPatternElement ppElement = (PowderPatternElement) newValue;
+					phasesListView.setItems(ppElement.powderPatternCrystals);
+					phasesListView.getSelectionModel().selectFirst();
+				}
+			}
+		});
+
 		configOptimizationTab();
 	}
 
@@ -158,7 +185,9 @@ public class MStructGuiController implements HasAppContext {
 	void closeFile(ActionEvent event) {
 		// TODO dialog
 		this.crystalsListView.setItems(FXCollections.observableArrayList());
-		this.diffractionsListView.setItems(FXCollections.observableArrayList());
+		this.instrumentalListView.setItems(FXCollections.observableArrayList());
+		this.instrumentalComboBox.setItems(FXCollections.observableArrayList());
+		this.phasesListView.setItems(FXCollections.observableArrayList());
 		this.tabParameters.setContent(null);
 		optimizationController.setRootModel(null);
 
@@ -222,7 +251,8 @@ public class MStructGuiController implements HasAppContext {
 
 	private void processSelectedFile(File selectedFile) {
 		BindingUtils.setupListViewListener(crystalsListView, tabCrystalsCenterPane, getAppContext());
-		BindingUtils.setupListViewListener(diffractionsListView, tabDiffractionsCenterPane, getAppContext());
+		BindingUtils.setupListViewListener(instrumentalListView, tabInstrumentalCenterPane, getAppContext());
+		BindingUtils.setupListViewListener(phasesListView, tabPhasesCenterPane, getAppContext());
 
 		parseMStructXml(selectedFile);
 	}
@@ -238,11 +268,12 @@ public class MStructGuiController implements HasAppContext {
 			rootModel = new ObjCrystModel();
 			rootModel.bindToElement(null, root);
 
-//			clearAndSetListViewItems(crystalsListView, rootModel.crystals);
 			crystalsListView.setItems(rootModel.crystals);
 			crystalsListView.getSelectionModel().selectFirst();
 
-			clearAndSetListViewItems(diffractionsListView, rootModel.diffractions);
+			instrumentalListView.setItems(rootModel.instruments);
+			instrumentalComboBox.setItems(rootModel.instruments);
+			instrumentalListView.getSelectionModel().selectFirst();
 
 			initParametersTab(this.tabParameters);
 
@@ -298,30 +329,11 @@ public class MStructGuiController implements HasAppContext {
 		return controller;
 	}
 
-	private <I> void clearAndSetListViewItems(ListView<I> listView, List<I> items) {
-		listView.getItems().clear();
-		listView.getItems().addAll(items);
-		listView.getSelectionModel().selectFirst();
-	}
-
 	private void configOptimizationTab() {
 		OptimizaitonModel parametersModel = new OptimizaitonModel();
 		optimizationController = BindingUtils.loadViewAndInitController(getAppContext(), parametersModel,
 				(view) -> tabOptimization.setContent(view));
 
-	}
-
-	private void addPar(TreeItem<ParUniqueElement> parent, ParUniqueElement par) {
-		parent.getChildren().add(new TreeItem<ParUniqueElement>(par));
-	}
-
-	private TreeItem<ParUniqueElement> createTreeItemParent(String tiName) {
-		ParUniqueElement mockPar = new ParUniqueElement(tiName);
-		mockPar.minProperty.set("");
-		mockPar.maxProperty.set("");
-		mockPar.valueProperty.set("");
-		TreeItem<ParUniqueElement> crystal = new TreeItem<ParUniqueElement>(mockPar);
-		return crystal;
 	}
 
 	void setBottomLabelText(String message, Object... args) {
@@ -539,6 +551,31 @@ public class MStructGuiController implements HasAppContext {
 		}
 	}
 
+	@FXML
+	public void removeCrystal() {
+
+	}
+
+	@FXML
+	public void addPhase() {
+
+	}
+
+	@FXML
+	public void removePhase() {
+
+	}
+
+	@FXML
+	public void addInstrument() {
+
+	}
+
+	@FXML
+	public void removeInstrument() {
+
+	}
+
 	public File addFileNameSuffix(File file, String suffix) {
 		Path selectedFilePath = file.toPath();
 		String nameWithoutExtension = MoreFiles.getNameWithoutExtension(selectedFilePath);
@@ -580,16 +617,23 @@ public class MStructGuiController implements HasAppContext {
 		this.tabCrystals = tabCrystals;
 	}
 
-	public ListView<DiffractionModel> getDiffractionsListView() {
-		return diffractionsListView;
+	public void instrumentNameUpdated() {
+		instrumentalListView.refresh();
+		instrumentalComboBox.setItems(FXCollections.observableArrayList());
+		instrumentalComboBox.setItems(rootModel.instruments);
+		instrumentalComboBox.getSelectionModel().select(instrumentalListView.getSelectionModel().getSelectedItem());
 	}
 
-	public void setTabDiffractions(Tab tabDiffractions) {
-		this.tabDiffractions = tabDiffractions;
+	public void phaseNameUpdated() {
+		phasesListView.refresh();
 	}
 
-	public Tab getTabDiffractions() {
-		return tabDiffractions;
+	public void settabInstrumental(Tab tabInstrumental) {
+		this.tabInstrumental = tabInstrumental;
+	}
+
+	public Tab gettabInstrumental() {
+		return tabInstrumental;
 	}
 
 	public AppContext getAppContext() {

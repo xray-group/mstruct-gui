@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @XmlMappedSubclasses({ PowderPatternElement.class })
-abstract public class DiffractionModel<C extends BaseController<?>> extends XmlLinkedModelElement
+abstract public class InstrumentalModel<C extends BaseController<?>> extends XmlLinkedModelElement
 		implements FxmlFileNameProvider<C>, ParamContainer {
 
 	@XmlAttributeProperty("Name")

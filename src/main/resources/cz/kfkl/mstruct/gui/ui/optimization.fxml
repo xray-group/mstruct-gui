@@ -176,7 +176,7 @@
 										<TextArea fx:id="consoleTextArea" editable="false" />
 									</content>
 								</TitledPane>
-								<TitledPane maxHeight="Infinity" minHeight="30" text="Job Logs" styleClass="no-padding-content">
+								<TitledPane animated="false" maxHeight="Infinity" minHeight="30" text="Job Logs" styleClass="no-padding-content">
 									<content>
 										<TextArea fx:id="jobsLogsTextArea" editable="false" />
 									</content>

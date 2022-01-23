@@ -28,7 +28,7 @@ public class PowderPatternBackgroundInvXController extends BaseController<Powder
 		powderPatternComponentTypeLabel.textProperty().set(model.getType().getTypeName());
 
 //		BindingUtils.doWhenNodeFocusedLost(powderPatternComponentName,
-//				() -> getAppContext().getMainController().getDiffractionsListView().refresh());
+//				() -> getAppContext().getMainController().getinstrumentalListView().refresh());
 
 		BindingUtils.bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 

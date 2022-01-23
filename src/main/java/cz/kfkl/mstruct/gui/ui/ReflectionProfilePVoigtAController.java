@@ -39,7 +39,7 @@ public class ReflectionProfilePVoigtAController extends BaseController<Reflectio
 		componentTypeLabel.textProperty().set(model.getType().toString());
 
 //		BindingUtils.doWhenNodeFocusedLost(componentNameTextField,
-//				() -> getAppContext().getMainController().getDiffractionsListView().refresh());
+//				() -> getAppContext().getMainController().getinstrumentalListView().refresh());
 
 		BindingUtils.bindAndBuildParFieldsNoName(uParContainer, model.uPar);
 		BindingUtils.bindAndBuildParFieldsNoName(vParContainer, model.vPar);

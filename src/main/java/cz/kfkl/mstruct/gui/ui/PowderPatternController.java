@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundType;
-import cz.kfkl.mstruct.gui.model.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
@@ -20,7 +19,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -83,9 +81,6 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	private StackPane powderPatternComponentsStackPane;
 
 	@FXML
-	private ComboBox<PowderPatternCrystalsModel> powderPatternCrystalComboBox;
-
-	@FXML
 	private StackPane powderPatternCrystalStackPane;
 
 	@Override
@@ -97,8 +92,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		PowderPatternElement model = getModelInstance();
 
 		powderPatternName.textProperty().bindBidirectional(model.getNameProperty());
-		BindingUtils.doWhenNodeFocusedLost(powderPatternName,
-				() -> getAppContext().getMainController().getDiffractionsListView().refresh());
+		BindingUtils.doWhenNodeFocusedLost(powderPatternName, () -> getAppContext().getMainController().instrumentNameUpdated());
 
 		BindingUtils.bindAndBuildParFieldsNoName(zeroParContainer, model.zeroPar);
 		BindingUtils.bindAndBuildParFieldsNoName(thetaDisplacementParContainer, model.thetaDisplacementPar);
@@ -133,11 +127,6 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 
 		powderPatternComponentsRemoveButton.disableProperty()
 				.bind(powderPatternComponentsListView.getSelectionModel().selectedItemProperty().isNull());
-
-		powderPatternCrystalComboBox.getItems().addAll(model.powderPatternCrystals);
-		BindingUtils.setupSelectionToChildrenListener(powderPatternCrystalComboBox.getSelectionModel().selectedItemProperty(),
-				powderPatternCrystalStackPane.getChildren(), getAppContext());
-		powderPatternCrystalComboBox.getSelectionModel().selectFirst();
 
 	}
 

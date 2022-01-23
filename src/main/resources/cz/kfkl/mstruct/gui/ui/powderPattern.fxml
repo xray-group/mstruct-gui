@@ -29,7 +29,7 @@
 			</children>
 		</HBox>
 
-		<GridPane hgap="8" VBox.vgrow="ALWAYS">
+		<GridPane hgap="8" maxHeight="Infinity">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
 				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="400.0" />
@@ -97,7 +97,7 @@
 				<TextField fx:id="geometryOmegaTextField" prefHeight="19.0" prefWidth="149.0"/>
 			</children>
 		</HBox>
-		<TitledPane animated="false" text="Powder Pattern Backgrounds">
+		<TitledPane animated="false" text="Powder Pattern Backgrounds" maxHeight="Infinity" VBox.vgrow="ALWAYS">
 			<content>
 				<BorderPane>
 					<padding>
@@ -151,53 +151,6 @@
 						</StackPane>
 					</center>
 				</BorderPane>
-			</content>
-			<font>
-				<Font name="System Bold" size="12.0" />
-			</font>
-			<VBox.margin>
-				<Insets top="12.0" />
-			</VBox.margin>
-		</TitledPane>
-		<TitledPane animated="false" maxHeight="Infinity" text="Powder Pattern Crystals">
-			<content>
-				<VBox fillWidth="true" maxHeight="Infinity">
-					<children>
-						<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="8.0">
-							<children>
-                        		<ComboBox fx:id="powderPatternCrystalComboBox" prefHeight="19.0" prefWidth="180.0" />
-		                        <Button mnemonicParsing="false" text="Add Crystal" disable="true">
-		                           <HBox.margin>
-		                              <Insets left="16.0" />
-		                           </HBox.margin>
-		                           <graphic>
-		                              <ImageView>
-		                                 <image>
-		                                    <Image url="@images/add.png" />
-		                                 </image>
-		                              </ImageView>
-		                           </graphic>
-		                        </Button>
-		                        <Button mnemonicParsing="false" text="Remove Crystal" disable="true">
-		                           <graphic>
-		                              <ImageView>
-		                                 <image>
-		                                    <Image url="@images/delete.png" />
-		                                 </image>
-		                              </ImageView>
-		                           </graphic>
-		                         </Button>
-							</children>
-						</HBox>
-						<Separator prefWidth="200.0">
-		                     <VBox.margin>
-		                        <Insets bottom="8.0" top="8.0" />
-		                     </VBox.margin>
-                     	</Separator>
-						<StackPane fx:id="powderPatternCrystalStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity">
-						</StackPane>
-					</children>
-				</VBox>
 			</content>
 			<font>
 				<Font name="System Bold" size="12.0" />

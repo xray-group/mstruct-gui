@@ -1,7 +1,6 @@
 package cz.kfkl.mstruct.gui.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.ui.PowderPatternController;
@@ -15,7 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 @XmlElementName("PowderPattern")
-public class PowderPatternElement extends DiffractionModel<PowderPatternController> {
+public class PowderPatternElement extends InstrumentalModel<PowderPatternController> {
 
 	private static final String FXML_FILE_NAME = "powderPattern.fxml";
 
@@ -52,7 +51,7 @@ public class PowderPatternElement extends DiffractionModel<PowderPatternControll
 	public ObservableList<PowderPatternBackgroundModel> powderPatternComponents = FXCollections.observableArrayList();
 
 	@XmlElementList
-	public List<PowderPatternCrystalsModel> powderPatternCrystals = new ArrayList<>();
+	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
 
 	@Override
 	public List<ParUniqueElement> getParams() {

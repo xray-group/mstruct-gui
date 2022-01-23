@@ -70,8 +70,8 @@ public class XmlLinkedModelElement {
 	}
 
 	/**
-	 * parentModelElement is allowed to be null only for the Roote model element,
-	 * i.e the {@link ObjCrystModel}
+	 * parentModelElement is allowed to be null only for the Root model element, i.e
+	 * the {@link ObjCrystModel}
 	 */
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		this.parentModelElement = parentModelElement;

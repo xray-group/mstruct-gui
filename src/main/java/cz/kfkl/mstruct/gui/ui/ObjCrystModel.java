@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.model.CrystalModel;
-import cz.kfkl.mstruct.gui.model.DiffractionModel;
+import cz.kfkl.mstruct.gui.model.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
@@ -21,7 +21,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	public ObservableList<CrystalModel> crystals = FXCollections.observableArrayList();
 
 	@XmlElementList
-	public List<DiffractionModel> diffractions = new ArrayList<>();
+	public ObservableList<InstrumentalModel> instruments = FXCollections.observableArrayList();
 
 	public IntegerProperty parametersCount = new SimpleIntegerProperty(0);
 	public IntegerProperty refinedParameters = new SimpleIntegerProperty();
@@ -49,7 +49,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	public List<ParamContainer> getInnerContainers() {
 		List<ParamContainer> list = new ArrayList<>();
 		list.addAll(crystals);
-		list.addAll(diffractions);
+		list.addAll(instruments);
 
 		return list;
 	}

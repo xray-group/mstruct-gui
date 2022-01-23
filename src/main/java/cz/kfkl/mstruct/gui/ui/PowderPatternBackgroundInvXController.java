@@ -21,7 +21,7 @@ public class PowderPatternBackgroundInvXController extends BaseController<Powder
 	private TextField powderPatternComponentScaleTextField;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		PowderPatternBackgroundInvX model = getModelInstance();
 
 		powderPatternComponentName.textProperty().bindBidirectional(model.getNameProperty());

@@ -40,7 +40,7 @@ public class ReflectionProfileStressSimpleController extends BaseController<Refl
 	private Button stiffnessConstantRemoveButton;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		ReflectionProfileStressSimpleElement model = getModelInstance();
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());

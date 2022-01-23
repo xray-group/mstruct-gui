@@ -85,10 +85,6 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 
 	@Override
 	public void init() {
-	}
-
-	@Override
-	public void bindToInstance() {
 		PowderPatternElement model = getModelInstance();
 
 		powderPatternName.textProperty().bindBidirectional(model.nameProperty);

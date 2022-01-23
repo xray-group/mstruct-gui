@@ -144,12 +144,6 @@ public class OptimizationController extends BaseController<OptimizaitonModel> {
 	MStructGuiController mainController;
 	ObjectProperty<File> openedFileProperty;
 
-	@Override
-	public void bindToInstance() {
-
-		OptimizaitonModel model = getModelInstance();
-	}
-
 	public static final StringConverter<String> IDENTITY_STRING_CONVERTER = new StringConverter<String>() {
 		@Override
 		public String toString(String text) {

@@ -32,7 +32,7 @@ public class ReflectionProfilePVoigtAController extends BaseController<Reflectio
 	private HBox asym2ParContainer;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		ReflectionProfilePVoigtAElement model = getModelInstance();
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());

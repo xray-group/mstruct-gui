@@ -76,7 +76,7 @@ public class ParametersController extends BaseController<ParametersModel> {
 	private TreeItemPredicate<RefinableParameter> treeFilterPredicate;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		ParametersModel model = getModelInstance();
 
 		ObjCrystModel rootModel = model.getRootModel();

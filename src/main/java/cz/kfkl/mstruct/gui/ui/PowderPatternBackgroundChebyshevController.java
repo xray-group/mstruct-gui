@@ -41,14 +41,16 @@ public class PowderPatternBackgroundChebyshevController extends BaseController<P
 	private TableColumn<ParUniqueElement, String> coefficientValueTableColumn;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		PowderPatternBackgroundChebyshev model = getModelInstance();
 
 		powderPatternComponentName.textProperty().bindBidirectional(model.getNameProperty());
 		powderPatternComponentTypeLabel.textProperty().set(model.getType().getTypeName());
 
 //		BindingUtils.doWhenNodeFocusedLost(powderPatternComponentName,
-//				() -> getAppContext().getMainController().getDiffractionsListView().refresh());
+//				() -> getAppContext().getMainController().getinstrumentalListView().refresh());
+		// https://stackoverflow.com/questions/19154711/javafx-custom-controller-factory
+		// https://docs.oracle.com/javase/8/javafx/api/javafx/fxml/FXMLLoader.html#setControllerFactory-javafx.util.Callback-
 
 		BindingUtils.bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 

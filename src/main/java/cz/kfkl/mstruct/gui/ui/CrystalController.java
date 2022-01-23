@@ -59,10 +59,6 @@ public class CrystalController extends BaseController<CrystalModel> {
 
 	@Override
 	public void init() {
-	}
-
-	@Override
-	protected void bindToInstance() {
 		CrystalModel crystalModel = getModelInstance();
 		crystalName.textProperty().bindBidirectional(crystalModel.getNameProperty());
 		BindingUtils.doWhenNodeFocusedLost(crystalName,

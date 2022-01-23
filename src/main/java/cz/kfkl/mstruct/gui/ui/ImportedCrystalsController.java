@@ -38,7 +38,7 @@ public class ImportedCrystalsController extends BaseController<ImportedCrystalsM
 	private ToggleGroup ifExistsToggleGroup;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		ImportedCrystalsModel model = getModelInstance();
 
 		importedCrystalsTableView.setEditable(true);
@@ -65,12 +65,6 @@ public class ImportedCrystalsController extends BaseController<ImportedCrystalsM
 		model.setIfExistsActionFromObject(ifExistsToggleGroup.getSelectedToggle().getUserData());
 		ifExistsToggleGroup.selectedToggleProperty()
 				.addListener((ov, o, n) -> model.setIfExistsActionFromObject(n.getUserData()));
-
-	}
-
-	@Override
-	public void init() {
-		super.init();
 	}
 
 	public static List<ImportedCrystal> parseObjCrystXmlCrystals(File selectedFile) {

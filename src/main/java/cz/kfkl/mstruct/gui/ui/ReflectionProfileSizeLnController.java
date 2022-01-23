@@ -20,7 +20,7 @@ public class ReflectionProfileSizeLnController extends BaseController<Reflection
 	private HBox sigmaParContainer;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		ReflectionProfileSizeLnElement model = getModelInstance();
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());

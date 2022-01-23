@@ -67,7 +67,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 	private StackPane reflectionProfileStackPane;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		PowderPatternCrystalsModel model = getModelInstance();
 
 		powderPatternCrystalInternalNameTextField.textProperty().bind(model.nameProperty);

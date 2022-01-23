@@ -14,12 +14,9 @@ public abstract class BaseController<T extends FxmlFileNameProvider> implements 
 	public void init() {
 	}
 
-	protected abstract void bindToInstance();
-
 	@Override
 	public void setModelInstance(T modelInstance) {
 		this.model = modelInstance;
-		bindToInstance();
 	}
 
 	public T getModelInstance() {

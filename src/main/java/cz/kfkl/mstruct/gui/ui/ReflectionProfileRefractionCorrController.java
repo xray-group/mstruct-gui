@@ -20,7 +20,7 @@ public class ReflectionProfileRefractionCorrController extends BaseController<Re
 	private HBox relDensityParContainer;
 
 	@Override
-	public void bindToInstance() {
+	public void init() {
 		ReflectionProfileRefractionCorrElement model = getModelInstance();
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());

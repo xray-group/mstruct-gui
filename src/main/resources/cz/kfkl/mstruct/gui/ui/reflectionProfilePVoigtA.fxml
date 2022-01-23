@@ -36,14 +36,14 @@
 				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" maxWidth="Infinity" minWidth="400.0" />
 			</columnConstraints>
 			<children>
-				<Label text="U:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-				<HBox fx:id="uParContainer" alignment="CENTER_LEFT" maxHeight="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<Label text="W:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+				<HBox fx:id="wParContainer" alignment="CENTER_LEFT" maxHeight="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 					
 				<Label text="V:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 				<HBox fx:id="vParContainer" alignment="CENTER_LEFT" maxHeight="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 					
-				<Label text="W:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-				<HBox fx:id="wParContainer" alignment="CENTER_LEFT" maxHeight="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<Label text="U:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+				<HBox fx:id="uParContainer" alignment="CENTER_LEFT" maxHeight="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 					
 				<Label text="Eta 0:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
 				<HBox fx:id="eta0ParContainer" alignment="CENTER_LEFT" maxHeight="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />

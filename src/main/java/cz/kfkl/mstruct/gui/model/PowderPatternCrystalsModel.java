@@ -47,13 +47,22 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	@XmlUniqueElement
 	public AbsorptionCorrElement absorptionCorrElement = new AbsorptionCorrElement();
 
+	public PowderPatternCrystalsModel() {
+		// needed for the powderPatternComponent sibling component when creating new
+		// from UI
+		this.nameProperty.set(DIFF_DATA_PREFIX);
+	}
+
 	@Override
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
 
 		String xmlValue = nameProperty.getValue();
 		if (xmlValue != null && xmlValue.startsWith(DIFF_DATA_PREFIX)) {
-			userNameProperty.set(JvStringUtils.substringAfter(xmlValue, DIFF_DATA_PREFIX));
+			String substringAfter = JvStringUtils.substringAfter(xmlValue, DIFF_DATA_PREFIX);
+			if (!substringAfter.equals(crystalProperty.getValue())) {
+				userNameProperty.set(substringAfter);
+			}
 		} else {
 			// TODO: some validation error
 			userNameProperty.set(xmlValue);

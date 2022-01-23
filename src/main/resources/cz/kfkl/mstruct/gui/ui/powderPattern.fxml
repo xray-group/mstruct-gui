@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -24,8 +25,16 @@
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>
-				<Label text="Powder Pattern Name:"/>
-				<TextField fx:id="powderPatternName" prefHeight="19.0" prefWidth="149.0"/>
+				<Label text="Powder Pattern Name:">
+				</Label>
+				<Label text="">
+					<graphic>
+						<TextField fx:id="powderPatternName" prefHeight="19.0" prefWidth="149.0" disable="true"/>
+					</graphic>
+					<tooltip>
+						<Tooltip text="Multiple instrumental patterns are not supported. The pattern must be named 'pattern0'." />
+					</tooltip>
+				</Label>
 			</children>
 		</HBox>
 

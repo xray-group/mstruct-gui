@@ -13,6 +13,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -141,20 +142,28 @@
 					<content>
 						<BorderPane>
 							<left>
-								<VBox alignment="TOP_CENTER" maxHeight="Infinity" prefWidth="180.0" styleClass="custom-box-border">
+								<VBox alignment="TOP_CENTER" maxHeight="Infinity" prefWidth="143.0" styleClass="custom-box-border">
 									<children>
 										<ListView fx:id="instrumentalListView" prefWidth="143.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" />
 										<HBox alignment="CENTER" prefHeight="30.0" spacing="8.0">
 											<children>
-												<Button fx:id="addInstrumentButton" mnemonicParsing="false" onAction="#addInstrument" text="Add">
+												<Label text="">
 													<graphic>
-														<ImageView>
-															<image>
-																<Image url="@images/add.png" />
-															</image>
-														</ImageView>
+														<Button fx:id="addInstrumentButton" mnemonicParsing="false" onAction="#addInstrument" text="Add">
+															<graphic>
+																<ImageView>
+																	<image>
+																		<Image url="@images/add.png" />
+																	</image>
+																</ImageView>
+															</graphic>
+														</Button>
 													</graphic>
-												</Button>
+													<tooltip>
+														<Tooltip text="Multiple instrumental patterns are not supported. Only default 'pattern0' can be added" />
+													</tooltip>
+												</Label>
+												<!-- 
 												<Button fx:id="removeInstrumentButton" mnemonicParsing="false" onAction="#removeInstrument" text="Remove">
 													<graphic>
 														<ImageView>
@@ -164,6 +173,7 @@
 														</ImageView>
 													</graphic>
 												</Button>
+												 -->
 											</children>
 											<padding>
 												<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

@@ -48,7 +48,9 @@ import cz.kfkl.mstruct.gui.utils.validation.Validator;
 import cz.kfkl.mstruct.gui.xml.XmlUtils;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -133,6 +135,10 @@ public class MStructGuiController implements HasAppContext {
 	private ListView<PowderPatternCrystalsModel> phasesListView;
 	@FXML
 	private ScrollPane tabPhasesCenterPane;
+	@FXML
+	private Button addPhaseButton;
+	@FXML
+	private Button removePhaseButton;
 
 	@FXML
 	private Tab tabParameters;
@@ -182,9 +188,16 @@ public class MStructGuiController implements HasAppContext {
 			}
 		});
 
+		// enable the Add instrument button only if instrumentalListView has no item
+		ListProperty<InstrumentalModel> lstProp = new SimpleListProperty<>(instrumentalListView.getItems());
+		lstProp.bind(instrumentalListView.itemsProperty());
+		addInstrumentButton.disableProperty().bind(Bindings.not(lstProp.emptyProperty()));
+
 		crystalsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		removeCrystalButton.disableProperty().bind(crystalsListView.getSelectionModel().selectedItemProperty().isNull());
+
+		removePhaseButton.disableProperty().bind(phasesListView.getSelectionModel().selectedItemProperty().isNull());
 
 		configOptimizationTab();
 	}
@@ -602,22 +615,28 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	public void addPhase() {
-
+		PowderPatternCrystalsModel newInstance = new PowderPatternCrystalsModel();
+		phasesListView.getItems().add(newInstance);
+		phasesListView.getSelectionModel().select(newInstance);
 	}
 
 	@FXML
 	public void removePhase() {
-
+		ObservableList<PowderPatternCrystalsModel> selectedPhases = phasesListView.getSelectionModel().getSelectedItems();
+		phasesListView.getItems().removeAll(selectedPhases);
 	}
 
 	@FXML
 	public void addInstrument() {
-
+		InstrumentalModel newInstance = new PowderPatternElement();
+		instrumentalListView.getItems().add(newInstance);
+		instrumentalListView.getSelectionModel().select(newInstance);
 	}
 
 	@FXML
 	public void removeInstrument() {
-
+		// multiple instruments not supported - Remove button is commnted out in the
+		// fxml
 	}
 
 	public File addFileNameSuffix(File file, String suffix) {

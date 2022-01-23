@@ -11,6 +11,7 @@ import cz.kfkl.mstruct.gui.model.ReflectionProfileModel;
 import cz.kfkl.mstruct.gui.model.ReflectionProfileType;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
+import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -79,7 +80,10 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		if (parentModelElement instanceof ObjCrystModel) {
 			ObjCrystModel ocm = (ObjCrystModel) parentModelElement;
 			powderPatternCrystalNameComboBox.setItems(ocm.crystals);
-			powderPatternCrystalNameComboBox.getSelectionModel().select(ocm.getCrystal(model.crystalProperty.get()));
+			String crystalName = model.crystalProperty.get();
+			if (JvStringUtils.isNotBlank(crystalName)) {
+				powderPatternCrystalNameComboBox.getSelectionModel().select(ocm.getCrystal(crystalName));
+			}
 			powderPatternCrystalNameComboBox.getSelectionModel().selectedItemProperty()
 					.addListener((observable, oldValue, newValue) -> {
 						if (newValue != null) {

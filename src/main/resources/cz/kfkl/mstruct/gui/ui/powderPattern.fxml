@@ -8,6 +8,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -140,7 +142,7 @@
 					<left>
 						<VBox BorderPane.alignment="CENTER">
                      		<children>
-								<ListView fx:id="powderPatternComponentsListView" prefWidth="140.0" BorderPane.alignment="CENTER"  VBox.vgrow="ALWAYS" />
+								<ListView fx:id="powderPatternComponentsListView" prefWidth="140.0" minHeight="40.0" BorderPane.alignment="CENTER"  VBox.vgrow="ALWAYS" />
 								<HBox alignment="TOP_CENTER" spacing="8.0">
 		                           <children>
 		                              <Button fx:id="powderPatternComponentsAddButton" onAction="#onPowderPatternComponentsAddButton" mnemonicParsing="false" text="Add">
@@ -185,6 +187,64 @@
 						</StackPane>
 					</center>
 				</BorderPane>
+			</content>
+			<font>
+				<Font name="System Bold" size="12.0" />
+			</font>
+			<VBox.margin>
+				<Insets top="12.0" />
+			</VBox.margin>
+		</TitledPane>
+		<TitledPane animated="false" text="Excluded Regions">
+			<content>
+			<!--  
+				<HBox alignment="TOP_LEFT" prefHeight="30.0" maxHeight="Infinity"  spacing="8.0" VBox.vgrow="ALWAYS">
+					<children>-->
+				<BorderPane>
+					<padding>
+						<Insets bottom="0" left="0" right="0" top="0" />
+					</padding>
+					<left>
+						<TableView fx:id="excludedRegionsTableView" minHeight="76" prefHeight="152.0" prefWidth="215.0" VBox.vgrow="ALWAYS">
+							<columns>
+								<TableColumn fx:id="excludedRegionsFromTableColumn" prefWidth="100.0" text="From" sortable="false"/>
+								<TableColumn fx:id="excludedRegionsToTableColumn" prefWidth="100.0" text="To" sortable="false"/>
+							</columns>
+						</TableView>
+					</left>
+					<center>
+						<VBox alignment="CENTER_LEFT" spacing="8">
+							<padding>
+								<Insets bottom="0" left="8" right="0" top="0" />
+							</padding>
+							<children>
+								<Button fx:id="excludedRegionAddButton" onAction="#addExcludedRegion" mnemonicParsing="false"
+									text="Add">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="@images/add.png" />
+											</image>
+										</ImageView>
+									</graphic>
+								</Button>
+								<Button fx:id="excludedRegionRemoveButton" onAction="#removeExcludedRegion" mnemonicParsing="false" text="Remove">
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="@images/delete.png" />
+											</image>
+										</ImageView>
+									</graphic>
+								</Button>
+							</children>
+						</VBox>
+					</center>
+				</BorderPane>
+					<!-- 
+					</children>
+				</HBox>
+				 -->
 			</content>
 			<font>
 				<Font name="System Bold" size="12.0" />

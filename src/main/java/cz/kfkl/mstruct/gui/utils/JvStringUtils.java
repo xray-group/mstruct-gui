@@ -7,7 +7,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javafx.beans.property.StringProperty;
+
 public class JvStringUtils {
+
+	private static final Logger LOG = LoggerFactory.getLogger(JvStringUtils.class);
 
 	private static final char APOSTROPHE = '\'';
 	private static final String COMMA_SEPARATOR = ",";
@@ -388,6 +395,24 @@ public class JvStringUtils {
 			int i = (int) d.doubleValue();
 			return d == i ? Integer.toString(i) : d.toString();
 		}
+	}
+
+	/**
+	 * Parse provided StringProperty value into Double. Null is return if the string
+	 * value is empty or cannot be parsed to Double.
+	 */
+	public static Double parseDouble(StringProperty stringProperty) {
+		Double valueDouble = null;
+		String valueStr = stringProperty.get();
+		if (JvStringUtils.isNotBlank(valueStr)) {
+			try {
+				valueDouble = Double.valueOf(valueStr);
+			} catch (Exception e) {
+				LOG.debug("Failed to parse [{}] into a double.", valueStr);
+				// TODO report as validation error ?
+			}
+		}
+		return valueDouble;
 	}
 
 }

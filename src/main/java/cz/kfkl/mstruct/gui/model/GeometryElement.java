@@ -1,8 +1,5 @@
 package cz.kfkl.mstruct.gui.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
@@ -13,8 +10,6 @@ import javafx.beans.property.StringProperty;
 
 @XmlElementName("Geometry")
 public class GeometryElement extends XmlLinkedModelElement {
-	private static final Logger LOG = LoggerFactory.getLogger(GeometryElement.class);
-
 	public static final Double OMEGA_BB_CONSTANT = -1d;
 	public static final Double OMEGA_BBVS_CONSTANT = -2d;
 	public static final Double DEFAULT_POSITIVE_OMEGA = 0.5;
@@ -30,7 +25,7 @@ public class GeometryElement extends XmlLinkedModelElement {
 	public Double decodeOmega() {
 		Double decoded = null;
 
-		Double omegaD = parseIfPossible();
+		Double omegaD = JvStringUtils.parseDouble(omegaProperty);
 
 		if (omegaD != null) {
 			if (omegaD < OMEGA_BB_CONSTANT) {
@@ -43,20 +38,6 @@ public class GeometryElement extends XmlLinkedModelElement {
 		}
 
 		return decoded;
-	}
-
-	private Double parseIfPossible() {
-		Double omegaD = null;
-		String omegaStr = omegaProperty.get();
-		if (JvStringUtils.isNotBlank(omegaStr)) {
-			try {
-				omegaD = Double.valueOf(omegaStr);
-			} catch (Exception e) {
-				LOG.debug("Failed to parse [{}] into a double.", omegaStr);
-				// TODO report as validation error ?
-			}
-		}
-		return omegaD;
 	}
 
 }

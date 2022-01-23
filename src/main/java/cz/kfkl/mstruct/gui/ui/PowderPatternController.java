@@ -3,18 +3,22 @@ package cz.kfkl.mstruct.gui.ui;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.kfkl.mstruct.gui.model.ExcludeXElement;
 import cz.kfkl.mstruct.gui.model.GeometryElement;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundType;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
+import cz.kfkl.mstruct.gui.utils.DoubleTextFieldTableCell;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -24,6 +28,9 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
@@ -95,6 +102,18 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	@FXML
 	private StackPane powderPatternCrystalStackPane;
 
+	@FXML
+	private TableView<ExcludeXElement> excludedRegionsTableView;
+	@FXML
+	private TableColumn<ExcludeXElement, String> excludedRegionsFromTableColumn;
+	@FXML
+	private TableColumn<ExcludeXElement, String> excludedRegionsToTableColumn;
+
+	@FXML
+	private Button excludedRegionAddButton;
+	@FXML
+	private Button excludedRegionRemoveButton;
+
 	@Override
 	public void init() {
 		PowderPatternElement model = getModelInstance();
@@ -135,6 +154,27 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 
 		powderPatternComponentsRemoveButton.disableProperty()
 				.bind(powderPatternComponentsListView.getSelectionModel().selectedItemProperty().isNull());
+
+		excludedRegionsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		excludedRegionsTableView.setEditable(true);
+		excludedRegionsTableView.setItems(model.excludeRegions);
+		BindingUtils.autoHeight(excludedRegionsTableView);
+		excludedRegionsTableView.setSortPolicy(tw -> {
+			FXCollections.sort(tw.getItems(),
+					Comparator.nullsFirst(Comparator.comparing(ExcludeXElement::from).thenComparing(ExcludeXElement::to)));
+			return true;
+		});
+
+		excludedRegionsFromTableColumn.setCellValueFactory(c -> c.getValue().fromProperty);
+		excludedRegionsFromTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
+		excludedRegionsFromTableColumn.setEditable(true);
+
+		excludedRegionsToTableColumn.setCellValueFactory(c -> c.getValue().toProperty);
+		excludedRegionsToTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
+		excludedRegionsToTableColumn.setEditable(true);
+
+		excludedRegionRemoveButton.disableProperty()
+				.bind(excludedRegionsTableView.getSelectionModel().selectedItemProperty().isNull());
 	}
 
 	private void initGeometryTogles(GeometryElement geometryElement) {
@@ -217,6 +257,18 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 
 	public void powderPatternComponentNameChanged() {
 		powderPatternComponentsListView.refresh();
+	}
+
+	@FXML
+	public void addExcludedRegion() {
+		ExcludeXElement newRow = new ExcludeXElement();
+		excludedRegionsTableView.getItems().add(newRow);
+		excludedRegionsTableView.getSelectionModel().select(newRow);
+	}
+
+	@FXML
+	public void removeExcludedRegion() {
+		excludedRegionsTableView.getItems().removeAll(excludedRegionsTableView.getSelectionModel().getSelectedItems());
 	}
 
 }

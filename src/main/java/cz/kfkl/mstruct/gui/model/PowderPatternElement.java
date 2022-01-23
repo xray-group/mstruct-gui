@@ -53,6 +53,9 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@XmlElementList
 	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
 
+	@XmlElementList
+	public ObservableList<ExcludeXElement> excludeRegions = FXCollections.observableArrayList();
+
 	public PowderPatternElement() {
 		this.nameProperty.set(DEFAULT_PATTERN_NAME);
 	}

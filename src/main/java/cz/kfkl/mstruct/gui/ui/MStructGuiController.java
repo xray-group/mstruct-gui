@@ -625,8 +625,7 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	public void removePhase() {
-		ObservableList<PowderPatternCrystalsModel> selectedPhases = phasesListView.getSelectionModel().getSelectedItems();
-		phasesListView.getItems().removeAll(selectedPhases);
+		phasesListView.getItems().removeAll(phasesListView.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML

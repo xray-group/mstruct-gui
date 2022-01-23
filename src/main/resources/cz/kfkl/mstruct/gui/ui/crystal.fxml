@@ -36,13 +36,15 @@
 		<HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="30.0" spacing="4.0">
 			<children>
 				<Label text="Space Group:">
-               <tooltip>
-                  <Tooltip text="Crystal's space group" />
-               </tooltip></Label>
+					<tooltip>
+						<Tooltip text="Crystal's space group" />
+					</tooltip>
+				</Label>
 				<TextField fx:id="spaceGroup" prefHeight="19.0" prefWidth="149.0">
-               <tooltip>
-                  <Tooltip text="Space group code, usually keep imported value" />
-               </tooltip></TextField>
+					<tooltip>
+						<Tooltip text="Space group code, usually keep imported value" />
+					</tooltip>
+				</TextField>
 			</children>
 		</HBox>
 		

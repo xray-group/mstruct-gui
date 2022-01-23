@@ -2,7 +2,9 @@ package cz.kfkl.mstruct.gui.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import cz.kfkl.mstruct.gui.model.CrystalModel;
 import cz.kfkl.mstruct.gui.model.InstrumentalModel;
@@ -52,6 +54,14 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 		list.addAll(instruments);
 
 		return list;
+	}
+
+	public Set<String> findUsedCrystals() {
+		Set<String> usedCrystalNames = new LinkedHashSet<String>();
+		for (InstrumentalModel<?> inst : instruments) {
+			usedCrystalNames.addAll(inst.findUsedCrystals());
+		}
+		return usedCrystalNames;
 	}
 
 	public void registerParameter(ParUniqueElement parUniqueElement) {

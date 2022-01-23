@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.jdom2.Document;
@@ -41,6 +42,7 @@ import cz.kfkl.mstruct.gui.model.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
+import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
 import cz.kfkl.mstruct.gui.xml.XmlUtils;
@@ -55,6 +57,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -64,6 +67,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
@@ -109,6 +113,8 @@ public class MStructGuiController implements HasAppContext {
 	private ListView<CrystalModel> crystalsListView;
 	@FXML
 	private ScrollPane tabCrystalsCenterPane;
+	@FXML
+	private Button removeCrystalButton;
 
 	@FXML
 	private Tab tabInstrumental;
@@ -116,6 +122,8 @@ public class MStructGuiController implements HasAppContext {
 	private ListView<InstrumentalModel> instrumentalListView;
 	@FXML
 	private ScrollPane tabInstrumentalCenterPane;
+	@FXML
+	private Button addInstrumentButton;
 
 	@FXML
 	private Tab tabPhases;
@@ -173,6 +181,10 @@ public class MStructGuiController implements HasAppContext {
 				}
 			}
 		});
+
+		crystalsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+		removeCrystalButton.disableProperty().bind(crystalsListView.getSelectionModel().selectedItemProperty().isNull());
 
 		configOptimizationTab();
 	}
@@ -553,7 +565,39 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	public void removeCrystal() {
+		ObservableList<CrystalModel> selectedCrystals = crystalsListView.getSelectionModel().getSelectedItems();
 
+		if (confirmRemoveIfNeeded(findUsedCrystalsToRemove(selectedCrystals))) {
+			crystalsListView.getItems().removeAll(selectedCrystals);
+		}
+	}
+
+	private Set<String> findUsedCrystalsToRemove(ObservableList<CrystalModel> selectedCrystals) {
+		Set<String> usedCrystals = rootModel.findUsedCrystals();
+
+		Set<String> usedCrystalsToRemove = new LinkedHashSet<>();
+		for (CrystalModel cm : selectedCrystals) {
+			String cName = cm.getName();
+			if (usedCrystals.contains(cName)) {
+				usedCrystalsToRemove.add(cName);
+			}
+		}
+		return usedCrystalsToRemove;
+	}
+
+	private boolean confirmRemoveIfNeeded(Set<String> usedCrystalsToRemove) {
+		boolean doRemove = true;
+		if (!usedCrystalsToRemove.isEmpty()) {
+			Alert alert = new Alert(AlertType.WARNING, "Are you sure you want to remove all selected crystal(s)?", ButtonType.YES,
+					ButtonType.CANCEL);
+			alert.setHeaderText(
+					"Removing crystals referenced by crystal phases: " + JvStringUtils.joinAbreviate(usedCrystalsToRemove, 5));
+			Optional<ButtonType> opt = alert.showAndWait();
+			if (opt.get() != ButtonType.YES) {
+				doRemove = false;
+			}
+		}
+		return doRemove;
 	}
 
 	@FXML

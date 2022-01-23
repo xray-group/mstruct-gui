@@ -347,6 +347,13 @@ public class JvStringUtils {
 	}
 
 	/**
+	 * @return JvStringUtils.joinAbreviate(usedCrystalsToRemove, ", ", 5, "...")
+	 */
+	public static <T> String joinAbreviate(Collection<T> collection, int maxCount) {
+		return JvStringUtils.joinAbreviate(collection, ", ", 5, "...");
+	}
+
+	/**
 	 * Transforms array of Object to array of String using {@link #toString(Object)}
 	 * method (i.e. result of {@link Object#toString()} method or empty string for
 	 * nulls).

@@ -1,5 +1,8 @@
 package cz.kfkl.mstruct.gui.model;
 
+import java.util.Collections;
+import java.util.Set;
+
 import com.google.common.base.Strings;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
@@ -27,6 +30,10 @@ abstract public class InstrumentalModel<C extends BaseController<?>> extends Xml
 
 	public StringProperty getNameProperty() {
 		return nameProperty;
+	}
+
+	public Set<? extends String> findUsedCrystals() {
+		return Collections.emptySet();
 	}
 
 	@Override

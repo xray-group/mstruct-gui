@@ -1,9 +1,12 @@
 package cz.kfkl.mstruct.gui.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import cz.kfkl.mstruct.gui.ui.PowderPatternController;
+import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
@@ -21,10 +24,6 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@XmlAttributeProperty("SpaceGroup")
 	public StringProperty spaceGroupProperty = new SimpleStringProperty();
 
-//    <Par Refined="0" Limited="0" Min="-2.86479" Max="2.86479" Name="Zero">0</Par>
-//    <Par Refined="0" Limited="1" Min="-2.86479" Max="2.86479" Name="2ThetaDisplacement">0</Par>
-//    <Par Refined="0" Limited="1" Min="-2.86479" Max="2.86479" Name="2ThetaTransparency">0</Par>
-//    <Option Name="Use Integrated Profiles" Choice="1" ChoiceName="No"/>
 	@XmlUniqueElement
 	public ParUniqueElement zeroPar = new ParUniqueElement("Zero");
 	@XmlUniqueElement
@@ -52,6 +51,18 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 
 	@XmlElementList
 	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
+
+	@Override
+	public Set<? extends String> findUsedCrystals() {
+		Set<String> usedCrystalNames = new LinkedHashSet<String>();
+		for (PowderPatternCrystalsModel ppCrystalPhase : powderPatternCrystals) {
+			String crystalName = ppCrystalPhase.crystalProperty.get();
+			if (JvStringUtils.isNotBlank(crystalName)) {
+				usedCrystalNames.add(crystalName);
+			}
+		}
+		return usedCrystalNames;
+	}
 
 	@Override
 	public List<ParUniqueElement> getParams() {

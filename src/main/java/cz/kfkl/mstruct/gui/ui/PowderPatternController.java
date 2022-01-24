@@ -1,5 +1,8 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -17,8 +20,10 @@ import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.DoubleTextFieldTableCell;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -37,6 +42,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 public class PowderPatternController extends BaseController<PowderPatternElement, MStructGuiController> {
+	private static final Comparator<ExcludeXElement> EXCLUDE_REGIONS_TABLE_COMPARATOR = Comparator
+			.comparing(ExcludeXElement::from, nullsFirst(naturalOrder()))
+			.thenComparing(ExcludeXElement::to, nullsFirst(naturalOrder()));
+
 	private static final Logger LOG = LoggerFactory.getLogger(PowderPatternController.class);
 
 	@FXML
@@ -160,18 +169,23 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		excludedRegionsTableView.setItems(model.excludeRegions);
 		BindingUtils.autoHeight(excludedRegionsTableView);
 		excludedRegionsTableView.setSortPolicy(tw -> {
-			FXCollections.sort(tw.getItems(),
-					Comparator.nullsFirst(Comparator.comparing(ExcludeXElement::from).thenComparing(ExcludeXElement::to)));
+			FXCollections.sort(tw.getItems(), EXCLUDE_REGIONS_TABLE_COMPARATOR);
 			return true;
 		});
 
 		excludedRegionsFromTableColumn.setCellValueFactory(c -> c.getValue().fromProperty);
 		excludedRegionsFromTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
 		excludedRegionsFromTableColumn.setEditable(true);
+		excludedRegionsFromTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
+			Platform.runLater(() -> excludedRegionsTableView.sort());
+		});
 
 		excludedRegionsToTableColumn.setCellValueFactory(c -> c.getValue().toProperty);
 		excludedRegionsToTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
 		excludedRegionsToTableColumn.setEditable(true);
+		excludedRegionsToTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
+			Platform.runLater(() -> excludedRegionsTableView.sort());
+		});
 
 		excludedRegionRemoveButton.disableProperty()
 				.bind(excludedRegionsTableView.getSelectionModel().selectedItemProperty().isNull());

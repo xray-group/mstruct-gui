@@ -12,6 +12,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,8 @@ public class XmlLinkedModelElement {
 
 	protected ObjCrystModel rootModel;
 
+	private Collection<Element> ownedSiblings = new ArrayList<>();
+
 	public XmlLinkedModelElement() {
 		super();
 	}
@@ -86,12 +89,18 @@ public class XmlLinkedModelElement {
 				XmlAttributeProperty propAnnotation = field.getAnnotation(XmlAttributeProperty.class);
 				if (propAnnotation != null) {
 					assertPublicOrProtected(field);
-					bindAttribute(field, decideAttributeName(field, propAnnotation), propAnnotation.converter());
+					bindAttribute(field, decideAttributeName(field, propAnnotation.value()), propAnnotation.converter());
 				}
 				XmlElementValueProperty elementValueAnnotation = field.getAnnotation(XmlElementValueProperty.class);
 				if (elementValueAnnotation != null) {
 					assertPublicOrProtected(field);
 					bindElementContent(field, elementValueAnnotation.converter());
+				}
+
+				XmlUniqueElementKey uniqueKeyAttributeAnnotation = field.getAnnotation(XmlUniqueElementKey.class);
+				if (uniqueKeyAttributeAnnotation != null) {
+					assertPublicOrProtected(field);
+					bindUniqueKeyAttribute(field, decideAttributeName(field, uniqueKeyAttributeAnnotation.value()));
 				}
 
 				XmlUniqueElement uniqueElementAnnotation = field.getAnnotation(XmlUniqueElement.class);
@@ -112,6 +121,7 @@ public class XmlLinkedModelElement {
 					if (uniqueElementAnnotation.isSibling()) {
 						childEl = parentModelElement.findOrCreateUniqueElement(elementName, keyAtributeValues, xmlElement,
 								indentStyle);
+						ownedSiblings.add(childEl);
 					} else {
 						childEl = findOrCreateUniqueElement(elementName, keyAtributeValues, lastElement, indentStyle);
 					}
@@ -282,14 +292,28 @@ public class XmlLinkedModelElement {
 				XmlUniqueElementKey keyFieldAnnotation = typeField.getAnnotation(XmlUniqueElementKey.class);
 				if (keyFieldAnnotation != null) {
 					String keyAttName = keyFieldAnnotation.value();
-					if (Strings.isNullOrEmpty(elementName)) {
-						keyAttName = field.getName();
+					if (Strings.isNullOrEmpty(keyAttName)) {
+						keyAttName = typeField.getName();
 					}
 
 					Object valueObj = typeField.get(fieldValue);
-					assertTrue(valueObj instanceof String,
-							"Field [%s] with value [%s] must be of type String and it must be set.", typeField, fieldValue);
-					String keyValue = (String) valueObj;
+					assertNotNull(valueObj,
+							"Field [%s] on object [%s] must be set by default as it is used as a XmlUniqueElementKey.", typeField,
+							fieldValue);
+
+					String keyValue = null;
+					if (valueObj instanceof String) {
+						keyValue = (String) valueObj;
+					} else if (valueObj instanceof StringProperty) {
+						keyValue = ((StringProperty) valueObj).getValue();
+						assertNotNull(keyValue,
+								"The string property field [%s] on object [%s] must be set as it is used as a XmlUniqueElementKey.",
+								typeField, fieldValue);
+					} else {
+						throw new UnexpectedException(
+								"XmlUniqueElementKey can be used only on field [%s] with type String or StringProperty but was [%s].",
+								typeField, fieldValue.getClass());
+					}
 
 					keyAtributeValues.put(keyAttName, keyValue);
 				}
@@ -363,6 +387,16 @@ public class XmlLinkedModelElement {
 		}
 
 		return elementName;
+	}
+
+	private void bindUniqueKeyAttribute(Field field, String attributeName) throws IllegalAccessException {
+		Object fieldValue = field.get(this);
+
+		if (fieldValue instanceof StringProperty) {
+			XmlAttributeUpdater updater = new XmlAttributeUpdater(xmlElement, attributeName);
+			StringProperty fieldValueSp = (StringProperty) fieldValue;
+			fieldValueSp.addListener(updater);
+		}
 	}
 
 	private void bindAttribute(Field field, String attributeName, Class converter) throws IllegalAccessException {
@@ -444,7 +478,7 @@ public class XmlLinkedModelElement {
 
 	private Object getFieldValueNotNull(Field field) throws IllegalAccessException {
 		Object fieldValue = field.get(this);
-		assertNotNull(fieldValue, "Field [{}] on class [{}] must be initialized.", field.getName(), field.getDeclaringClass());
+		assertNotNull(fieldValue, "Field [%s] on class [%s] must be initialized.", field.getName(), field.getDeclaringClass());
 		return fieldValue;
 	}
 
@@ -460,8 +494,8 @@ public class XmlLinkedModelElement {
 		}
 	}
 
-	private String decideAttributeName(Field field, XmlAttributeProperty propAnnotation) {
-		String attributeName = propAnnotation.value();
+	private String decideAttributeName(Field field, String annotationValue) {
+		String attributeName = annotationValue;
 		if (Strings.isNullOrEmpty(attributeName)) {
 			attributeName = field.getName();
 		}
@@ -522,6 +556,10 @@ public class XmlLinkedModelElement {
 
 	public void setImportedXmlContent(List<Content> importedXmlContent) {
 		this.importedXmlContent = importedXmlContent;
+	}
+
+	public Collection<Element> getOwnedSiblings() {
+		return ownedSiblings;
 	}
 
 }

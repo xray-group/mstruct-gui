@@ -19,7 +19,7 @@ import javafx.beans.property.StringProperty;
 
 @XmlElementName("PowderPatternCrystal")
 public class PowderPatternCrystalsModel extends XmlLinkedModelElement
-		implements FxmlFileNameProvider<PowderPatternController>, ParamContainer {
+		implements FxmlFileNameProvider<PowderPatternController>, ParamContainer, HasUniqueName {
 	private static final String DIFF_DATA_PREFIX = "diffData_";
 
 	private static final String FXML_FILE_NAME = "powderPatternCrystal.fxml";
@@ -73,6 +73,10 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 
 	}
 
+	public String getNameSuffix() {
+		return JvStringUtils.isEmpty(userNameProperty.get()) ? crystalProperty.get() : userNameProperty.get();
+	}
+
 	@Override
 	public XmlIndentingStyle getXmlIndentingStyle() {
 		return XmlIndentingStyle.MULTILINE_WITH_GAP;
@@ -102,4 +106,14 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	public String toString() {
 		return nameProperty.get() + " (" + crystalProperty.get() + ")";
 	}
+
+	@Override
+	public String getName() {
+		return nameProperty.getValue();
+	}
+
+	public void setName(String name) {
+		nameProperty.setValue(name);
+	}
+
 }

@@ -16,10 +16,10 @@ import javafx.beans.property.StringProperty;
 @XmlMappedSubclasses({ ReflectionProfilePVoigtAElement.class, ReflectionProfileSizeLnElement.class,
 		ReflectionProfileRefractionCorrElement.class, ReflectionProfileStressSimpleElement.class })
 abstract public class ReflectionProfileModel<C extends BaseController<?, ?>> extends XmlLinkedModelElement
-		implements FxmlFileNameProvider<C>, ParamContainer {
+		implements FxmlFileNameProvider<C>, ParamContainer, HasUniqueName {
 
 	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty("comp_");
+	public StringProperty nameProperty = new SimpleStringProperty();
 
 	public abstract ReflectionProfileType getType();
 
@@ -38,6 +38,7 @@ abstract public class ReflectionProfileModel<C extends BaseController<?, ?>> ext
 		return XmlIndentingStyle.MULTILINE_WITH_GAP;
 	}
 
+	@Override
 	public String getName() {
 		return nameProperty.get();
 	}

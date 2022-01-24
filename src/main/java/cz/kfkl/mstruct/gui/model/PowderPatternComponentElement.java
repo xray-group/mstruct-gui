@@ -7,7 +7,6 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElementKey;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 
 @XmlElementName("PowderPatternComponent")
 public class PowderPatternComponentElement extends XmlLinkedModelElement {
@@ -16,10 +15,10 @@ public class PowderPatternComponentElement extends XmlLinkedModelElement {
 	public StringProperty scalePoperty = new SimpleStringProperty("1");
 
 	@XmlUniqueElementKey("Name")
-	public String name;
+	public StringProperty name = new SimpleStringProperty();
 
-	public PowderPatternComponentElement(StringProperty nameProperty) {
-		nameProperty.addListener((ChangeListener<? super String>) (ov, oldValue, newValue) -> name = newValue);
+	public PowderPatternComponentElement(StringProperty ownerObjectNameProperty) {
+		name.bind(ownerObjectNameProperty);
 	}
 
 	@Override

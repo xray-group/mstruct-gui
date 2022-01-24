@@ -135,6 +135,9 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 				Constructor<? extends ReflectionProfileModel<?>> constructor = selectedType.getModelClass().getConstructor();
 				ReflectionProfileModel<?> newInstance = constructor.newInstance();
 
+				newInstance.setName(newInstance.getType().getNamePrefix() + getModelInstance().getNameSuffix());
+				newInstance.setName(BindingUtils.createUniqueName(newInstance, reflectionProfileListView.getItems()));
+
 				reflectionProfileListView.getItems().add(newInstance);
 				reflectionProfileListView.getSelectionModel().select(newInstance);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException

@@ -1,6 +1,7 @@
 package cz.kfkl.mstruct.gui.model.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jdom2.Element;
@@ -47,7 +48,12 @@ public class XmlLinkedObservableListListener<T extends XmlLinkedModelElement> im
 				for (T removedItem : c.getRemoved()) {
 					Element parent = parrentModelElement.getXmlElement();
 					Element elementToRemove = removedItem.getXmlElement();
+
+					Collection<Element> ownedSiblings = removedItem.getOwnedSiblings();
 					XmlUtils.removeWithIndent(parent, elementToRemove);
+					for (Element sibling : ownedSiblings) {
+						XmlUtils.removeWithIndent(parent, sibling);
+					}
 				}
 				for (T addedItem : c.getAddedSubList()) {
 					// additem.add(Outer.this);

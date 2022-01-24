@@ -619,6 +619,9 @@ public class MStructGuiController implements HasAppContext {
 	@FXML
 	public void addPhase() {
 		PowderPatternCrystalsModel newInstance = new PowderPatternCrystalsModel();
+
+		newInstance.setName(BindingUtils.createUniqueName(newInstance, phasesListView.getItems()));
+
 		phasesListView.getItems().add(newInstance);
 		phasesListView.getSelectionModel().select(newInstance);
 	}

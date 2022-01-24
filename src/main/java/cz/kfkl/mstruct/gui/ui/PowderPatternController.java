@@ -23,7 +23,6 @@ import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -241,6 +240,8 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 				Constructor<? extends PowderPatternBackgroundModel<?>> constructor = selectedType.getModelClass()
 						.getConstructor();
 				PowderPatternBackgroundModel<?> newInstance = constructor.newInstance();
+
+				newInstance.setName(BindingUtils.createUniqueName(newInstance, getModelInstance().powderPatternComponents));
 
 				powderPatternComponentsListView.getItems().add(newInstance);
 				powderPatternComponentsListView.getSelectionModel().select(newInstance);

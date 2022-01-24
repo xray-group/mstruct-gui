@@ -15,10 +15,12 @@ import javafx.beans.property.StringProperty;
 
 @XmlMappedSubclasses({ PowderPatternBackgroundInvX.class, PowderPatternBackgroundChebyshev.class })
 abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?>> extends XmlLinkedModelElement
-		implements FxmlFileNameProvider<C>, ParamContainer {
+		implements FxmlFileNameProvider<C>, ParamContainer, HasUniqueName {
+
+	private static final String DEFAULT_BACKGROUND_PREFIX = "bkgData_";
 
 	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty("bkgData_");
+	public StringProperty nameProperty = new SimpleStringProperty(DEFAULT_BACKGROUND_PREFIX);
 
 	@XmlUniqueElement(isSibling = true)
 	public PowderPatternComponentElement powderPatternComponent = new PowderPatternComponentElement(nameProperty);
@@ -28,7 +30,7 @@ abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?
 
 	public PowderPatternBackgroundModel() {
 		super();
-		nameProperty.set("bkgComp_" + getType().getTypeName());
+		nameProperty.set(DEFAULT_BACKGROUND_PREFIX + getType().getTypeName());
 	}
 
 	public abstract PowderPatternBackgroundType getType();
@@ -48,6 +50,7 @@ abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?
 		return "Background: " + getName();
 	}
 
+	@Override
 	public String getName() {
 		return nameProperty.get();
 	}

@@ -1,6 +1,9 @@
 package cz.kfkl.mstruct.gui.utils;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
@@ -9,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.core.HasAppContext;
 import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
+import cz.kfkl.mstruct.gui.model.HasUniqueName;
 import cz.kfkl.mstruct.gui.model.OptionChoice;
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
@@ -439,6 +443,21 @@ public final class BindingUtils {
 				}
 			}
 		};
+	}
+
+	public static String createUniqueName(HasUniqueName newInstance, List<? extends HasUniqueName> powderPatternComponents) {
+		Set<String> existingUniqueNames = new LinkedHashSet<>();
+		powderPatternComponents.forEach((el) -> existingUniqueNames.add(el.getName()));
+
+		int suffix = 2;
+		String originalName = newInstance.getName();
+		String newName = originalName;
+		while (existingUniqueNames.contains(newName)) {
+			newName = originalName + "_" + suffix;
+			suffix++;
+		}
+
+		return newName;
 	}
 
 }

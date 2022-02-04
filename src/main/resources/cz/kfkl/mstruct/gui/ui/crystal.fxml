@@ -138,9 +138,10 @@
 					<children>
 						<TableView fx:id="scatPowersTableView" prefHeight="400.0" prefWidth="579.0" tableMenuButtonVisible="true">
 							<columns>
-								<TableColumn fx:id="scatPowersTableNameColumn" prefWidth="95.0" text="Name" />
-								<TableColumn fx:id="scatPowersTableSymbolColumn" minWidth="20.0" prefWidth="203.0" text="Symbol" />
-								<TableColumn fx:id="scatPowersTableColourColumn" minWidth="20.0" prefWidth="203.0" text="Colour" />
+								<TableColumn fx:id="scatPowersTableNameColumn" prefWidth="75.0" text="Name" />
+								<TableColumn fx:id="scatPowersTableSymbolColumn" prefWidth="85.0" text="Symbol" />
+								<TableColumn fx:id="scatPowersTableColourColumn" prefWidth="120.0" text="Colour" />
+								<TableColumn fx:id="scatPowersTableBisoValueColumn" prefWidth="100.0" text="Biso" />
 							</columns>
 						</TableView>
 						<HBox alignment="CENTER">
@@ -176,7 +177,7 @@
 					<children>
 						<TableView fx:id="atomsTableView" tableMenuButtonVisible="true">
 							<columns>
-								<TableColumn fx:id="atomsTableNameColumn" prefWidth="95.0" text="Name" />
+								<TableColumn fx:id="atomsTableNameColumn" prefWidth="75.0" text="Name" />
 								<TableColumn fx:id="atomsTableScatteringPowerColumn" minWidth="20.0" prefWidth="120.0" text="Scattering Power" />
 								<TableColumn fx:id="atomsTableXColumn" prefWidth="95.0" text="X" />
 								<TableColumn fx:id="atomsTableYColumn" prefWidth="95.0" text="Y" />

@@ -1,6 +1,5 @@
 package cz.kfkl.mstruct.gui.model;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +27,10 @@ public class ScatteringPowerSphereElement extends ScatteringPowerCommon {
 
 	public String getSymbol() {
 		return "<sphere>";
+	}
+
+	public String getBiso() {
+		return this.bisoPar.getValue();
 	}
 
 	@Override

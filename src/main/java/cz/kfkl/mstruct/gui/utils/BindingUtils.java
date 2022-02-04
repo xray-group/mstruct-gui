@@ -404,7 +404,11 @@ public final class BindingUtils {
 	}
 
 	public static <T> void autoHeight(TableView<T> table) {
-		table.setFixedCellSize(25);
+		autoHeight(table, 25);
+	}
+
+	public static <T> void autoHeight(TableView<T> table, double fixedCellSize) {
+		table.setFixedCellSize(fixedCellSize);
 		table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(26));
 	}
 

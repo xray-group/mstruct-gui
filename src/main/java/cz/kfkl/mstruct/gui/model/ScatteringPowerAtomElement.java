@@ -1,6 +1,5 @@
 package cz.kfkl.mstruct.gui.model;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,6 +43,10 @@ public class ScatteringPowerAtomElement extends ScatteringPowerCommon {
 
 	public void setSymbol(String symbol) {
 		this.symbolPoperty.set(symbol);
+	}
+
+	public String getBiso() {
+		return this.bisoPar.getValue();
 	}
 
 	@Override

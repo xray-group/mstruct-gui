@@ -402,8 +402,13 @@ public class JvStringUtils {
 	 * value is empty or cannot be parsed to Double.
 	 */
 	public static Double parseDouble(StringProperty stringProperty) {
-		Double valueDouble = null;
+
 		String valueStr = stringProperty.get();
+		return parseDoubleSilently(valueStr);
+	}
+
+	public static Double parseDoubleSilently(String valueStr) {
+		Double valueDouble = null;
 		if (JvStringUtils.isNotBlank(valueStr)) {
 			try {
 				valueDouble = Double.valueOf(valueStr);

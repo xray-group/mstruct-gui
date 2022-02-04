@@ -4,6 +4,7 @@ import cz.kfkl.mstruct.gui.model.AtomElement;
 import cz.kfkl.mstruct.gui.model.CrystalModel;
 import cz.kfkl.mstruct.gui.model.ScatteringPowerCommon;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
+import cz.kfkl.mstruct.gui.utils.ColorTableCell;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -11,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 public class CrystalController extends BaseController<CrystalModel, MStructGuiController> {
 
@@ -55,14 +57,15 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	@FXML
 	private TableColumn<ScatteringPowerCommon, String> scatPowersTableSymbolColumn;
 	@FXML
-	private TableColumn<ScatteringPowerCommon, String> scatPowersTableColourColumn;
+	private TableColumn<ScatteringPowerCommon, Color> scatPowersTableColourColumn;
+	@FXML
+	private TableColumn<ScatteringPowerCommon, String> scatPowersTableBisoValueColumn;
 
 	@Override
 	public void init() {
 		CrystalModel crystalModel = getModelInstance();
 		crystalName.textProperty().bindBidirectional(crystalModel.getNameProperty());
-		BindingUtils.doWhenFocuseLost(crystalName,
-				() -> getAppContext().getMainController().getCrystalsListView().refresh());
+		BindingUtils.doWhenFocuseLost(crystalName, () -> getAppContext().getMainController().getCrystalsListView().refresh());
 		spaceGroup.textProperty().bindBidirectional(crystalModel.getSpaceGroupProperty());
 
 		BindingUtils.bindToggleGroupToPropertyByText(constrainLatticeToggleGroup, crystalModel.constrainLatticeOption);
@@ -85,17 +88,24 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		atomsTableXColumn.setCellValueFactory(new PropertyValueFactory<>("x"));
 		atomsTableYColumn.setCellValueFactory(new PropertyValueFactory<>("y"));
 		atomsTableZColumn.setCellValueFactory(new PropertyValueFactory<>("z"));
+
 		atomsTableOccupColumn.setCellValueFactory(new PropertyValueFactory<>("occup"));
 
 		scatPowersTableView.getItems().addAll(crystalModel.scatterintPowers);
 		scatPowersTableView.setEditable(true);
-		BindingUtils.autoHeight(scatPowersTableView);
+		BindingUtils.autoHeight(scatPowersTableView, 33);
 
 		scatPowersTableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		scatPowersTableNameColumn.setEditable(true);
 		scatPowersTableSymbolColumn.setCellValueFactory(new PropertyValueFactory<>("symbol"));
 		scatPowersTableSymbolColumn.setEditable(true);
-		scatPowersTableColourColumn.setCellValueFactory(new PropertyValueFactory<>("colour"));
+
+		scatPowersTableColourColumn.setCellValueFactory(new PropertyValueFactory<ScatteringPowerCommon, Color>("color"));
+		scatPowersTableColourColumn.setCellFactory(column -> new ColorTableCell<>(column));
+		scatPowersTableColourColumn
+				.setOnEditCommit(t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setColor(t.getNewValue()));
+
+		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
 	}
 
 }

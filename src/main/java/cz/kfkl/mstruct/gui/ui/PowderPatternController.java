@@ -203,24 +203,22 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		BindingUtils.doubleTextField(geometryOmegaTextField);
 		geometryOmegaTextField.textProperty().bindBidirectional(geometryElement.omegaProperty);
 		geometryOmegaTextField.disableProperty().bind(Bindings.not(geometryTogglePB.selectedProperty()));
-		geometryToggleBB.selectedProperty().addListener(BindingUtils.newChanged((newValue) -> {
-			if (newValue) {
-				geometryOmegaTextField.textProperty().set("-1");
+		geometryToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+			if (oldValue == geometryTogglePB) {
+				geometryElement.lastPbOmega = geometryOmegaTextField.textProperty().get();
 			}
-		}));
-		geometryToggleBBVS.selectedProperty().addListener(BindingUtils.newChanged((newValue) -> {
-			if (newValue) {
-				geometryOmegaTextField.textProperty().set("-2");
-			}
-		}));
-		geometryTogglePB.selectedProperty().addListener(BindingUtils.newChanged((newValue) -> {
-			if (newValue) {
+
+			if (newValue == geometryToggleBB) {
+				geometryOmegaTextField.textProperty().set(GeometryElement.OMEGA_BB_CONSTANT_STR);
+			} else if (newValue == geometryToggleBBVS) {
+				geometryOmegaTextField.textProperty().set(GeometryElement.OMEGA_BBVS_CONSTANT_STR);
+			} else if (newValue == geometryTogglePB) {
 				Double omegaD = geometryElement.decodeOmega();
 				if (omegaD != null && omegaD < 0) {
-					geometryOmegaTextField.textProperty().set(GeometryElement.DEFAULT_POSITIVE_OMEGA.toString());
+					geometryOmegaTextField.textProperty().set(geometryElement.lastPbOmega);
 				}
 			}
-		}));
+		});
 	}
 
 	@FXML

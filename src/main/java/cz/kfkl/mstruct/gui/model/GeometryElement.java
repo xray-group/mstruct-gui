@@ -11,8 +11,12 @@ import javafx.beans.property.StringProperty;
 @XmlElementName("Geometry")
 public class GeometryElement extends XmlLinkedModelElement {
 	public static final Double OMEGA_BB_CONSTANT = -1d;
+	public static final String OMEGA_BB_CONSTANT_STR = "-1";
+
 	public static final Double OMEGA_BBVS_CONSTANT = -2d;
-	public static final Double DEFAULT_POSITIVE_OMEGA = 0.5;
+	public static final String OMEGA_BBVS_CONSTANT_STR = "-2";
+
+	public String lastPbOmega = "0.5";
 
 	@XmlAttributeProperty("Omega")
 	public StringProperty omegaProperty = new SimpleStringProperty();

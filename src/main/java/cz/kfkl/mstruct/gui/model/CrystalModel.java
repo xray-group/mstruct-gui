@@ -1,7 +1,6 @@
 package cz.kfkl.mstruct.gui.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.base.Strings;
@@ -39,18 +38,23 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 
 	@XmlUniqueElement
 	public ParUniqueElement aPar = new ParUniqueElement("a");
-
 	@XmlUniqueElement
 	public ParUniqueElement bPar = new ParUniqueElement("b");
-
 	@XmlUniqueElement
 	public ParUniqueElement cPar = new ParUniqueElement("c");
+
+	@XmlUniqueElement
+	public ParUniqueElement alphaPar = new ParUniqueElement("alpha");
+	@XmlUniqueElement
+	public ParUniqueElement betaPar = new ParUniqueElement("beta");
+	@XmlUniqueElement
+	public ParUniqueElement gammaPar = new ParUniqueElement("gamma");
 
 	@XmlElementList
 	public List<AtomElement> atoms = new ArrayList<>();
 
 	@XmlElementList
-	public List<ScatteringPowerCommon> scatterintPowers = new ArrayList<>();
+	public List<ScatteringPowerModel> scatterintPowers = new ArrayList<>();
 
 	public CrystalModel() {
 	}
@@ -62,7 +66,7 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 
 	@Override
 	public List<ParUniqueElement> getParams() {
-		return List.of(aPar, bPar, cPar);
+		return List.of(aPar, bPar, cPar, alphaPar, betaPar, gammaPar);
 	}
 
 	@Override

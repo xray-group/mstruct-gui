@@ -1,6 +1,7 @@
 package cz.kfkl.mstruct.gui.model;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
+import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlMappedSubclasses;
@@ -10,7 +11,8 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 
 @XmlMappedSubclasses({ ScatteringPowerAtomElement.class, ScatteringPowerSphereElement.class })
-public abstract class ScatteringPowerCommon extends XmlLinkedModelElement implements ParamContainer {
+public abstract class ScatteringPowerModel<C extends BaseController<?, ?>> extends XmlLinkedModelElement
+		implements ParamContainer, FxmlFileNameProvider<C> {
 
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty();

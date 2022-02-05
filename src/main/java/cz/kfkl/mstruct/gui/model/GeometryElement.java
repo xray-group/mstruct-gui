@@ -43,5 +43,5 @@ public class GeometryElement extends XmlLinkedModelElement {
 
 		return decoded;
 	}
-
+	
 }

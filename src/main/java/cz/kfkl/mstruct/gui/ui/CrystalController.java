@@ -2,7 +2,7 @@ package cz.kfkl.mstruct.gui.ui;
 
 import cz.kfkl.mstruct.gui.model.AtomElement;
 import cz.kfkl.mstruct.gui.model.CrystalModel;
-import cz.kfkl.mstruct.gui.model.ScatteringPowerCommon;
+import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.ColorTableCell;
 import javafx.fxml.FXML;
@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 public class CrystalController extends BaseController<CrystalModel, MStructGuiController> {
@@ -36,6 +37,13 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	private HBox cParContainer;
 
 	@FXML
+	private HBox alphaParContainer;
+	@FXML
+	private HBox betaParContainer;
+	@FXML
+	private HBox gammaParContainer;
+
+	@FXML
 	private TableView<AtomElement> atomsTableView;
 	@FXML
 	private TableColumn<AtomElement, String> atomsTableNameColumn;
@@ -51,15 +59,17 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	private TableColumn<AtomElement, String> atomsTableOccupColumn;
 
 	@FXML
-	private TableView<ScatteringPowerCommon> scatPowersTableView;
+	private TableView<ScatteringPowerModel> scatPowersTableView;
 	@FXML
-	private TableColumn<ScatteringPowerCommon, String> scatPowersTableNameColumn;
+	private TableColumn<ScatteringPowerModel, String> scatPowersTableNameColumn;
 	@FXML
-	private TableColumn<ScatteringPowerCommon, String> scatPowersTableSymbolColumn;
+	private TableColumn<ScatteringPowerModel, String> scatPowersTableSymbolColumn;
 	@FXML
-	private TableColumn<ScatteringPowerCommon, Color> scatPowersTableColourColumn;
+	private TableColumn<ScatteringPowerModel, Color> scatPowersTableColourColumn;
 	@FXML
-	private TableColumn<ScatteringPowerCommon, String> scatPowersTableBisoValueColumn;
+	private TableColumn<ScatteringPowerModel, String> scatPowersTableBisoValueColumn;
+	@FXML
+	private StackPane scatPowersDetailsStackPane;
 
 	@Override
 	public void init() {
@@ -77,6 +87,10 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		BindingUtils.bindAndBuildParFieldsNoName(bParContainer, crystalModel.bPar);
 		BindingUtils.bindAndBuildParFieldsNoName(cParContainer, crystalModel.cPar);
 
+		BindingUtils.bindAndBuildParFieldsNoName(alphaParContainer, crystalModel.alphaPar);
+		BindingUtils.bindAndBuildParFieldsNoName(betaParContainer, crystalModel.betaPar);
+		BindingUtils.bindAndBuildParFieldsNoName(gammaParContainer, crystalModel.gammaPar);
+
 		atomsTableView.getItems().addAll(crystalModel.atoms);
 		atomsTableView.setEditable(true);
 		BindingUtils.autoHeight(atomsTableView);
@@ -93,6 +107,8 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 		scatPowersTableView.getItems().addAll(crystalModel.scatterintPowers);
 		scatPowersTableView.setEditable(true);
+		BindingUtils.setupSelectionToChildrenListener(this, scatPowersTableView.getSelectionModel().selectedItemProperty(),
+				scatPowersDetailsStackPane.getChildren(), getAppContext());
 		BindingUtils.autoHeight(scatPowersTableView, 33);
 
 		scatPowersTableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -100,7 +116,7 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		scatPowersTableSymbolColumn.setCellValueFactory(new PropertyValueFactory<>("symbol"));
 		scatPowersTableSymbolColumn.setEditable(true);
 
-		scatPowersTableColourColumn.setCellValueFactory(new PropertyValueFactory<ScatteringPowerCommon, Color>("color"));
+		scatPowersTableColourColumn.setCellValueFactory(new PropertyValueFactory<ScatteringPowerModel, Color>("color"));
 		scatPowersTableColourColumn.setCellFactory(column -> new ColorTableCell<>(column));
 		scatPowersTableColourColumn
 				.setOnEditCommit(t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setColor(t.getNewValue()));

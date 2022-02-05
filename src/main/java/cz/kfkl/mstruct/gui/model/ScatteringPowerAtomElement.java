@@ -3,6 +3,7 @@ package cz.kfkl.mstruct.gui.model;
 import java.util.Collections;
 import java.util.List;
 
+import cz.kfkl.mstruct.gui.ui.ScatteringPowerAtomController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
@@ -10,7 +11,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @XmlElementName("ScatteringPowerAtom")
-public class ScatteringPowerAtomElement extends ScatteringPowerCommon {
+public class ScatteringPowerAtomElement extends ScatteringPowerModel<ScatteringPowerAtomController> {
+	private static final String FXML_FILE_NAME = "scatteringPowerAtom.fxml";
 
 	@XmlAttributeProperty("Symbol")
 	public StringProperty symbolPoperty = new SimpleStringProperty();
@@ -26,6 +28,11 @@ public class ScatteringPowerAtomElement extends ScatteringPowerCommon {
 
 	@XmlUniqueElement
 	public ParUniqueElement formalChargePar = new ParUniqueElement("Formal Charge");
+
+	@Override
+	public String getFxmlFileName() {
+		return FXML_FILE_NAME;
+	}
 
 	@Override
 	public List<ParUniqueElement> getParams() {

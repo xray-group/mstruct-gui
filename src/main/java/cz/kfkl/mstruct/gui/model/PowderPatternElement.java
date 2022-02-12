@@ -42,8 +42,6 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@XmlUniqueElement("MaxSinThetaOvLambda")
 	public SingleValueUniqueElement maxSinThetaOvLambdaElement = new SingleValueUniqueElement("0");
 
-	// is it the incidence angle (deg)-2Theta scan, negative value-2Theta/Theta scan
-	// ?
 	@XmlUniqueElement
 	public GeometryElement geometryElement = new GeometryElement();
 

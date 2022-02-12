@@ -12,13 +12,13 @@ public class AbsorptionCorrElement extends UniqueElement {
 	public StringProperty nameProperty = new SimpleStringProperty();
 
 	@XmlAttributeProperty("Thickness")
-	public StringProperty thicknessPoperty = new SimpleStringProperty();
+	public StringProperty thicknessProperty = new SimpleStringProperty();
 
 	@XmlAttributeProperty("Depth")
-	public StringProperty depthPoperty = new SimpleStringProperty();
+	public StringProperty depthProperty = new SimpleStringProperty();
 
 	@XmlAttributeProperty("AbsorptionFactor")
-	public StringProperty absorptionFactorPoperty = new SimpleStringProperty();
+	public StringProperty absorptionFactorProperty = new SimpleStringProperty();
 
 	public AbsorptionCorrElement() {
 		super("AbsorptionCorr");

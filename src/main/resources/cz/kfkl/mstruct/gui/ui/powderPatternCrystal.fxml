@@ -45,7 +45,7 @@
 						<Insets left="8.0" />
 					</HBox.margin>
 				</Label>
-				<TextField fx:id="powderPatternCrystalInternalNameTextField" prefHeight="19.0" prefWidth="130.0" disable="true" />
+				<TextField fx:id="powderPatternCrystalInternalNameTextField" prefHeight="19.0" prefWidth="180.0" disable="true" />
 			</children>
 		</HBox>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">

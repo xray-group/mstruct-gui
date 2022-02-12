@@ -97,15 +97,15 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 //		BindingUtils.bindAndBuildParFieldsFullLarge(globalBisoParContainer, model.globalBisoPar);
 		BindingUtils.bindAndBuildParFieldsNoName(globalBisoParContainer, model.globalBisoPar);
 
-		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scalePoperty);
+		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
 
 		absoptionCorrectionNameTextField.textProperty().bindBidirectional(model.absorptionCorrElement.nameProperty);
 		BindingUtils.doubleTextField(absoptionDepthTextField);
-		absoptionDepthTextField.textProperty().bindBidirectional(model.absorptionCorrElement.depthPoperty);
+		absoptionDepthTextField.textProperty().bindBidirectional(model.absorptionCorrElement.depthProperty);
 		BindingUtils.doubleTextField(absoptionThicknessTextField);
-		absoptionThicknessTextField.textProperty().bindBidirectional(model.absorptionCorrElement.thicknessPoperty);
+		absoptionThicknessTextField.textProperty().bindBidirectional(model.absorptionCorrElement.thicknessProperty);
 		BindingUtils.doubleTextField(absoptionFactorTextField);
-		absoptionFactorTextField.textProperty().bindBidirectional(model.absorptionCorrElement.absorptionFactorPoperty);
+		absoptionFactorTextField.textProperty().bindBidirectional(model.absorptionCorrElement.absorptionFactorProperty);
 
 		reflectionProfileListView.setItems(model.reflectionProfile.reflectionProfilesList);
 //		BindingUtils.setupListViewListener(reflectionProfileListView, reflectionProfileStackPane, getAppContext());

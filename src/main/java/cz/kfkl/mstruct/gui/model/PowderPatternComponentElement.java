@@ -12,7 +12,7 @@ import javafx.beans.property.StringProperty;
 public class PowderPatternComponentElement extends XmlLinkedModelElement {
 
 	@XmlAttributeProperty("Scale")
-	public StringProperty scalePoperty = new SimpleStringProperty("1");
+	public StringProperty scaleProperty = new SimpleStringProperty("1");
 
 	@XmlUniqueElementKey("Name")
 	public StringProperty name = new SimpleStringProperty();

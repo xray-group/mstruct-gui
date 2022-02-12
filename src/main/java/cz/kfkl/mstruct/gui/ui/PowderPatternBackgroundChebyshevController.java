@@ -3,7 +3,6 @@ package cz.kfkl.mstruct.gui.ui;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundChebyshev;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
-import cz.kfkl.mstruct.gui.utils.DoubleTextFieldTableCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -56,7 +55,7 @@ public class PowderPatternBackgroundChebyshevController
 
 		BindingUtils.bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 
-		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scalePoperty);
+		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
 
 		polynomialDegreeSpinner.setValueFactory(new IntegerSpinnerValueFactory(0, 16, model.polynomialDegreeProperty.getValue()));
 		// model.polynomialDegreeProperty.bind(polynomialDegreeSpinner.valueProperty());
@@ -79,12 +78,9 @@ public class PowderPatternBackgroundChebyshevController
 		coefficientIndexTableColumn.setCellValueFactory(new PropertyValueFactory<>("index"));
 		// coefficientIndexTableColumn.setEditable(fa);
 
-		coefficientValueTableColumn.setCellValueFactory(c -> c.getValue().valueProperty);
-		coefficientValueTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
+		BindingUtils.bindDoubleTableColumn(coefficientValueTableColumn, v -> v.valueProperty);
 		// When variable is renamed, re-evaluate formula
 		// coefficientValueTableColumn.setOnEditCommit(event -> parseFormula());
-
-		coefficientValueTableColumn.setEditable(true);
 
 		coefficientRefinedTableColumn.setCellValueFactory(cdf -> cdf.getValue().refinedProperty);
 		coefficientRefinedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(coefficientRefinedTableColumn));

@@ -24,6 +24,7 @@ public class ColorTableCell<T> extends TableCell<T, Color> {
 				commitEdit(newValue);
 			}
 		});
+		this.colorPicker.getStyleClass().add(ColorPicker.STYLE_CLASS_BUTTON);
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	}
 

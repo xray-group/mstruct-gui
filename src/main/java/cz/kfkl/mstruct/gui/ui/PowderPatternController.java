@@ -18,7 +18,6 @@ import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundType;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
-import cz.kfkl.mstruct.gui.utils.DoubleTextFieldTableCell;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -172,16 +171,12 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 			return true;
 		});
 
-		excludedRegionsFromTableColumn.setCellValueFactory(c -> c.getValue().fromProperty);
-		excludedRegionsFromTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
-		excludedRegionsFromTableColumn.setEditable(true);
+		BindingUtils.bindDoubleTableColumn(excludedRegionsFromTableColumn, v -> v.fromProperty);
 		excludedRegionsFromTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
 			Platform.runLater(() -> excludedRegionsTableView.sort());
 		});
 
-		excludedRegionsToTableColumn.setCellValueFactory(c -> c.getValue().toProperty);
-		excludedRegionsToTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
-		excludedRegionsToTableColumn.setEditable(true);
+		BindingUtils.bindDoubleTableColumn(excludedRegionsToTableColumn, v -> v.toProperty);
 		excludedRegionsToTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
 			Platform.runLater(() -> excludedRegionsTableView.sort());
 		});

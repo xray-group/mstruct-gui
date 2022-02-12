@@ -1,7 +1,10 @@
 package cz.kfkl.mstruct.gui.ui;
 
-import cz.kfkl.mstruct.gui.model.AtomElement;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import cz.kfkl.mstruct.gui.model.CrystalModel;
+import cz.kfkl.mstruct.gui.model.ScattererModel;
 import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.ColorTableCell;
@@ -44,21 +47,6 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	private HBox gammaParContainer;
 
 	@FXML
-	private TableView<AtomElement> atomsTableView;
-	@FXML
-	private TableColumn<AtomElement, String> atomsTableNameColumn;
-	@FXML
-	private TableColumn<AtomElement, String> atomsTableScatteringPowerColumn;
-	@FXML
-	private TableColumn<AtomElement, String> atomsTableXColumn;
-	@FXML
-	private TableColumn<AtomElement, String> atomsTableYColumn;
-	@FXML
-	private TableColumn<AtomElement, String> atomsTableZColumn;
-	@FXML
-	private TableColumn<AtomElement, String> atomsTableOccupColumn;
-
-	@FXML
 	private TableView<ScatteringPowerModel> scatPowersTableView;
 	@FXML
 	private TableColumn<ScatteringPowerModel, String> scatPowersTableNameColumn;
@@ -70,6 +58,26 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	private TableColumn<ScatteringPowerModel, String> scatPowersTableBisoValueColumn;
 	@FXML
 	private StackPane scatPowersDetailsStackPane;
+
+	@FXML
+	private TableView<ScattererModel> scatterersTableView;
+	@FXML
+	private TableColumn<ScattererModel, String> scatterersTableNameColumn;
+//	@FXML
+//	private TableColumn<ScattererModel, String> scatterersTableScatteringPowerColumn;
+	@FXML
+	private TableColumn<ScattererModel, String> scatterersTableXColumn;
+	@FXML
+	private TableColumn<ScattererModel, String> scatterersTableYColumn;
+	@FXML
+	private TableColumn<ScattererModel, String> scatterersTableZColumn;
+	@FXML
+	private TableColumn<ScattererModel, String> scatterersTableOccupColumn;
+	@FXML
+	private StackPane scatterresDetailsStackPane;
+
+	@FXML
+	private TableView<DynamicMatrixRow> antiBumpDistanceTableView;
 
 	@Override
 	public void init() {
@@ -91,20 +99,6 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		BindingUtils.bindAndBuildParFieldsNoName(betaParContainer, crystalModel.betaPar);
 		BindingUtils.bindAndBuildParFieldsNoName(gammaParContainer, crystalModel.gammaPar);
 
-		atomsTableView.getItems().addAll(crystalModel.atoms);
-		atomsTableView.setEditable(true);
-		BindingUtils.autoHeight(atomsTableView);
-
-		atomsTableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-		atomsTableNameColumn.setEditable(true);
-		atomsTableScatteringPowerColumn.setCellValueFactory(new PropertyValueFactory<>("scattPow"));
-		atomsTableScatteringPowerColumn.setEditable(true);
-		atomsTableXColumn.setCellValueFactory(new PropertyValueFactory<>("x"));
-		atomsTableYColumn.setCellValueFactory(new PropertyValueFactory<>("y"));
-		atomsTableZColumn.setCellValueFactory(new PropertyValueFactory<>("z"));
-
-		atomsTableOccupColumn.setCellValueFactory(new PropertyValueFactory<>("occup"));
-
 		scatPowersTableView.getItems().addAll(crystalModel.scatterintPowers);
 		scatPowersTableView.setEditable(true);
 		BindingUtils.setupSelectionToChildrenListener(this, scatPowersTableView.getSelectionModel().selectedItemProperty(),
@@ -122,6 +116,25 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 				.setOnEditCommit(t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setColor(t.getNewValue()));
 
 		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
+
+		scatterersTableView.getItems().addAll(crystalModel.scatterers);
+		scatterersTableView.setEditable(true);
+		BindingUtils.setupSelectionToChildrenListener(this, scatterersTableView.getSelectionModel().selectedItemProperty(),
+				scatterresDetailsStackPane.getChildren(), getAppContext());
+		BindingUtils.autoHeight(scatterersTableView);
+
+		scatterersTableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+		scatterersTableNameColumn.setEditable(true);
+//		scatterersTableScatteringPowerColumn.setCellValueFactory(new PropertyValueFactory<>("scattPow"));
+//		scatterersTableScatteringPowerColumn.setEditable(true);
+		scatterersTableXColumn.setCellValueFactory(new PropertyValueFactory<>("x"));
+		scatterersTableYColumn.setCellValueFactory(new PropertyValueFactory<>("y"));
+		scatterersTableZColumn.setCellValueFactory(new PropertyValueFactory<>("z"));
+
+		scatterersTableOccupColumn.setCellValueFactory(new PropertyValueFactory<>("occup"));
+
+		List<String> keys = crystalModel.scatterintPowers.stream().map((i) -> i.getName()).collect(Collectors.toList());
+
 	}
 
 }

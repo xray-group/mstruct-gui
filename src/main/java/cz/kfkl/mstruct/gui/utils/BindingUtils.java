@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -47,6 +49,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
@@ -154,6 +157,11 @@ public final class BindingUtils {
 		});
 	}
 
+	public static void bindDoubleTextField(TextField textField, StringProperty stringProperty) {
+		doubleTextField(textField);
+		textField.textProperty().bindBidirectional(stringProperty);
+	}
+
 	public static void doubleTextField(TextField textField) {
 		textField.setPrefWidth(Double.MIN_VALUE);
 		textField.setMinWidth(60);
@@ -241,6 +249,10 @@ public final class BindingUtils {
 	}
 
 	public static void bindAndBuildRadioButtonsOption(HBox container, OptionUniqueElement optionEl) {
+		// The idea is that with this spacing adjustment the ComboBoxOption and
+		// ChoiceBoxOption containers can both have the same spacing (typically 4)
+		// defined in fxml
+		container.setSpacing(container.getSpacing() + 4);
 		Label label = new Label(optionEl.getName() + ":");
 
 		container.getChildren().add(label);
@@ -409,7 +421,8 @@ public final class BindingUtils {
 
 	public static <T> void autoHeight(TableView<T> table, double fixedCellSize) {
 		table.setFixedCellSize(fixedCellSize);
-		table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(26));
+		table.prefHeightProperty()
+				.bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(fixedCellSize + 1));
 	}
 
 	public static void initTableView(TableView<RowIndex> tableView, String[] columnNames) {
@@ -462,6 +475,20 @@ public final class BindingUtils {
 		}
 
 		return newName;
+	}
+
+	public static <E> void bindDoubleTableColumn(TableColumn<E, String> tableColumn,
+			Function<E, StringProperty> stringPropertyFunction) {
+		tableColumn.setCellValueFactory(c -> stringPropertyFunction.apply(c.getValue()));
+		tableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
+		tableColumn.setEditable(true);
+	}
+
+	public static <E> void bindStringTableColumn(TableColumn<E, String> tableColumn,
+			Function<E, StringProperty> stringPropertyFunction) {
+		tableColumn.setCellValueFactory(c -> stringPropertyFunction.apply(c.getValue()));
+		tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		tableColumn.setEditable(true);
 	}
 
 }

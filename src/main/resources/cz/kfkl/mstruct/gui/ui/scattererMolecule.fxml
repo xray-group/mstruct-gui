@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fillWidth="true" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ScattererMoleculeController">
+	<children>
+		<GridPane hgap="8" VBox.vgrow="ALWAYS">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="400.0" />
+			</columnConstraints>
+			<children>
+				<Label text="x:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+				<Label text="y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+				<Label text="z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+				<Label text="Occup:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+				<HBox fx:id="xParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<HBox fx:id="yParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<HBox fx:id="zParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<HBox fx:id="occupParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+			</children>
+		</GridPane>
+		<HBox fx:id="flexibilityModelOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
+		<HBox fx:id="enableFlippingOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
+		<HBox fx:id="autoOptimizeStartingConformationOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
+		<HBox fx:id="optimizeOrientationOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
+		<HBox fx:id="rotationCenterOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="Log(likelihood) Scale:" />
+				<TextField fx:id="logLikelihoodScaleTextField" prefHeight="19.0" prefWidth="100.0"/>
+			</children>
+		</HBox>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="MD Move Frequency:" />
+				<TextField fx:id="mDMoveFreqTextField" prefHeight="19.0" prefWidth="100.0"/>
+				<Label text="MD Move Energy:">
+					<padding>
+						<Insets left="8.0" />
+					</padding>
+				</Label>
+				<TextField fx:id="mDMoveEnergyTextField" prefHeight="19.0" prefWidth="100.0"/>
+			</children>
+		</HBox>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="Center Atom:" />
+				<TextField fx:id="centerAtomTextField" prefHeight="19.0" prefWidth="100.0" editable="false"/>
+			</children>
+		</HBox>
+		<TableView fx:id="moleculeAtomsTableView">
+			<columns>
+				<TableColumn fx:id="moleculeAtomsTableNameColumn" prefWidth="75.0" text="Name" />
+				<TableColumn fx:id="moleculeAtomsTableScatteringPowerColumn" minWidth="20.0" prefWidth="120.0" text="Scattering Power" />
+				<TableColumn fx:id="moleculeAtomsTableXColumn" prefWidth="95.0" text="X" />
+				<TableColumn fx:id="moleculeAtomsTableYColumn" prefWidth="95.0" text="Y" />
+				<TableColumn fx:id="moleculeAtomsTableZColumn" prefWidth="95.0" text="Z" />
+				<TableColumn fx:id="moleculeAtomsTableOccupColumn" prefWidth="95.0" text="Occup" />
+			</columns>
+		</TableView>
+		<!-- 
+		<TitledPane animated="false" text="Restraints - TODO">
+			<content>
+			</content>
+			<font>
+				<Font name="System Bold" size="12.0" />
+			</font>
+			<VBox.margin>
+				<Insets top="8.0" />
+			</VBox.margin>
+		</TitledPane>
+		 -->
+	</children>
+</VBox>

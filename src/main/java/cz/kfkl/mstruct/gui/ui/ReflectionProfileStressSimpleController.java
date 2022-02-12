@@ -3,7 +3,6 @@ package cz.kfkl.mstruct.gui.ui;
 import cz.kfkl.mstruct.gui.model.ReflectionProfileStressSimpleElement;
 import cz.kfkl.mstruct.gui.model.StiffnessConstantElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
-import cz.kfkl.mstruct.gui.utils.DoubleTextFieldTableCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -12,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 
 public class ReflectionProfileStressSimpleController
@@ -59,22 +57,16 @@ public class ReflectionProfileStressSimpleController
 			return true;
 		});
 
-		stiffnessConstantNameTableColumn.setCellValueFactory(c -> c.getValue().nameProperty);
-		stiffnessConstantNameTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-		stiffnessConstantNameTableColumn.setEditable(true);
-
+		BindingUtils.bindStringTableColumn(stiffnessConstantNameTableColumn, v -> v.nameProperty);
 		stiffnessConstantNameTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
 			Platform.runLater(() -> stiffnessConstantsTableView.sort());
 		});
 		// method to add a TableColumn.editCommitEvent() EventType withyour desired
 		// EventHandler as the second argument.
 
-		stiffnessConstantValueTableColumn.setCellValueFactory(c -> c.getValue().valueProperty);
-		stiffnessConstantValueTableColumn.setCellFactory(DoubleTextFieldTableCell.forTableColumn());
+		BindingUtils.bindDoubleTableColumn(stiffnessConstantValueTableColumn, v -> v.valueProperty);
 		// When variable is renamed, re-evaluate formula
 		// coefficientValueTableColumn.setOnEditCommit(event -> parseFormula());
-
-		stiffnessConstantValueTableColumn.setEditable(true);
 
 		stiffnessConstantRemoveButton.disableProperty()
 				.bind(stiffnessConstantsTableView.getSelectionModel().selectedItemProperty().isNull());

@@ -57,12 +57,12 @@
 			</children>
 		</GridPane>
 		
-		<HBox fx:id="useIntegratedProfilesOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="8.0" />
+		<HBox fx:id="useIntegratedProfilesOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
 		<TitledPane animated="false" text="Radiation">
 			<content>
 				<VBox alignment="TOP_CENTER">
 					<children>
-						<HBox fx:id="radiationOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="8.0" />
+						<HBox fx:id="radiationOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
 						<HBox fx:id="spectrumOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
 						<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 							<children>

@@ -51,7 +51,7 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	public ParUniqueElement gammaPar = new ParUniqueElement("gamma");
 
 	@XmlElementList
-	public List<AtomElement> atoms = new ArrayList<>();
+	public List<ScattererModel> scatterers = new ArrayList<>();
 
 	@XmlElementList
 	public List<ScatteringPowerModel> scatterintPowers = new ArrayList<>();
@@ -72,8 +72,8 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	@Override
 	public List<? extends ParamContainer> getInnerContainers() {
 		List<ParamContainer> list = new ArrayList<>();
-		list.addAll(atoms);
 		list.addAll(scatterintPowers);
+		list.addAll(scatterers);
 		return list;
 	}
 

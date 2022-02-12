@@ -15,7 +15,7 @@ public class ScatteringPowerAtomElement extends ScatteringPowerModel<ScatteringP
 	private static final String FXML_FILE_NAME = "scatteringPowerAtom.fxml";
 
 	@XmlAttributeProperty("Symbol")
-	public StringProperty symbolPoperty = new SimpleStringProperty();
+	public StringProperty symbolProperty = new SimpleStringProperty();
 
 	@XmlUniqueElement
 	public ParUniqueElement bisoPar = new ParUniqueElement("Biso");
@@ -45,11 +45,11 @@ public class ScatteringPowerAtomElement extends ScatteringPowerModel<ScatteringP
 	}
 
 	public String getSymbol() {
-		return symbolPoperty.get();
+		return symbolProperty.get();
 	}
 
 	public void setSymbol(String symbol) {
-		this.symbolPoperty.set(symbol);
+		this.symbolProperty.set(symbol);
 	}
 
 	public String getBiso() {

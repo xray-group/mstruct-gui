@@ -34,7 +34,7 @@
 				</font>
 			</Label>
 		</HBox>
-		<HBox fx:id="xFuncTypeOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="8.0">
+		<HBox fx:id="xFuncTypeOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>
 			</children>
 		</HBox>

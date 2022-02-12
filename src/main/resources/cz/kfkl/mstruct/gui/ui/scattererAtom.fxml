@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fillWidth="true" spacing="4" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ScattererAtomController">
+	<children>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="Scattering Power: " />
+				<TextField fx:id="scaterringPowerTextField" prefHeight="19.0" prefWidth="90.0" editable="false"/>
+			</children>
+		</HBox>
+		<GridPane hgap="8" VBox.vgrow="ALWAYS">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="400.0" />
+			</columnConstraints>
+			<children>
+				<Label text="x:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+				<Label text="y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+				<Label text="z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+				<Label text="Occup:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+				<HBox fx:id="xParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<HBox fx:id="yParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<HBox fx:id="zParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<HBox fx:id="occupParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+			</children>
+		</GridPane>
+	</children>
+</VBox>

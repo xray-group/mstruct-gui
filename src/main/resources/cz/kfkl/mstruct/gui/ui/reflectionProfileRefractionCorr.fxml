@@ -30,7 +30,7 @@
 			</children>
 		</HBox>
 		
-		<HBox fx:id="chi0SourceOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="8.0" />
+		<HBox fx:id="chi0SourceOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
 		
 		<GridPane hgap="8" VBox.vgrow="ALWAYS">
 			<columnConstraints>

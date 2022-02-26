@@ -1,13 +1,23 @@
 package cz.kfkl.mstruct.gui.model;
 
+import org.jdom2.Element;
+
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
+import cz.kfkl.mstruct.gui.ui.images.FramedRectangle;
+import cz.kfkl.mstruct.gui.utils.BindingUtils;
+import cz.kfkl.mstruct.gui.utils.ImageWithBackgroud;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlMappedSubclasses;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 @XmlMappedSubclasses({ ScatteringPowerAtomElement.class, ScatteringPowerSphereElement.class })
@@ -19,6 +29,19 @@ public abstract class ScatteringPowerModel<C extends BaseController<?, ?>> exten
 
 	@XmlUniqueElement("RGBColour")
 	public SingleValueUniqueElement colourElement = new SingleValueUniqueElement("1 0 0");
+
+	@XmlUniqueElement
+	public ParUniqueElement bisoPar = new ParUniqueElement("Biso");
+
+	public Property<Color> colorProperty;
+
+	@Override
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+
+		colorProperty = new SimpleObjectProperty<>(colorFromColourStr());
+		colorProperty.addListener(BindingUtils.newChanged(v -> this.colorToColourStr(v)));
+	}
 
 	@Override
 	public String formatParamContainerName() {
@@ -43,7 +66,14 @@ public abstract class ScatteringPowerModel<C extends BaseController<?, ?>> exten
 
 	public abstract String getType();
 
-	public Color getColor() {
+	abstract public Image getIcon();
+
+	public ImageWithBackgroud getTypeGraphics() {
+		HBox graphic = new HBox(3, new FramedRectangle(9, 9, colorProperty), new ImageView(getIcon()));
+		return new ImageWithBackgroud(graphic, null);
+	}
+
+	private Color colorFromColourStr() {
 		String rgbStr = colourElement.valueProperty.get();
 		String[] split = rgbStr.split(" ");
 
@@ -64,7 +94,7 @@ public abstract class ScatteringPowerModel<C extends BaseController<?, ?>> exten
 		return val == null ? 0 : val;
 	}
 
-	public void setColor(Color color) {
+	private void colorToColourStr(Color color) {
 		this.colourElement.valueProperty.set(JvStringUtils.join(" ", JvStringUtils.toStringNoDotZero(color.getRed()),
 				JvStringUtils.toStringNoDotZero(color.getGreen()), JvStringUtils.toStringNoDotZero(color.getBlue())));
 	}

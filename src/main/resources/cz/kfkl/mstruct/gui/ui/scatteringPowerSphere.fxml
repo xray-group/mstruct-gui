@@ -1,17 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <VBox fillWidth="true" spacing="4" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ScatteringPowerSphereController">
 	<children>
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+			<children>
+				<Label text="Name:" />
+				<TextField fx:id="scatteringPowerNameTextField" prefHeight="19.0" minWidth="60.0" prefWidth="-Infinity" maxWidth="120"  disable="true" HBox.hgrow="ALWAYS">
+				</TextField>
+	            <Label layoutX="10.0" layoutY="17.0" text="Type:">
+	            	<HBox.margin>
+						<Insets left="8.0" />
+					</HBox.margin>
+	            </Label>
+	            <Label fx:id="scatteringPowerTypeLabel" layoutX="202.0" layoutY="17.0">
+	               <font>
+	                  <Font name="System Bold Italic" size="12.0" />
+	               </font>
+	            </Label>
+	            <Label text="Color:">
+	            	<HBox.margin>
+						<Insets left="8.0" />
+					</HBox.margin>
+				</Label>
+            	<ColorPicker fx:id="scatteringPowerColorPicker" prefWidth="120"/>
+			</children>
+		</HBox>
 		<GridPane hgap="8" VBox.vgrow="ALWAYS">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />

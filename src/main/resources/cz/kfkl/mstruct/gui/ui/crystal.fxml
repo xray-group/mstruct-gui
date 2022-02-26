@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -154,42 +155,51 @@
 		
 		<TitledPane animated="false" text="Scattering Powers">
 			<content>
-				<VBox alignment="TOP_CENTER">
+				<BorderPane>
 					<padding>
-	                	<Insets bottom="0" left="0" right="0" top="0" />                 
-	                </padding>
-					<children>
-						<TableView fx:id="scatPowersTableView" prefHeight="400.0" prefWidth="579.0">
-							<columns>
-								<TableColumn fx:id="scatPowersTableNameColumn" prefWidth="75.0" text="Name" />
-								<TableColumn fx:id="scatPowersTableSymbolColumn" prefWidth="85.0" text="Symbol" />
-								<TableColumn fx:id="scatPowersTableColourColumn" prefWidth="120.0" text="Colour"/>
-								<TableColumn fx:id="scatPowersTableBisoValueColumn" prefWidth="100.0" text="Biso" />
-							</columns>
-						</TableView>
+						<Insets bottom="0" left="0" right="0" top="0" />
+					</padding>
+					<left>
+						<VBox BorderPane.alignment="CENTER">
+                     		<children>
+	                     		<TableView fx:id="scatPowersTableView" prefHeight="400.0" prefWidth="177.0">
+									<columns>
+										<TableColumn fx:id="scatPowersTableIconColumn" prefWidth="42.0" text="Type"/>
+										<TableColumn fx:id="scatPowersTableNameColumn" prefWidth="60.0" text="Name" />
+										<TableColumn fx:id="scatPowersTableSymbolColumn" prefWidth="60.0" text="Symbol" />
+										<!-- 
+										<TableColumn fx:id="scatPowersTableColourColumn" prefWidth="120.0" text="Colour"/>
+										<TableColumn fx:id="scatPowersTableBisoValueColumn" prefWidth="100.0" text="Biso" />
+										 -->
+									</columns>
+								</TableView>
+								<!-- 
+								<HBox alignment="CENTER">
+									<children>
+										<Button mnemonicParsing="false" text="Add Sphere Scattering Power" />
+										<Button mnemonicParsing="false" text="Add Atomic Scattering Power">
+											<HBox.margin>
+												<Insets left="16.0" />
+											</HBox.margin>
+										</Button>
+									</children>
+									<padding>
+										<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+									</padding>
+								</HBox>
+								 -->
+	                        </children>
+                        </VBox>
+						
+					</left>
+					<center>
 						<StackPane fx:id="scatPowersDetailsStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity">
 							<padding>
-								<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+								<Insets bottom="4.0" left="8.0" right="4.0" top="4.0" />
 							</padding>
 						</StackPane>
-						
-						<!-- 
-						<HBox alignment="CENTER">
-							<children>
-								<Button mnemonicParsing="false" text="Add Sphere Scattering Power" />
-								<Button mnemonicParsing="false" text="Add Atomic Scattering Power">
-									<HBox.margin>
-										<Insets left="16.0" />
-									</HBox.margin>
-								</Button>
-							</children>
-							<padding>
-								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-							</padding>
-						</HBox>
-						 -->
-					</children>
-				</VBox>
+					</center>
+				</BorderPane>
 			</content>
 			<font>
 				<Font name="System Bold" size="12.0" />

@@ -4,8 +4,10 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.ui.ScatteringPowerSphereController;
+import cz.kfkl.mstruct.gui.ui.images.Images;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.scene.image.Image;
 
 @XmlElementName("ScatteringPowerSphere")
 public class ScatteringPowerSphereElement extends ScatteringPowerModel<ScatteringPowerSphereController> {
@@ -14,9 +16,6 @@ public class ScatteringPowerSphereElement extends ScatteringPowerModel<Scatterin
 
 	@XmlUniqueElement
 	public ParUniqueElement radiusPar = new ParUniqueElement("Radius");
-
-	@XmlUniqueElement
-	public ParUniqueElement bisoPar = new ParUniqueElement("Biso");
 
 	@Override
 	public String getFxmlFileName() {
@@ -44,5 +43,10 @@ public class ScatteringPowerSphereElement extends ScatteringPowerModel<Scatterin
 	@Override
 	public String getType() {
 		return "Sphere";
+	}
+
+	@Override
+	public Image getIcon() {
+		return Images.get("sphere.png");
 	}
 }

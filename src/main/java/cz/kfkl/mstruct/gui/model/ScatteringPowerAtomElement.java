@@ -4,11 +4,13 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.ui.ScatteringPowerAtomController;
+import cz.kfkl.mstruct.gui.ui.images.Images;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
 
 @XmlElementName("ScatteringPowerAtom")
 public class ScatteringPowerAtomElement extends ScatteringPowerModel<ScatteringPowerAtomController> {
@@ -16,9 +18,6 @@ public class ScatteringPowerAtomElement extends ScatteringPowerModel<ScatteringP
 
 	@XmlAttributeProperty("Symbol")
 	public StringProperty symbolProperty = new SimpleStringProperty();
-
-	@XmlUniqueElement
-	public ParUniqueElement bisoPar = new ParUniqueElement("Biso");
 
 	@XmlUniqueElement
 	public ParUniqueElement mlErrorPar = new ParUniqueElement("ML Error");
@@ -59,6 +58,11 @@ public class ScatteringPowerAtomElement extends ScatteringPowerModel<ScatteringP
 	@Override
 	public String getType() {
 		return "Atom";
+	}
+
+	@Override
+	public Image getIcon() {
+		return Images.get("atom.png");
 	}
 
 }

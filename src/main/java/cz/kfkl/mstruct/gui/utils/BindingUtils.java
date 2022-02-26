@@ -79,7 +79,9 @@ public final class BindingUtils {
 		}
 		// Update property value on toggle selection changes
 		toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			property.setValue((T) newValue.getUserData());
+			if (newValue != null && newValue.getUserData() != null) {
+				property.setValue((T) newValue.getUserData());
+			}
 		});
 	}
 
@@ -390,15 +392,15 @@ public final class BindingUtils {
 				((HasAppContext) controller).setAppContext(appContext);
 			}
 
+			if (controller instanceof HasParentController<?>) {
+				((HasParentController<P>) controller).setParenController(parentController);
+			}
+
 			if (controller instanceof SingleModelInstanceController) {
 				SingleModelInstanceController<FxmlFileNameProvider> cc = (SingleModelInstanceController<FxmlFileNameProvider>) controller;
 
 				cc.setModelInstance(modelInstance);
 				cc.init();
-			}
-
-			if (controller instanceof HasParentController<?>) {
-				((HasParentController<P>) controller).setParenController(parentController);
 			}
 
 			viewConsumer.accept(parent);
@@ -439,15 +441,15 @@ public final class BindingUtils {
 	}
 
 	public static <T> void doWhenPropertySet(Consumer<T> propertyValueConsumer, ObjectProperty<T> objectProperty) {
-		T tableOfDoubles = objectProperty.get();
-		if (tableOfDoubles == null) {
+		T value = objectProperty.get();
+		if (value == null) {
 			objectProperty.addListener((obsTbd, oldV, newV) -> {
 				if (newV != null) {
 					propertyValueConsumer.accept(newV);
 				}
 			});
 		} else {
-			propertyValueConsumer.accept(tableOfDoubles);
+			propertyValueConsumer.accept(value);
 		}
 	}
 

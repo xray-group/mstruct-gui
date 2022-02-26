@@ -3,12 +3,14 @@ package cz.kfkl.mstruct.gui.ui;
 import cz.kfkl.mstruct.gui.model.ScatteringPowerAtomElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class ScatteringPowerAtomController extends BaseController<ScatteringPowerAtomElement, CrystalController> {
+public class ScatteringPowerAtomController extends ScatteringPowerCommonController<ScatteringPowerAtomElement> {
 
 	@FXML
-	private HBox bisoParContainer;
+	private TextField scatteringPowerSymbolTextField;
+
 	@FXML
 	private HBox mlErrorParContainer;
 	@FXML
@@ -18,9 +20,13 @@ public class ScatteringPowerAtomController extends BaseController<ScatteringPowe
 
 	@Override
 	public void init() {
+		super.init();
+
 		ScatteringPowerAtomElement model = getModelInstance();
 
-		BindingUtils.bindAndBuildParFieldsNoName(bisoParContainer, model.bisoPar);
+		scatteringPowerSymbolTextField.textProperty().bindBidirectional(model.symbolProperty);
+		BindingUtils.doWhenFocuseLost(scatteringPowerSymbolTextField, () -> getParentController().scatteringPowerRecordChanged());
+
 		BindingUtils.bindAndBuildParFieldsNoName(mlErrorParContainer, model.mlErrorPar);
 		BindingUtils.bindAndBuildParFieldsNoName(mlNbGhostParContainer, model.mlNbGhostPar);
 		BindingUtils.bindAndBuildParFieldsNoName(formalChargeParContainer, model.formalChargePar);

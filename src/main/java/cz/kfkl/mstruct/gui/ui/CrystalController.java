@@ -7,7 +7,8 @@ import cz.kfkl.mstruct.gui.model.CrystalModel;
 import cz.kfkl.mstruct.gui.model.ScattererModel;
 import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
-import cz.kfkl.mstruct.gui.utils.ColorTableCell;
+import cz.kfkl.mstruct.gui.utils.ImageWithBackgroud;
+import cz.kfkl.mstruct.gui.utils.ImageWithBackgroudTableCell;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -16,7 +17,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 public class CrystalController extends BaseController<CrystalModel, MStructGuiController> {
 
@@ -49,13 +49,15 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	@FXML
 	private TableView<ScatteringPowerModel> scatPowersTableView;
 	@FXML
+	private TableColumn<ScatteringPowerModel, ImageWithBackgroud> scatPowersTableIconColumn;
+	@FXML
 	private TableColumn<ScatteringPowerModel, String> scatPowersTableNameColumn;
 	@FXML
 	private TableColumn<ScatteringPowerModel, String> scatPowersTableSymbolColumn;
-	@FXML
-	private TableColumn<ScatteringPowerModel, Color> scatPowersTableColourColumn;
-	@FXML
-	private TableColumn<ScatteringPowerModel, String> scatPowersTableBisoValueColumn;
+//	@FXML
+//	private TableColumn<ScatteringPowerModel, Color> scatPowersTableColourColumn;
+//	@FXML
+//	private TableColumn<ScatteringPowerModel, String> scatPowersTableBisoValueColumn;
 	@FXML
 	private StackPane scatPowersDetailsStackPane;
 
@@ -103,19 +105,24 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		scatPowersTableView.setEditable(true);
 		BindingUtils.setupSelectionToChildrenListener(this, scatPowersTableView.getSelectionModel().selectedItemProperty(),
 				scatPowersDetailsStackPane.getChildren(), getAppContext());
-		BindingUtils.autoHeight(scatPowersTableView, 33);
+		BindingUtils.autoHeight(scatPowersTableView, 28);
+
+		scatPowersTableIconColumn.setCellValueFactory(new PropertyValueFactory<>("typeGraphics"));
+		scatPowersTableIconColumn.setCellFactory(column -> new ImageWithBackgroudTableCell<>(column));
 
 		scatPowersTableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		scatPowersTableNameColumn.setEditable(true);
 		scatPowersTableSymbolColumn.setCellValueFactory(new PropertyValueFactory<>("symbol"));
 		scatPowersTableSymbolColumn.setEditable(true);
 
-		scatPowersTableColourColumn.setCellValueFactory(new PropertyValueFactory<ScatteringPowerModel, Color>("color"));
-		scatPowersTableColourColumn.setCellFactory(column -> new ColorTableCell<>(column));
-		scatPowersTableColourColumn
-				.setOnEditCommit(t -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setColor(t.getNewValue()));
+//		scatPowersTableColourColumn.setCellValueFactory(new PropertyValueFactory<ScatteringPowerModel, Color>("color"));
+//		scatPowersTableColourColumn.setCellFactory(column -> new ColorTableCell<>(column));
+//		scatPowersTableColourColumn.setOnEditCommit(t -> {
+//			t.getTableView().getItems().get(t.getTablePosition().getRow()).setColor(t.getNewValue());
+//			scatPowersTableView.refresh();
+//		});
 
-		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
+//		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
 
 		scatterersTableView.getItems().addAll(crystalModel.scatterers);
 		scatterersTableView.setEditable(true);
@@ -135,6 +142,10 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 		List<String> keys = crystalModel.scatterintPowers.stream().map((i) -> i.getName()).collect(Collectors.toList());
 
+	}
+
+	public void scatteringPowerRecordChanged() {
+		scatPowersTableView.refresh();
 	}
 
 }

@@ -68,6 +68,7 @@
 				<TableColumn fx:id="moleculeAtomsTableYColumn" prefWidth="95.0" text="Y" />
 				<TableColumn fx:id="moleculeAtomsTableZColumn" prefWidth="95.0" text="Z" />
 				<TableColumn fx:id="moleculeAtomsTableOccupColumn" prefWidth="95.0" text="Occup" />
+				<TableColumn fx:id="moleculeAtomsTableCenterAtomColumn" prefWidth="55.0" text="Center"/>
 			</columns>
 		</TableView>
 		<!-- 

@@ -3,6 +3,7 @@ package cz.kfkl.mstruct.gui.ui;
 import cz.kfkl.mstruct.gui.model.MoleculeAtomElement;
 import cz.kfkl.mstruct.gui.model.MoleculeElement;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
+import javafx.beans.value.WritableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -56,6 +57,8 @@ public class ScattererMoleculeController extends BaseController<MoleculeElement,
 	private TableColumn<MoleculeAtomElement, String> moleculeAtomsTableZColumn;
 	@FXML
 	private TableColumn<MoleculeAtomElement, String> moleculeAtomsTableOccupColumn;
+	@FXML
+	private TableColumn<MoleculeAtomElement, String> moleculeAtomsTableCenterAtomColumn;
 
 	@Override
 	public void init() {
@@ -87,6 +90,11 @@ public class ScattererMoleculeController extends BaseController<MoleculeElement,
 		moleculeAtomsTableNameColumn.setEditable(true);
 		moleculeAtomsTableScatteringPowerColumn.setCellValueFactory(new PropertyValueFactory<>("scattPow"));
 		moleculeAtomsTableScatteringPowerColumn.setEditable(true);
+		moleculeAtomsTableCenterAtomColumn.setCellValueFactory(cdf -> cdf.getValue().nameProperty);
+
+		moleculeAtomsTableCenterAtomColumn
+				.setCellFactory(new RadioButtonTableCellFactory<>((WritableValue<String>) model.centerAtomElement.nameProperty));
+		moleculeAtomsTableCenterAtomColumn.setStyle("-fx-alignment: CENTER;");
 
 		BindingUtils.bindStringTableColumn(moleculeAtomsTableNameColumn, v -> v.nameProperty);
 		BindingUtils.bindStringTableColumn(moleculeAtomsTableScatteringPowerColumn, v -> v.scattPowProperty);

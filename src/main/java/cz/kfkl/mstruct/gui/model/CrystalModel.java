@@ -59,6 +59,8 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	public List<ScatteringPowerModel> scatterintPowers = new ArrayList<>();
 	@XmlElementList
 	public ObservableList<AntiBumpDistanceElement> antiBumpDistances = FXCollections.observableArrayList();
+	@XmlElementList
+	public ObservableList<BondValenceRoElement> bondValences = FXCollections.observableArrayList();
 
 	public CrystalModel() {
 	}

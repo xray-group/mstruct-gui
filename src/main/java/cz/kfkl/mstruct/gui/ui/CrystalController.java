@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cz.kfkl.mstruct.gui.model.AntiBumpDistanceElement;
+import cz.kfkl.mstruct.gui.model.BondValenceRoElement;
 import cz.kfkl.mstruct.gui.model.CrystalModel;
 import cz.kfkl.mstruct.gui.model.ScattererModel;
 import cz.kfkl.mstruct.gui.model.ScatteringPowerAtomElement;
@@ -67,6 +68,8 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 	@FXML
 	private TableView<DynamicMatrixRow<AntiBumpDistanceElement>> antiBumpTableView;
+	@FXML
+	private TableView<DynamicMatrixRow<BondValenceRoElement>> bondValenceTableView;
 
 	@FXML
 	private TableView<ScattererModel> scatterersTableView;
@@ -131,12 +134,18 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 //		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
 
-		List<String> keys = crystalModel.scatterintPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
+		List<String> scatPowNames = crystalModel.scatterintPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
 				.map((i) -> i.getName()).collect(Collectors.toList());
 
 		antiBumpTableView.setEditable(true);
-		DynamicMatrix<AntiBumpDistanceElement> dynamicMatrix = new DynamicMatrix<>(antiBumpTableView, keys, v -> v.valueProperty);
-		dynamicMatrix.registerTuples(crystalModel.antiBumpDistances, AntiBumpDistanceElement::new);
+		DynamicMatrix<AntiBumpDistanceElement> antiBumpDistanceDynamicMatrix = new DynamicMatrix<>(antiBumpTableView, scatPowNames,
+				v -> v.valueProperty);
+		antiBumpDistanceDynamicMatrix.registerTuples(crystalModel.antiBumpDistances, AntiBumpDistanceElement::new);
+
+		bondValenceTableView.setEditable(true);
+		DynamicMatrix<BondValenceRoElement> bondValenceDynamicMatrix = new DynamicMatrix<>(bondValenceTableView, scatPowNames,
+				v -> v.valueProperty);
+		bondValenceDynamicMatrix.registerTuples(crystalModel.bondValences, BondValenceRoElement::new);
 
 		scatterersTableView.getItems().addAll(crystalModel.scatterers);
 		scatterersTableView.setEditable(true);

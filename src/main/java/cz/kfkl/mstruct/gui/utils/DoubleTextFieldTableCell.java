@@ -1,5 +1,8 @@
 package cz.kfkl.mstruct.gui.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
@@ -7,6 +10,8 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(DoubleTextFieldTableCell.class);
 
 	/***************************************************************************
 	 * * Static cell factories * *
@@ -40,6 +45,7 @@ public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
 	/** {@inheritDoc} */
 	@Override
 	public void startEdit() {
+		LOG.trace("startEdit called");
 		if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
 			return;
 		}
@@ -53,6 +59,12 @@ public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
 			UseCellUtils.startEdit(this, getConverter(), null, null, textField);
 		}
 	}
+
+//	@Override
+//	public void commitEdit(T newValue) {
+//		super.commitEdit(newValue);
+//		LOG.trace("commitEdit called with value [{}]", newValue);
+//	}
 
 	private TextField createTextField() {
 		TextField createTextField = UseCellUtils.createTextField(this, getConverter());

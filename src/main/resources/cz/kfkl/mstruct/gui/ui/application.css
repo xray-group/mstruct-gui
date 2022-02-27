@@ -1,5 +1,6 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
+
 .titled-pane > .content > * {
     -fx-padding: 4px;
 }
@@ -18,6 +19,22 @@
     -fx-background-color: -fx-focus-color, -fx-box-border, -fx-background;
     -fx-background-insets: -1.4, 0, 1;
 }
+
+
+/* if the .row-title-column is selected show the highlighting */
+.row-title-column.table-cell:selected {
+    -fx-background-color: derive(-fx-accent,40%), -fx-background;
+}
+
+/* the column with the .row-title-column class to look like the table header*/
+.row-title-column.table-cell {
+    -fx-font-weight: bold;
+    -fx-background-color: -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1; 
+}
+
+
+
 
 /*
 

@@ -13,6 +13,8 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("Crystal")
 public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameProvider<CrystalController>, ParamContainer {
@@ -55,6 +57,8 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 
 	@XmlElementList
 	public List<ScatteringPowerModel> scatterintPowers = new ArrayList<>();
+	@XmlElementList
+	public ObservableList<AntiBumpDistanceElement> antiBumpDistances = FXCollections.observableArrayList();
 
 	public CrystalModel() {
 	}

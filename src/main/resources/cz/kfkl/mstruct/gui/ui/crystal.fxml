@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -20,18 +22,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.CrystalController">
+<VBox maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/16"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.CrystalController">
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>
 				<Label text="Crystal Name:" />
-				<TextField fx:id="crystalName" prefHeight="19.0" prefWidth="149.0"/>
+				<TextField fx:id="crystalName" prefHeight="19.0" prefWidth="149.0" />
 			</children>
 		</HBox>
-		
+
 		<Separator>
 			<VBox.margin>
-		    	<Insets bottom="8.0" top="8.0" />
+				<Insets bottom="8.0" top="8.0" />
 			</VBox.margin>
 		</Separator>
 
@@ -49,7 +52,7 @@
 				</TextField>
 			</children>
 		</HBox>
-		
+
 		<HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="53.0" prefHeight="30.0" spacing="8.0">
 			<children>
 				<Label text="Constrain Lattice to SpaceGroup Symmetry:" />
@@ -108,7 +111,7 @@
 				</RadioButton>
 			</children>
 		</HBox>
-		
+
 		<GridPane hgap="8">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -118,18 +121,21 @@
 				<Label text="a:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
 				<Label text="b:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 				<Label text="c:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-				<HBox fx:id="aParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-				<HBox fx:id="bParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-				<HBox fx:id="cParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<HBox fx:id="aParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<HBox fx:id="bParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<HBox fx:id="cParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="3" />
 			</children>
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
+			<rowConstraints>
+				<RowConstraints />
+				<RowConstraints />
+				<RowConstraints />
+				<RowConstraints />
+			</rowConstraints>
 		</GridPane>
-		
+
 		<GridPane hgap="8">
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -139,107 +145,114 @@
 				<Label text="alpha:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
 				<Label text="beta:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 				<Label text="gamma:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-				<HBox fx:id="alphaParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-				<HBox fx:id="betaParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-				<HBox fx:id="gammaParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<HBox fx:id="alphaParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<HBox fx:id="betaParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<HBox fx:id="gammaParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="3" />
 			</children>
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
+			<rowConstraints>
+				<RowConstraints />
+				<RowConstraints />
+				<RowConstraints />
+				<RowConstraints />
+			</rowConstraints>
 		</GridPane>
-		
-		
-		
-		<TitledPane animated="false" text="Scattering Powers">
-			<content>
-				<BorderPane>
-					<padding>
-						<Insets bottom="0" left="0" right="0" top="0" />
-					</padding>
-					<left>
-						<VBox BorderPane.alignment="CENTER">
-                     		<children>
-	                     		<TableView fx:id="scatPowersTableView" prefHeight="400.0" prefWidth="177.0">
-									<columns>
-										<TableColumn fx:id="scatPowersTableIconColumn" prefWidth="42.0" text="Type"/>
-										<TableColumn fx:id="scatPowersTableNameColumn" prefWidth="60.0" text="Name" />
-										<TableColumn fx:id="scatPowersTableSymbolColumn" prefWidth="60.0" text="Symbol" />
-										<!-- 
-										<TableColumn fx:id="scatPowersTableColourColumn" prefWidth="120.0" text="Colour"/>
-										<TableColumn fx:id="scatPowersTableBisoValueColumn" prefWidth="100.0" text="Biso" />
-										 -->
-									</columns>
-								</TableView>
-								<!-- 
-								<HBox alignment="CENTER">
-									<children>
-										<Button mnemonicParsing="false" text="Add Sphere Scattering Power" />
-										<Button mnemonicParsing="false" text="Add Atomic Scattering Power">
-											<HBox.margin>
-												<Insets left="16.0" />
-											</HBox.margin>
-										</Button>
-									</children>
-									<padding>
-										<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-									</padding>
-								</HBox>
-								 -->
-	                        </children>
-                        </VBox>
-						
-					</left>
-					<center>
-						<StackPane fx:id="scatPowersDetailsStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity">
-							<padding>
-								<Insets bottom="4.0" left="8.0" right="4.0" top="4.0" />
-							</padding>
-						</StackPane>
-					</center>
-				</BorderPane>
-			</content>
+
+
+
+		<TitledPane animated="false" text="Scattering Powers" styleClass="no-padding-content">
 			<font>
 				<Font name="System Bold" size="12.0" />
 			</font>
 			<VBox.margin>
 				<Insets top="8.0" />
 			</VBox.margin>
+			<content>
+				<TabPane tabClosingPolicy="UNAVAILABLE">
+					<tabs>
+						<Tab text="List">
+							<content>
+								<!--<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"> <children> -->
+								<BorderPane>
+									<padding>
+										<Insets bottom="0" left="0" right="0" top="0" />
+									</padding>
+									<left>
+										<VBox BorderPane.alignment="CENTER">
+											<children>
+												<TableView fx:id="scatPowersTableView" prefHeight="400.0" prefWidth="177.0">
+													<columns>
+														<TableColumn fx:id="scatPowersTableIconColumn" prefWidth="42.0" text="Type" />
+														<TableColumn fx:id="scatPowersTableNameColumn" prefWidth="60.0" text="Name" />
+														<TableColumn fx:id="scatPowersTableSymbolColumn" prefWidth="60.0" text="Symbol" />
+														<!-- <TableColumn fx:id="scatPowersTableColourColumn" prefWidth="120.0" text="Colour"/> <TableColumn fx:id="scatPowersTableBisoValueColumn" 
+															prefWidth="100.0" text="Biso" /> -->
+													</columns>
+												</TableView>
+												<!-- <HBox alignment="CENTER"> <children> <Button mnemonicParsing="false" text="Add Sphere Scattering Power" /> <Button 
+													mnemonicParsing="false" text="Add Atomic Scattering Power"> <HBox.margin> <Insets left="16.0" /> </HBox.margin> </Button> </children> 
+													<padding> <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" /> </padding> </HBox> -->
+											</children>
+										</VBox>
+
+									</left>
+									<center>
+										<StackPane fx:id="scatPowersDetailsStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity"
+											minHeight="-Infinity" minWidth="-Infinity">
+											<padding>
+												<Insets bottom="4.0" left="8.0" right="4.0" top="4.0" />
+											</padding>
+										</StackPane>
+									</center>
+								</BorderPane>
+								<!-- </children> </AnchorPane> -->
+							</content>
+						</Tab>
+						<Tab text="Anti-bumping Distances">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+									<children>
+										<TableView fx:id="antiBumpTableView" prefHeight="400.0" prefWidth="177.0"/>
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<Tab text="Bond-valence">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+							</content>
+						</Tab>
+					</tabs>
+				</TabPane>
+			</content>
 		</TitledPane>
 		<TitledPane animated="false" layoutX="10.0" layoutY="236.0" text="Scatterers">
 			<content>
 				<VBox alignment="TOP_CENTER">
 					<padding>
-	                	<Insets bottom="4 " left="4" right="4" top="4" />                 
-	                </padding>
+						<Insets bottom="4 " left="4" right="4" top="4" />
+					</padding>
 					<children>
 						<TableView fx:id="scatterersTableView" tableMenuButtonVisible="true">
 							<columns>
 								<TableColumn fx:id="scatterersTableNameColumn" prefWidth="75.0" text="Name" />
-								<!-- 
-								<TableColumn fx:id="scatterersTableScatteringPowerColumn" minWidth="20.0" prefWidth="120.0" text="Scattering Power" />
-								 -->
+								<!-- <TableColumn fx:id="scatterersTableScatteringPowerColumn" minWidth="20.0" prefWidth="120.0" text="Scattering Power" /> -->
 								<TableColumn fx:id="scatterersTableXColumn" prefWidth="95.0" text="X" />
 								<TableColumn fx:id="scatterersTableYColumn" prefWidth="95.0" text="Y" />
 								<TableColumn fx:id="scatterersTableZColumn" prefWidth="95.0" text="Z" />
 								<TableColumn fx:id="scatterersTableOccupColumn" prefWidth="95.0" text="Occup" />
 							</columns>
 						</TableView>
-						<StackPane fx:id="scatterresDetailsStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity">
+						<StackPane fx:id="scatterresDetailsStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity"
+							minHeight="-Infinity" minWidth="-Infinity">
 							<padding>
 								<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
 							</padding>
 						</StackPane>
-						
-						<!-- 
-						<Button mnemonicParsing="false" text="Add Atom">
-							<VBox.margin>
-								<Insets top="12.0" />
-							</VBox.margin>
-						</Button>
-						 -->
+
+						<!-- <Button mnemonicParsing="false" text="Add Atom"> <VBox.margin> <Insets top="12.0" /> </VBox.margin> </Button> -->
 					</children>
 				</VBox>
 			</content>
@@ -250,17 +263,6 @@
 				<Insets top="8.0" />
 			</VBox.margin>
 		</TitledPane>
-		
-		<TitledPane animated="false" text="Anti Bump Distance Matrix - TODO">
-			<content>
-				<TableView fx:id="antiBumpDistanceTableView" prefHeight="400.0" prefWidth="579.0" tableMenuButtonVisible="false"/>
-			</content>
-			<font>
-				<Font name="System Bold" size="12.0" />
-			</font>
-			<VBox.margin>
-				<Insets top="8.0" />
-			</VBox.margin>
-		</TitledPane>
+
 	</children>
 </VBox>

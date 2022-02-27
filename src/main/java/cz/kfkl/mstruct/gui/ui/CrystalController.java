@@ -3,9 +3,13 @@ package cz.kfkl.mstruct.gui.ui;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cz.kfkl.mstruct.gui.model.AntiBumpDistanceElement;
 import cz.kfkl.mstruct.gui.model.CrystalModel;
 import cz.kfkl.mstruct.gui.model.ScattererModel;
+import cz.kfkl.mstruct.gui.model.ScatteringPowerAtomElement;
 import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
+import cz.kfkl.mstruct.gui.ui.matrix.DynamicMatrix;
+import cz.kfkl.mstruct.gui.ui.matrix.DynamicMatrixRow;
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.ImageWithBackgroud;
 import cz.kfkl.mstruct.gui.utils.ImageWithBackgroudTableCell;
@@ -60,6 +64,9 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 //	private TableColumn<ScatteringPowerModel, String> scatPowersTableBisoValueColumn;
 	@FXML
 	private StackPane scatPowersDetailsStackPane;
+
+	@FXML
+	private TableView<DynamicMatrixRow<AntiBumpDistanceElement>> antiBumpTableView;
 
 	@FXML
 	private TableView<ScattererModel> scatterersTableView;
@@ -124,6 +131,13 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 //		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
 
+		List<String> keys = crystalModel.scatterintPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
+				.map((i) -> i.getName()).collect(Collectors.toList());
+
+		antiBumpTableView.setEditable(true);
+		DynamicMatrix<AntiBumpDistanceElement> dynamicMatrix = new DynamicMatrix<>(antiBumpTableView, keys, v -> v.valueProperty);
+		dynamicMatrix.registerTuples(crystalModel.antiBumpDistances, AntiBumpDistanceElement::new);
+
 		scatterersTableView.getItems().addAll(crystalModel.scatterers);
 		scatterersTableView.setEditable(true);
 		BindingUtils.setupSelectionToChildrenListener(this, scatterersTableView.getSelectionModel().selectedItemProperty(),
@@ -139,8 +153,6 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		scatterersTableZColumn.setCellValueFactory(new PropertyValueFactory<>("z"));
 
 		scatterersTableOccupColumn.setCellValueFactory(new PropertyValueFactory<>("occup"));
-
-		List<String> keys = crystalModel.scatterintPowers.stream().map((i) -> i.getName()).collect(Collectors.toList());
 
 	}
 

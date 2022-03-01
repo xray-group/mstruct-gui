@@ -1,14 +1,21 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildComboBoxOption;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTextField;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindStringTableColumn;
+
+import cz.kfkl.mstruct.gui.model.MoleculeAtomBondElement;
 import cz.kfkl.mstruct.gui.model.MoleculeAtomElement;
 import cz.kfkl.mstruct.gui.model.MoleculeElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.beans.value.WritableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
 public class ScattererMoleculeController extends BaseController<MoleculeElement, CrystalController> {
@@ -60,50 +67,74 @@ public class ScattererMoleculeController extends BaseController<MoleculeElement,
 	@FXML
 	private TableColumn<MoleculeAtomElement, String> moleculeAtomsTableCenterAtomColumn;
 
+	@FXML
+	private TableView<MoleculeAtomBondElement> bondLengthsTableView;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondAtom1TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondAtom2TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondLengthTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondRestraintTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondDeltaTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondSigmaTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondOrderTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondElement, String> bondFreeTorsionTableNameColumn;
+
 	@Override
 	public void init() {
 		MoleculeElement model = getModelInstance();
 
-		BindingUtils.bindAndBuildParFieldsNoName(xParContainer, model.xPar);
-		BindingUtils.bindAndBuildParFieldsNoName(yParContainer, model.yPar);
-		BindingUtils.bindAndBuildParFieldsNoName(zParContainer, model.zPar);
-		BindingUtils.bindAndBuildParFieldsNoName(occupParContainer, model.occupPar);
+		bindAndBuildParFieldsNoName(xParContainer, model.xPar);
+		bindAndBuildParFieldsNoName(yParContainer, model.yPar);
+		bindAndBuildParFieldsNoName(zParContainer, model.zPar);
+		bindAndBuildParFieldsNoName(occupParContainer, model.occupPar);
 
-		BindingUtils.bindAndBuildComboBoxOption(flexibilityModelOptionContainer, model.flexibilityModelOption);
-		BindingUtils.bindAndBuildRadioButtonsOption(enableFlippingOptionContainer, model.enableFlippingOption);
-		BindingUtils.bindAndBuildRadioButtonsOption(autoOptimizeStartingConformationOptionContainer,
+		bindAndBuildComboBoxOption(flexibilityModelOptionContainer, model.flexibilityModelOption);
+		bindAndBuildRadioButtonsOption(enableFlippingOptionContainer, model.enableFlippingOption);
+		bindAndBuildRadioButtonsOption(autoOptimizeStartingConformationOptionContainer,
 				model.autoOptimizeStartingConformationOption);
-		BindingUtils.bindAndBuildRadioButtonsOption(optimizeOrientationOptionContainer, model.optimizeOrientationOption);
-		BindingUtils.bindAndBuildComboBoxOption(rotationCenterOptionContainer, model.rotationCenterOption);
+		bindAndBuildRadioButtonsOption(optimizeOrientationOptionContainer, model.optimizeOrientationOption);
+		bindAndBuildComboBoxOption(rotationCenterOptionContainer, model.rotationCenterOption);
 
-		BindingUtils.bindDoubleTextField(logLikelihoodScaleTextField, model.logLikelihoodScaleProperty);
-		BindingUtils.bindDoubleTextField(mDMoveFreqTextField, model.mDMoveFreqProperty);
-		BindingUtils.bindDoubleTextField(mDMoveEnergyTextField, model.mDMoveEnergyProperty);
+		bindDoubleTextField(logLikelihoodScaleTextField, model.logLikelihoodScaleProperty);
+		bindDoubleTextField(mDMoveFreqTextField, model.mDMoveFreqProperty);
+		bindDoubleTextField(mDMoveEnergyTextField, model.mDMoveEnergyProperty);
 
 		centerAtomTextField.textProperty().bindBidirectional(model.centerAtomElement.nameProperty);
 
 		moleculeAtomsTableView.getItems().addAll(model.moleculeAtoms);
 		moleculeAtomsTableView.setEditable(true);
-		BindingUtils.autoHeight(moleculeAtomsTableView);
+		autoHeight(moleculeAtomsTableView);
 
-		moleculeAtomsTableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-		moleculeAtomsTableNameColumn.setEditable(true);
-		moleculeAtomsTableScatteringPowerColumn.setCellValueFactory(new PropertyValueFactory<>("scattPow"));
-		moleculeAtomsTableScatteringPowerColumn.setEditable(true);
+		bindStringTableColumn(moleculeAtomsTableNameColumn, v -> v.nameProperty);
+		bindStringTableColumn(moleculeAtomsTableScatteringPowerColumn, v -> v.scattPowProperty);
+		bindDoubleTableColumn(moleculeAtomsTableXColumn, v -> v.xProperty);
+		bindDoubleTableColumn(moleculeAtomsTableYColumn, v -> v.yProperty);
+		bindDoubleTableColumn(moleculeAtomsTableZColumn, v -> v.zProperty);
+		bindDoubleTableColumn(moleculeAtomsTableOccupColumn, v -> v.occupProperty);
 		moleculeAtomsTableCenterAtomColumn.setCellValueFactory(cdf -> cdf.getValue().nameProperty);
-
 		moleculeAtomsTableCenterAtomColumn
 				.setCellFactory(new RadioButtonTableCellFactory<>((WritableValue<String>) model.centerAtomElement.nameProperty));
 		moleculeAtomsTableCenterAtomColumn.setStyle("-fx-alignment: CENTER;");
 
-		BindingUtils.bindStringTableColumn(moleculeAtomsTableNameColumn, v -> v.nameProperty);
-		BindingUtils.bindStringTableColumn(moleculeAtomsTableScatteringPowerColumn, v -> v.scattPowProperty);
+		bondLengthsTableView.getItems().addAll(model.moleculeAtomBonds);
+		autoHeight(bondLengthsTableView);
 
-		BindingUtils.bindDoubleTableColumn(moleculeAtomsTableXColumn, v -> v.xProperty);
-		BindingUtils.bindDoubleTableColumn(moleculeAtomsTableYColumn, v -> v.yProperty);
-		BindingUtils.bindDoubleTableColumn(moleculeAtomsTableZColumn, v -> v.zProperty);
-		BindingUtils.bindDoubleTableColumn(moleculeAtomsTableOccupColumn, v -> v.occupProperty);
-
+		bindStringTableColumn(bondAtom1TableNameColumn, v -> v.atom1Property);
+		bindStringTableColumn(bondAtom2TableNameColumn, v -> v.atom2Property);
+		// TODO: seems calculated in FOX but how ??
+		bindDoubleTableColumn(bondLengthTableNameColumn, v -> v.lengthProperty);
+		bindDoubleTableColumn(bondRestraintTableNameColumn, v -> v.lengthProperty);
+		bindDoubleTableColumn(bondSigmaTableNameColumn, v -> v.sigmaProperty);
+		bindDoubleTableColumn(bondDeltaTableNameColumn, v -> v.deltaProperty);
+		bindDoubleTableColumn(bondOrderTableNameColumn, v -> v.bondOrderProperty);
+		bindDoubleTableColumn(bondFreeTorsionTableNameColumn, v -> v.freeTorsionProperty);
 	}
 
 }

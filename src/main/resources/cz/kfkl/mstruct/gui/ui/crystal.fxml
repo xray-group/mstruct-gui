@@ -232,7 +232,7 @@
 				</TabPane>
 			</content>
 		</TitledPane>
-		<TitledPane animated="false" layoutX="10.0" layoutY="236.0" text="Scatterers">
+		<TitledPane animated="false" layoutX="10.0" layoutY="236.0" text="Scatterers" styleClass="no-padding-content">
 			<content>
 				<VBox alignment="TOP_CENTER">
 					<padding>

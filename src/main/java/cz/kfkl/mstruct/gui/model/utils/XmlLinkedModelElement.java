@@ -134,8 +134,8 @@ public class XmlLinkedModelElement {
 //						}
 
 						fieldValueAsXmlLinked.bindToElement(this, childEl);
-						lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
 
+						lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
 						previousModelElement = fieldValueAsXmlLinked;
 					}
 
@@ -160,7 +160,7 @@ public class XmlLinkedModelElement {
 						String elementName = child.getName();
 						Class mappedClass = mappedClasses.get(elementName);
 						if (mappedClasses.get(elementName) != null) {
-
+							lastElement = child;
 							Object newInstance = null;
 							try {
 								Constructor noArgsConstructor = mappedClass.getConstructor();
@@ -175,7 +175,11 @@ public class XmlLinkedModelElement {
 							}
 
 							if (newInstance instanceof XmlLinkedModelElement) {
-								((XmlLinkedModelElement) newInstance).bindToElement(this, child);
+								XmlLinkedModelElement fieldValueAsXmlLinked = (XmlLinkedModelElement) newInstance;
+								fieldValueAsXmlLinked.bindToElement(this, child);
+
+								lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
+								previousModelElement = fieldValueAsXmlLinked;
 							}
 						}
 

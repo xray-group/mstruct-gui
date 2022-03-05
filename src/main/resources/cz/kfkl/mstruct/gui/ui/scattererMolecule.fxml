@@ -103,26 +103,28 @@
 						<Tab text="Atoms">
 							<content>
 								<VBox fillWidth="true">
-									<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
-										<children>
-											<Label text="Center Atom:" />
-											<TextField fx:id="centerAtomTextField" editable="false" prefHeight="19.0" prefWidth="100.0" />
-										</children>
-										<VBox.margin>
-											<Insets left="8.0" />
-										</VBox.margin>
-									</HBox>
-									<TableView fx:id="moleculeAtomsTableView">
-										<columns>
-											<TableColumn fx:id="moleculeAtomsTableNameColumn" prefWidth="75.0" text="Name" />
-											<TableColumn fx:id="moleculeAtomsTableScatteringPowerColumn" minWidth="20.0" prefWidth="120.0" text="Scattering Power" />
-											<TableColumn fx:id="moleculeAtomsTableXColumn" prefWidth="95.0" text="X" />
-											<TableColumn fx:id="moleculeAtomsTableYColumn" prefWidth="95.0" text="Y" />
-											<TableColumn fx:id="moleculeAtomsTableZColumn" prefWidth="95.0" text="Z" />
-											<TableColumn fx:id="moleculeAtomsTableOccupColumn" prefWidth="95.0" text="Occup" />
-											<TableColumn fx:id="moleculeAtomsTableCenterAtomColumn" prefWidth="55.0" text="Center" />
-										</columns>
-									</TableView>
+									<children>
+										<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+											<children>
+												<Label text="Center Atom:" />
+												<TextField fx:id="centerAtomTextField" editable="false" prefHeight="19.0" prefWidth="100.0" />
+											</children>
+											<VBox.margin>
+												<Insets left="8.0" />
+											</VBox.margin>
+										</HBox>
+										<TableView fx:id="moleculeAtomsTableView">
+											<columns>
+												<TableColumn fx:id="moleculeAtomsTableNameColumn" prefWidth="75.0" text="Name" />
+												<TableColumn fx:id="moleculeAtomsTableScatteringPowerColumn" minWidth="20.0" prefWidth="120.0" text="Scattering Power" />
+												<TableColumn fx:id="moleculeAtomsTableXColumn" prefWidth="95.0" text="X" />
+												<TableColumn fx:id="moleculeAtomsTableYColumn" prefWidth="95.0" text="Y" />
+												<TableColumn fx:id="moleculeAtomsTableZColumn" prefWidth="95.0" text="Z" />
+												<TableColumn fx:id="moleculeAtomsTableOccupColumn" prefWidth="95.0" text="Occup" />
+												<TableColumn fx:id="moleculeAtomsTableCenterAtomColumn" prefWidth="55.0" text="Center" />
+											</columns>
+										</TableView>
+									</children>
 								</VBox>
 							</content>
 						</Tab>

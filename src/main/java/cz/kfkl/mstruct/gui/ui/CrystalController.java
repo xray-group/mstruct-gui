@@ -1,5 +1,12 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTextField;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindToggleGroupToPropertyByText;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenListener;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +18,6 @@ import cz.kfkl.mstruct.gui.model.ScatteringPowerAtomElement;
 import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
 import cz.kfkl.mstruct.gui.ui.matrix.DynamicMatrix;
 import cz.kfkl.mstruct.gui.ui.matrix.DynamicMatrixRow;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.ImageWithBackgroud;
 import cz.kfkl.mstruct.gui.utils.ImageWithBackgroudTableCell;
 import javafx.fxml.FXML;
@@ -67,7 +73,12 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	private StackPane scatPowersDetailsStackPane;
 
 	@FXML
+	private TextField antiBumpScaleTextField;
+	@FXML
 	private TableView<DynamicMatrixRow<AntiBumpDistanceElement>> antiBumpTableView;
+
+	@FXML
+	private TextField bondValenceScaleTextField;
 	@FXML
 	private TableView<DynamicMatrixRow<BondValenceRoElement>> bondValenceTableView;
 
@@ -95,27 +106,26 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	public void init() {
 		CrystalModel crystalModel = getModelInstance();
 		crystalName.textProperty().bindBidirectional(crystalModel.getNameProperty());
-		BindingUtils.doWhenFocuseLost(crystalName, () -> getAppContext().getMainController().getCrystalsListView().refresh());
+		doWhenFocuseLost(crystalName, () -> getAppContext().getMainController().getCrystalsListView().refresh());
 		spaceGroup.textProperty().bindBidirectional(crystalModel.getSpaceGroupProperty());
 
-		BindingUtils.bindToggleGroupToPropertyByText(constrainLatticeToggleGroup, crystalModel.constrainLatticeOption);
-		BindingUtils.bindToggleGroupToPropertyByText(useOccupancyCorrectionToggleGroup,
-				crystalModel.useOccupancyCorrectionOption);
-		BindingUtils.bindToggleGroupToPropertyByText(displayEnantiomerToggleGroup, crystalModel.constrainLatticeOption);
+		bindToggleGroupToPropertyByText(constrainLatticeToggleGroup, crystalModel.constrainLatticeOption);
+		bindToggleGroupToPropertyByText(useOccupancyCorrectionToggleGroup, crystalModel.useOccupancyCorrectionOption);
+		bindToggleGroupToPropertyByText(displayEnantiomerToggleGroup, crystalModel.constrainLatticeOption);
 
-		BindingUtils.bindAndBuildParFieldsNoName(aParContainer, crystalModel.aPar);
-		BindingUtils.bindAndBuildParFieldsNoName(bParContainer, crystalModel.bPar);
-		BindingUtils.bindAndBuildParFieldsNoName(cParContainer, crystalModel.cPar);
+		bindAndBuildParFieldsNoName(aParContainer, crystalModel.aPar);
+		bindAndBuildParFieldsNoName(bParContainer, crystalModel.bPar);
+		bindAndBuildParFieldsNoName(cParContainer, crystalModel.cPar);
 
-		BindingUtils.bindAndBuildParFieldsNoName(alphaParContainer, crystalModel.alphaPar);
-		BindingUtils.bindAndBuildParFieldsNoName(betaParContainer, crystalModel.betaPar);
-		BindingUtils.bindAndBuildParFieldsNoName(gammaParContainer, crystalModel.gammaPar);
+		bindAndBuildParFieldsNoName(alphaParContainer, crystalModel.alphaPar);
+		bindAndBuildParFieldsNoName(betaParContainer, crystalModel.betaPar);
+		bindAndBuildParFieldsNoName(gammaParContainer, crystalModel.gammaPar);
 
 		scatPowersTableView.getItems().addAll(crystalModel.scatterintPowers);
 		scatPowersTableView.setEditable(true);
-		BindingUtils.setupSelectionToChildrenListener(this, scatPowersTableView.getSelectionModel().selectedItemProperty(),
+		setupSelectionToChildrenListener(this, scatPowersTableView.getSelectionModel().selectedItemProperty(),
 				scatPowersDetailsStackPane.getChildren(), getAppContext());
-		BindingUtils.autoHeight(scatPowersTableView, 28);
+		autoHeight(scatPowersTableView, 28);
 
 		scatPowersTableIconColumn.setCellValueFactory(new PropertyValueFactory<>("typeGraphics"));
 		scatPowersTableIconColumn.setCellFactory(column -> new ImageWithBackgroudTableCell<>(column));
@@ -137,11 +147,13 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		List<String> scatPowNames = crystalModel.scatterintPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
 				.map((i) -> i.getName()).collect(Collectors.toList());
 
+		bindDoubleTextField(antiBumpScaleTextField, crystalModel.antiBumpScale.valueProperty);
 		antiBumpTableView.setEditable(true);
-		DynamicMatrix<AntiBumpDistanceElement> antiBumpDistanceDynamicMatrix = new DynamicMatrix<>(antiBumpTableView, scatPowNames,
-				v -> v.valueProperty);
+		DynamicMatrix<AntiBumpDistanceElement> antiBumpDistanceDynamicMatrix = new DynamicMatrix<>(antiBumpTableView,
+				scatPowNames, v -> v.valueProperty);
 		antiBumpDistanceDynamicMatrix.registerTuples(crystalModel.antiBumpDistances, AntiBumpDistanceElement::new);
 
+		bindDoubleTextField(bondValenceScaleTextField, crystalModel.bondValenceCostScale.valueProperty);
 		bondValenceTableView.setEditable(true);
 		DynamicMatrix<BondValenceRoElement> bondValenceDynamicMatrix = new DynamicMatrix<>(bondValenceTableView, scatPowNames,
 				v -> v.valueProperty);
@@ -149,9 +161,9 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 		scatterersTableView.getItems().addAll(crystalModel.scatterers);
 		scatterersTableView.setEditable(true);
-		BindingUtils.setupSelectionToChildrenListener(this, scatterersTableView.getSelectionModel().selectedItemProperty(),
+		setupSelectionToChildrenListener(this, scatterersTableView.getSelectionModel().selectedItemProperty(),
 				scatterresDetailsStackPane.getChildren(), getAppContext());
-		BindingUtils.autoHeight(scatterersTableView);
+		autoHeight(scatterersTableView);
 
 		scatterersTableNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		scatterersTableNameColumn.setEditable(true);

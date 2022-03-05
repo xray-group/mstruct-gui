@@ -212,20 +212,38 @@
 						</Tab>
 						<Tab text="Anti-bumping Distances">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+								<VBox fillWidth="true">
 									<children>
+										<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+											<children>
+												<Label text="Scale:" />
+												<TextField fx:id="antiBumpScaleTextField" prefHeight="19.0" prefWidth="90.0" />
+											</children>
+											<VBox.margin>
+												<Insets left="8.0" />
+											</VBox.margin>
+										</HBox>
 										<TableView fx:id="antiBumpTableView" prefHeight="400.0" prefWidth="177.0"/>
 									</children>
-								</AnchorPane>
+								</VBox>
 							</content>
 						</Tab>
 						<Tab text="Bond-valence">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+								<VBox fillWidth="true">
 									<children>
+										<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+											<children>
+												<Label text="Scale:" />
+												<TextField fx:id="bondValenceScaleTextField" prefHeight="19.0" prefWidth="90.0" />
+											</children>
+											<VBox.margin>
+												<Insets left="8.0" />
+											</VBox.margin>
+										</HBox>
 										<TableView fx:id="bondValenceTableView" prefHeight="400.0" prefWidth="177.0"/>
 									</children>
-								</AnchorPane>
+								</VBox>
 							</content>
 						</Tab>
 					</tabs>

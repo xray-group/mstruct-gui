@@ -28,17 +28,6 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	public StringProperty spaceGroupProperty = new SimpleStringProperty();
 
 	@XmlUniqueElement
-	public OptionUniqueElement constrainLatticeOption = new OptionUniqueElement("Constrain Lattice to SpaceGroup Symmetry", 0,
-			new OptionChoice("Yes (Default)", "Yes"), new OptionChoice("No (Allow Crystallographic Pseudo-Symmetry)", "No"));
-
-	@XmlUniqueElement
-	public OptionUniqueElement useOccupancyCorrectionOption = new OptionUniqueElement("Use Dynamical Occupancy Correction", 0,
-			"No", "Yes");
-
-	@XmlUniqueElement
-	public OptionUniqueElement displayEnantiomerOption = new OptionUniqueElement("Display Enantiomer", 0, "No", "Yes");
-
-	@XmlUniqueElement
 	public ParUniqueElement aPar = new ParUniqueElement("a");
 	@XmlUniqueElement
 	public ParUniqueElement bPar = new ParUniqueElement("b");
@@ -52,15 +41,32 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	@XmlUniqueElement
 	public ParUniqueElement gammaPar = new ParUniqueElement("gamma");
 
+	@XmlUniqueElement
+	public OptionUniqueElement constrainLatticeOption = new OptionUniqueElement("Constrain Lattice to SpaceGroup Symmetry", 0,
+			new OptionChoice("Yes (Default)", "Yes"), new OptionChoice("No (Allow Crystallographic Pseudo-Symmetry)", "No"));
+
+	@XmlUniqueElement
+	public OptionUniqueElement useOccupancyCorrectionOption = new OptionUniqueElement("Use Dynamical Occupancy Correction", 0,
+			"No", "Yes");
+
+	@XmlUniqueElement
+	public OptionUniqueElement displayEnantiomerOption = new OptionUniqueElement("Display Enantiomer", 0, "No", "Yes");
+
+	@XmlElementList
+	public List<ScatteringPowerModel> scatterintPowers = new ArrayList<>();
+
 	@XmlElementList
 	public List<ScattererModel> scatterers = new ArrayList<>();
 
 	@XmlElementList
-	public List<ScatteringPowerModel> scatterintPowers = new ArrayList<>();
-	@XmlElementList
 	public ObservableList<AntiBumpDistanceElement> antiBumpDistances = FXCollections.observableArrayList();
+	@XmlUniqueElement("AntiBumpScale")
+	public SingleValueUniqueElement antiBumpScale = new SingleValueUniqueElement("1");
+
 	@XmlElementList
 	public ObservableList<BondValenceRoElement> bondValences = FXCollections.observableArrayList();
+	@XmlUniqueElement("BondValenceCostScale")
+	public SingleValueUniqueElement bondValenceCostScale = new SingleValueUniqueElement("1");
 
 	public CrystalModel() {
 	}

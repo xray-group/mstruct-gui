@@ -8,7 +8,9 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTextField;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindStringTableColumn;
 
+import cz.kfkl.mstruct.gui.model.MoleculeAtomBondAngleElement;
 import cz.kfkl.mstruct.gui.model.MoleculeAtomBondElement;
+import cz.kfkl.mstruct.gui.model.MoleculeAtomDihedralAngleElement;
 import cz.kfkl.mstruct.gui.model.MoleculeAtomElement;
 import cz.kfkl.mstruct.gui.model.MoleculeElement;
 import javafx.beans.value.WritableValue;
@@ -86,6 +88,38 @@ public class ScattererMoleculeController extends BaseController<MoleculeElement,
 	@FXML
 	private TableColumn<MoleculeAtomBondElement, String> bondFreeTorsionTableNameColumn;
 
+	@FXML
+	private TableView<MoleculeAtomBondAngleElement> bondAngleTableView;
+	@FXML
+	private TableColumn<MoleculeAtomBondAngleElement, String> bondAngleAtom1TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondAngleElement, String> bondAngleAtom2TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondAngleElement, String> bondAngleAtom3TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondAngleElement, String> bondAngleAngleTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondAngleElement, String> bondAngleDeltaTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomBondAngleElement, String> bondAngleSigmaTableNameColumn;
+
+	@FXML
+	private TableView<MoleculeAtomDihedralAngleElement> dihedralAngleTableView;
+	@FXML
+	private TableColumn<MoleculeAtomDihedralAngleElement, String> dihedralAngleAtom1TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomDihedralAngleElement, String> dihedralAngleAtom2TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomDihedralAngleElement, String> dihedralAngleAtom3TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomDihedralAngleElement, String> dihedralAngleAtom4TableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomDihedralAngleElement, String> dihedralAngleAngleTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomDihedralAngleElement, String> dihedralAngleDeltaTableNameColumn;
+	@FXML
+	private TableColumn<MoleculeAtomDihedralAngleElement, String> dihedralAngleSigmaTableNameColumn;
+
 	@Override
 	public void init() {
 		MoleculeElement model = getModelInstance();
@@ -135,6 +169,27 @@ public class ScattererMoleculeController extends BaseController<MoleculeElement,
 		bindDoubleTableColumn(bondDeltaTableNameColumn, v -> v.deltaProperty);
 		bindDoubleTableColumn(bondOrderTableNameColumn, v -> v.bondOrderProperty);
 		bindDoubleTableColumn(bondFreeTorsionTableNameColumn, v -> v.freeTorsionProperty);
+
+		bondAngleTableView.getItems().addAll(model.moleculeAtomBondAngles);
+		autoHeight(bondAngleTableView);
+
+		bindStringTableColumn(bondAngleAtom1TableNameColumn, v -> v.atom1Property);
+		bindStringTableColumn(bondAngleAtom2TableNameColumn, v -> v.atom2Property);
+		bindStringTableColumn(bondAngleAtom3TableNameColumn, v -> v.atom3Property);
+		bindStringTableColumn(bondAngleAngleTableNameColumn, v -> v.angleProperty);
+		bindDoubleTableColumn(bondAngleSigmaTableNameColumn, v -> v.sigmaProperty);
+		bindDoubleTableColumn(bondAngleDeltaTableNameColumn, v -> v.deltaProperty);
+
+		dihedralAngleTableView.getItems().addAll(model.moleculeAtomDihedralAngles);
+		autoHeight(dihedralAngleTableView);
+
+		bindStringTableColumn(dihedralAngleAtom1TableNameColumn, v -> v.atom1Property);
+		bindStringTableColumn(dihedralAngleAtom2TableNameColumn, v -> v.atom2Property);
+		bindStringTableColumn(dihedralAngleAtom3TableNameColumn, v -> v.atom3Property);
+		bindStringTableColumn(dihedralAngleAtom4TableNameColumn, v -> v.atom4Property);
+		bindStringTableColumn(dihedralAngleAngleTableNameColumn, v -> v.angleProperty);
+		bindDoubleTableColumn(dihedralAngleSigmaTableNameColumn, v -> v.sigmaProperty);
+		bindDoubleTableColumn(dihedralAngleDeltaTableNameColumn, v -> v.deltaProperty);
 	}
 
 }

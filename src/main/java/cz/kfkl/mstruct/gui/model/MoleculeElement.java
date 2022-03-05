@@ -52,6 +52,12 @@ public class MoleculeElement extends ScattererModel<ScattererMoleculeController>
 	@XmlElementList
 	public List<MoleculeAtomBondElement> moleculeAtomBonds = new ArrayList<>();
 
+	@XmlElementList
+	public List<MoleculeAtomBondAngleElement> moleculeAtomBondAngles = new ArrayList<>();
+
+	@XmlElementList
+	public List<MoleculeAtomDihedralAngleElement> moleculeAtomDihedralAngles = new ArrayList<>();
+
 	@Override
 	public String getFxmlFileName() {
 		return FXML_FILE_NAME;

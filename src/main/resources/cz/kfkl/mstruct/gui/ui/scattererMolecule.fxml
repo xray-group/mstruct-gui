@@ -8,14 +8,15 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fillWidth="true" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ScattererMoleculeController" styleClass="no-padding-content">
+<VBox fillWidth="true" styleClass="no-padding-content" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ScattererMoleculeController">
 	<children>
 		<GridPane hgap="8" VBox.vgrow="ALWAYS">
 			<columnConstraints>
@@ -27,13 +28,19 @@
 				<Label text="y:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 				<Label text="z:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 				<Label text="Occup:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-				<HBox fx:id="xParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="xParContainer" />
 				<HBox fx:id="yParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 				<HBox fx:id="zParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 				<HBox fx:id="occupParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 			</children>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
 		</GridPane>
-		<TitledPane animated="false" expanded="false" text="Molecule Configuration" styleClass="no-padding-content">
+		<TitledPane animated="false" styleClass="no-padding-content" text="Molecule Configuration">
 			<font>
 				<Font name="System Bold" size="12.0" />
 			</font>
@@ -41,7 +48,7 @@
 				<Insets top="8.0" />
 			</VBox.margin>
 			<content>
-				<TabPane tabClosingPolicy="UNAVAILABLE" >
+				<TabPane tabClosingPolicy="UNAVAILABLE">
 					<tabs>
 						<Tab text="Options">
 							<content>
@@ -55,22 +62,25 @@
 										<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 											<children>
 												<Label text="Log(likelihood) Scale:" />
-												<TextField fx:id="logLikelihoodScaleTextField" prefHeight="19.0" prefWidth="100.0"/>
+												<TextField fx:id="logLikelihoodScaleTextField" prefHeight="19.0" prefWidth="100.0" />
 											</children>
 										</HBox>
 										<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 											<children>
 												<Label text="MD Move Frequency:" />
-												<TextField fx:id="mDMoveFreqTextField" prefHeight="19.0" prefWidth="100.0"/>
+												<TextField fx:id="mDMoveFreqTextField" prefHeight="19.0" prefWidth="100.0" />
 												<Label text="MD Move Energy:">
 													<padding>
 														<Insets left="8.0" />
 													</padding>
 												</Label>
-												<TextField fx:id="mDMoveEnergyTextField" prefHeight="19.0" prefWidth="100.0"/>
+												<TextField fx:id="mDMoveEnergyTextField" prefHeight="19.0" prefWidth="100.0" />
 											</children>
 										</HBox>
 									</children>
+			                        <padding>
+			                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+			                        </padding>
 								</VBox> 
 							</content>
 						</Tab>
@@ -80,8 +90,11 @@
 									<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 										<children>
 											<Label text="Center Atom:" />
-											<TextField fx:id="centerAtomTextField" prefHeight="19.0" prefWidth="100.0" editable="false"/>
+											<TextField fx:id="centerAtomTextField" editable="false" prefHeight="19.0" prefWidth="100.0" />
 										</children>
+										<VBox.margin>
+											<Insets left="8.0" />
+										</VBox.margin>
 									</HBox>
 									<TableView fx:id="moleculeAtomsTableView">
 										<columns>
@@ -91,7 +104,7 @@
 											<TableColumn fx:id="moleculeAtomsTableYColumn" prefWidth="95.0" text="Y" />
 											<TableColumn fx:id="moleculeAtomsTableZColumn" prefWidth="95.0" text="Z" />
 											<TableColumn fx:id="moleculeAtomsTableOccupColumn" prefWidth="95.0" text="Occup" />
-											<TableColumn fx:id="moleculeAtomsTableCenterAtomColumn" prefWidth="55.0" text="Center"/>
+											<TableColumn fx:id="moleculeAtomsTableCenterAtomColumn" prefWidth="55.0" text="Center" />
 										</columns>
 									</TableView>
 								</VBox>
@@ -99,18 +112,59 @@
 						</Tab>
 						<Tab text="Bond Lengths">
 							<content>
-								<TableView fx:id="bondLengthsTableView" prefHeight="400.0" prefWidth="177.0" editable="true">
-									<columns>
-										<TableColumn fx:id="bondAtom1TableNameColumn" prefWidth="75.0" text="Atom 1"/>
-										<TableColumn fx:id="bondAtom2TableNameColumn" prefWidth="75.0" text="Atom 2" />
-										<TableColumn fx:id="bondLengthTableNameColumn" prefWidth="85.0" text="Length ??" />
-										<TableColumn fx:id="bondRestraintTableNameColumn" prefWidth="110.0" text="Restraint (length)" editable="true" />
-										<TableColumn fx:id="bondSigmaTableNameColumn" prefWidth="85.0" text="Sigma" editable="true"/>
-										<TableColumn fx:id="bondDeltaTableNameColumn" prefWidth="85.0" text="Delta" editable="true"/>
-										<TableColumn fx:id="bondOrderTableNameColumn" prefWidth="60.0" text="Order" editable="true"/>
-										<TableColumn fx:id="bondFreeTorsionTableNameColumn" prefWidth="90.0" text="Free Torsion" editable="true"/>
-									</columns>
-								</TableView>
+								<AnchorPane>
+									<children>
+										<TableView fx:id="bondLengthsTableView" editable="true" prefWidth="680.0">
+											<columns>
+												<TableColumn fx:id="bondAtom1TableNameColumn" prefWidth="75.0" text="Atom 1" />
+												<TableColumn fx:id="bondAtom2TableNameColumn" prefWidth="75.0" text="Atom 2" />
+												<TableColumn fx:id="bondLengthTableNameColumn" prefWidth="85.0" text="Length ??" />
+												<TableColumn fx:id="bondRestraintTableNameColumn" editable="true" prefWidth="110.0" text="Restraint (length)" />
+												<TableColumn fx:id="bondSigmaTableNameColumn" editable="true" prefWidth="85.0" text="Sigma" />
+												<TableColumn fx:id="bondDeltaTableNameColumn" editable="true" prefWidth="85.0" text="Delta" />
+												<TableColumn fx:id="bondOrderTableNameColumn" editable="true" prefWidth="60.0" text="Order" />
+												<TableColumn fx:id="bondFreeTorsionTableNameColumn" editable="true" prefWidth="90.0" text="Free Torsion" />
+											</columns>
+										</TableView>
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<Tab text="Bond Angles">
+							<content>
+								<AnchorPane>
+									<children>
+										<TableView fx:id="bondAngleTableView" editable="true" prefWidth="495.0">
+											<columns>
+												<TableColumn fx:id="bondAngleAtom1TableNameColumn" prefWidth="75.0" text="Atom 1" />
+												<TableColumn fx:id="bondAngleAtom2TableNameColumn" prefWidth="75.0" text="Atom 2" />
+												<TableColumn fx:id="bondAngleAtom3TableNameColumn" prefWidth="75.0" text="Atom 3" />
+												<TableColumn fx:id="bondAngleAngleTableNameColumn" editable="true" prefWidth="85.0" text="Angle" />
+												<TableColumn fx:id="bondAngleSigmaTableNameColumn" editable="true" prefWidth="85.0" text="Sigma" />
+												<TableColumn fx:id="bondAngleDeltaTableNameColumn" editable="true" prefWidth="85.0" text="Delta" />
+											</columns>
+										</TableView>
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<Tab text="Dihedral Angles">
+							<content>
+								<AnchorPane>
+									<children>
+										<TableView fx:id="dihedralAngleTableView" editable="true" prefWidth="570.0">
+											<columns>
+												<TableColumn fx:id="dihedralAngleAtom1TableNameColumn" prefWidth="75.0" text="Atom 1" />
+												<TableColumn fx:id="dihedralAngleAtom2TableNameColumn" prefWidth="75.0" text="Atom 2" />
+												<TableColumn fx:id="dihedralAngleAtom3TableNameColumn" prefWidth="75.0" text="Atom 3" />
+												<TableColumn fx:id="dihedralAngleAtom4TableNameColumn" prefWidth="75.0" text="Atom 4" />
+												<TableColumn fx:id="dihedralAngleAngleTableNameColumn" editable="true" prefWidth="85.0" text="Angle" />
+												<TableColumn fx:id="dihedralAngleSigmaTableNameColumn" editable="true" prefWidth="85.0" text="Sigma" />
+												<TableColumn fx:id="dihedralAngleDeltaTableNameColumn" editable="true" prefWidth="85.0" text="Delta" />
+											</columns>
+										</TableView>
+									</children>
+								</AnchorPane>
 							</content>
 						</Tab>
 					</tabs>

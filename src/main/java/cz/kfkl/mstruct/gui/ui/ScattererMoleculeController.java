@@ -15,12 +15,18 @@ import cz.kfkl.mstruct.gui.model.MoleculeAtomElement;
 import cz.kfkl.mstruct.gui.model.MoleculeElement;
 import javafx.beans.value.WritableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 public class ScattererMoleculeController extends BaseController<MoleculeElement, CrystalController> {
+
+	@FXML
+	private TextField scattererNameTextField;
+	@FXML
+	private Label scattererTypeLabel;
 
 	@FXML
 	private HBox xParContainer;
@@ -123,6 +129,9 @@ public class ScattererMoleculeController extends BaseController<MoleculeElement,
 	@Override
 	public void init() {
 		MoleculeElement model = getModelInstance();
+
+		scattererNameTextField.textProperty().bindBidirectional(model.nameProperty);
+		scattererTypeLabel.textProperty().set(model.getType());
 
 		bindAndBuildParFieldsNoName(xParContainer, model.xPar);
 		bindAndBuildParFieldsNoName(yParContainer, model.yPar);

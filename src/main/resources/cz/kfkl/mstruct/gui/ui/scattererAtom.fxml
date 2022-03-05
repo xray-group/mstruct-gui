@@ -14,8 +14,24 @@
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>
-				<Label text="Scattering Power: " />
+				<Label text="Name:" />
+				<TextField fx:id="scattererNameTextField" prefHeight="19.0" minWidth="60.0" prefWidth="-Infinity" maxWidth="120"  disable="true" HBox.hgrow="ALWAYS"/>
+				<Label text="Scattering Power:">
+	            	<HBox.margin>
+						<Insets left="8.0" />
+					</HBox.margin>
+				</Label>
 				<TextField fx:id="scaterringPowerTextField" prefHeight="19.0" prefWidth="90.0" editable="false"/>
+	            <Label layoutX="10.0" layoutY="17.0" text="Type:">
+	            	<HBox.margin>
+						<Insets left="8.0" />
+					</HBox.margin>
+	            </Label>
+	            <Label fx:id="scattererTypeLabel" layoutX="202.0" layoutY="17.0">
+	               <font>
+	                  <Font name="System Bold Italic" size="12.0" />
+	               </font>
+	            </Label>
 			</children>
 		</HBox>
 		<GridPane hgap="8" VBox.vgrow="ALWAYS">

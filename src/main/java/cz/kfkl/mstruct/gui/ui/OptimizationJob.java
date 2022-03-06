@@ -1,5 +1,8 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenPropertySet;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.initTableView;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +18,6 @@ import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -227,28 +229,27 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		ParametersController parametersTabController = mainController.initParametersTab(fittedParamsTab, fittedParamsProperty,
 				refinedParams);
 		parametersTabController.showFittedOptions();
-		BindingUtils.doWhenPropertySet(t -> parametersTabController.refreshTable(), fittedParamsProperty);
+		doWhenPropertySet(t -> parametersTabController.refreshTable(), fittedParamsProperty);
 	}
 
 	private void updateDataTableTab(OptimizationController optimizationController) {
 		optimizationController.datRowsCountLabel.setText("N/A");
 
-		BindingUtils.initTableView(optimizationController.outputDataTableView, DATA_TABLE_COLUMNS);
+		initTableView(optimizationController.outputDataTableView, DATA_TABLE_COLUMNS);
 
-		BindingUtils.doWhenPropertySet(t -> optimizationController.outputDataTableView.getItems().addAll(t.getRowIndexes()),
-				datTableProperty);
+		doWhenPropertySet(t -> optimizationController.outputDataTableView.getItems().addAll(t.getRowIndexes()), datTableProperty);
 	}
 
 	private void updateHklTableTab(TableView<RowIndex> dataTableView) {
 
-		BindingUtils.initTableView(dataTableView, HKL_TABLE_COLUMNS);
+		initTableView(dataTableView, HKL_TABLE_COLUMNS);
 
-		BindingUtils.doWhenPropertySet(t -> dataTableView.getItems().addAll(t.getRowIndexes()), hklTableProperty);
+		doWhenPropertySet(t -> dataTableView.getItems().addAll(t.getRowIndexes()), hklTableProperty);
 	}
 
 	private void updateChartTab(BorderPane pane) {
 
-		BindingUtils.doWhenPropertySet(t -> {
+		doWhenPropertySet(t -> {
 			PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getContext());
 			chartGenerator.forJob(this);
 			chartGenerator.useGuiTemplate();

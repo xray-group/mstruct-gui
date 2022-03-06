@@ -197,7 +197,7 @@ public final class BindingUtils {
 	private static void addParValue(HBox bParContainer, ParUniqueElement par) {
 		TextField parValue = new TextField();
 		parValue.setMinWidth(VALUE_FIELD_MIN_WIDTH);
-		BindingUtils.doubleTextField(parValue);
+		doubleTextField(parValue);
 		parValue.textProperty().bindBidirectional(par.valueProperty);
 
 		bParContainer.getChildren().addAll(parValue);
@@ -207,7 +207,7 @@ public final class BindingUtils {
 		CheckBox refinedCb = new CheckBox("Refined");
 		refinedCb.selectedProperty().bindBidirectional(par.refinedProperty);
 		setHBoxMarginLeft(refinedCb);
-		// BindingUtils.bindlBooleanPropertyToInteger(refinedCb.selectedProperty(),
+		// bindlBooleanPropertyToInteger(refinedCb.selectedProperty(),
 		// par.refinedProperty);
 
 		CheckBox limitedCb = new CheckBox("Limited");
@@ -224,11 +224,11 @@ public final class BindingUtils {
 	private static void addParRefinedLimitedShort(HBox bParContainer, ParUniqueElement par) {
 		CheckBox refinedCb = new CheckBox("R");
 		refinedCb.selectedProperty().bindBidirectional(par.refinedProperty);
-//		BindingUtils.bindlBooleanPropertyToInteger(refinedCb.selectedProperty(), par.refinedProperty);
+//		bindlBooleanPropertyToInteger(refinedCb.selectedProperty(), par.refinedProperty);
 
 		CheckBox limitedCb = new CheckBox("L");
 		limitedCb.selectedProperty().bindBidirectional(par.limitedProperty);
-//		BindingUtils.bindlBooleanPropertyToInteger(limitedCb.selectedProperty(), par.limitedProperty);
+//		bindlBooleanPropertyToInteger(limitedCb.selectedProperty(), par.limitedProperty);
 
 		bParContainer.getChildren().addAll(refinedCb, limitedCb);
 	}
@@ -236,14 +236,14 @@ public final class BindingUtils {
 	private static void addParMinMax(HBox bParContainer, ParUniqueElement par) {
 		Label minLabel = new Label("Min:");
 		TextField min = new TextField();
-		BindingUtils.doubleTextField(min);
+		doubleTextField(min);
 		min.setMinWidth(MIN_MAX_FIELD_MIN_WIDTH);
 		min.textProperty().bindBidirectional(par.minProperty);
 		setHBoxMarginLeft(minLabel);
 
 		Label maxLabel = new Label("Max:");
 		TextField max = new TextField();
-		BindingUtils.doubleTextField(max);
+		doubleTextField(max);
 		max.setMinWidth(MIN_MAX_FIELD_MIN_WIDTH);
 		max.textProperty().bindBidirectional(par.maxProperty);
 		bParContainer.getChildren().addAll(minLabel, min, maxLabel, max);
@@ -266,7 +266,7 @@ public final class BindingUtils {
 			container.getChildren().add(rb);
 		}
 
-		BindingUtils.bindToggleGroupToPropertyByText(toggleGroup, optionEl);
+		bindToggleGroupToPropertyByText(toggleGroup, optionEl);
 	}
 
 	public static void bindAndBuildChoiceBoxOption(HBox container, OptionUniqueElement optionEl) {

@@ -1,5 +1,9 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.createUniqueName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.initTableView;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.loadViewAndInitController;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupListViewListener;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
 
 import java.io.File;
@@ -41,7 +45,6 @@ import cz.kfkl.mstruct.gui.model.ParametersModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
@@ -277,9 +280,9 @@ public class MStructGuiController implements HasAppContext {
 	}
 
 	private void processSelectedFile(File selectedFile) {
-		BindingUtils.setupListViewListener(this, crystalsListView, tabCrystalsCenterPane, getAppContext());
-		BindingUtils.setupListViewListener(this, instrumentalListView, tabInstrumentalCenterPane, getAppContext());
-		BindingUtils.setupListViewListener(this, phasesListView, tabPhasesCenterPane, getAppContext());
+		setupListViewListener(this, crystalsListView, tabCrystalsCenterPane, getAppContext());
+		setupListViewListener(this, instrumentalListView, tabInstrumentalCenterPane, getAppContext());
+		setupListViewListener(this, phasesListView, tabPhasesCenterPane, getAppContext());
 
 		parseMStructXml(selectedFile);
 	}
@@ -327,7 +330,7 @@ public class MStructGuiController implements HasAppContext {
 		TableView<RowIndex> dataTableView = inputDataTableView;
 		String[] columnNames = DATA_TABLE_COLUMNS;
 
-		BindingUtils.initTableView(dataTableView, columnNames);
+		initTableView(dataTableView, columnNames);
 
 		TabularDataParser parser = new TabularDataParser();
 		TableOfDoubles tabularData = parser.parse(data);
@@ -344,7 +347,7 @@ public class MStructGuiController implements HasAppContext {
 		ParametersModel parametersModel = new ParametersModel(rootModel);
 		parametersModel.fittedParamsProperty = fittedParamsProperty;
 		parametersModel.refinedParams = refinedParams;
-		ParametersController controller = BindingUtils.loadViewAndInitController(this, getAppContext(), parametersModel,
+		ParametersController controller = loadViewAndInitController(this, getAppContext(), parametersModel,
 				(view) -> tabParameters.setContent(view));
 
 		tabParameters.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -358,7 +361,7 @@ public class MStructGuiController implements HasAppContext {
 
 	private void configOptimizationTab() {
 		OptimizaitonModel parametersModel = new OptimizaitonModel();
-		optimizationController = BindingUtils.loadViewAndInitController(this, getAppContext(), parametersModel,
+		optimizationController = loadViewAndInitController(this, getAppContext(), parametersModel,
 				(view) -> tabOptimization.setContent(view));
 
 	}
@@ -505,8 +508,7 @@ public class MStructGuiController implements HasAppContext {
 		crystalSelectionDialog.setTitle("Crystals Import");
 
 //				ImportedCrystalsController importXmlController = 
-		BindingUtils.loadViewAndInitController(this, getAppContext(), importedCrystalsModel,
-				(view) -> dialogPane.setContent(view));
+		loadViewAndInitController(this, getAppContext(), importedCrystalsModel, (view) -> dialogPane.setContent(view));
 
 		dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		crystalSelectionDialog.showAndWait();
@@ -620,7 +622,7 @@ public class MStructGuiController implements HasAppContext {
 	public void addPhase() {
 		PowderPatternCrystalsModel newInstance = new PowderPatternCrystalsModel();
 
-		newInstance.setName(BindingUtils.createUniqueName(newInstance, phasesListView.getItems()));
+		newInstance.setName(createUniqueName(newInstance, phasesListView.getItems()));
 
 		phasesListView.getItems().add(newInstance);
 		phasesListView.getSelectionModel().select(newInstance);

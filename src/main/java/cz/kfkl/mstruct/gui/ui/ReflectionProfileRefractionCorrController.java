@@ -1,7 +1,10 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+
 import cz.kfkl.mstruct.gui.model.ReflectionProfileRefractionCorrElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -26,10 +29,10 @@ public class ReflectionProfileRefractionCorrController
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());
 		componentTypeLabel.textProperty().set(model.getType().toString());
-		BindingUtils.doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
+		doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
 
-		BindingUtils.bindAndBuildRadioButtonsOption(chi0SourceOptionContainer, model.chi0SourceOption);
-		BindingUtils.bindAndBuildParFieldsNoName(relDensityParContainer, model.relDensityPar);
+		bindAndBuildRadioButtonsOption(chi0SourceOptionContainer, model.chi0SourceOption);
+		bindAndBuildParFieldsNoName(relDensityParContainer, model.relDensityPar);
 	}
 
 }

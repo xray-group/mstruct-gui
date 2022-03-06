@@ -1,5 +1,14 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildComboBoxOption;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.createUniqueName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doubleTextField;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenListener;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
@@ -17,7 +26,6 @@ import cz.kfkl.mstruct.gui.model.GeometryElement;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundType;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -126,38 +134,36 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		PowderPatternElement model = getModelInstance();
 
 		powderPatternName.textProperty().bindBidirectional(model.nameProperty);
-		BindingUtils.doWhenFocuseLost(powderPatternName, () -> getAppContext().getMainController().instrumentNameUpdated());
+		doWhenFocuseLost(powderPatternName, () -> getAppContext().getMainController().instrumentNameUpdated());
 
-		BindingUtils.bindAndBuildParFieldsNoName(zeroParContainer, model.zeroPar);
-		BindingUtils.bindAndBuildParFieldsNoName(thetaDisplacementParContainer, model.thetaDisplacementPar);
-		BindingUtils.bindAndBuildParFieldsNoName(thetaTransparencyParContainer, model.thetaTransparencyPar);
+		bindAndBuildParFieldsNoName(zeroParContainer, model.zeroPar);
+		bindAndBuildParFieldsNoName(thetaDisplacementParContainer, model.thetaDisplacementPar);
+		bindAndBuildParFieldsNoName(thetaTransparencyParContainer, model.thetaTransparencyPar);
 
-		BindingUtils.bindAndBuildRadioButtonsOption(useIntegratedProfilesOptionContainer, model.useIntegratedProfilesOption);
+		bindAndBuildRadioButtonsOption(useIntegratedProfilesOptionContainer, model.useIntegratedProfilesOption);
 
 		// Radiation
-		BindingUtils.bindAndBuildRadioButtonsOption(radiationOptionContainer, model.radiationElement.radiationOption);
-		BindingUtils.bindAndBuildComboBoxOption(spectrumOptionContainer, model.radiationElement.spectrumOption);
-		BindingUtils.doubleTextField(linearPolarRateElementTextField);
+		bindAndBuildRadioButtonsOption(radiationOptionContainer, model.radiationElement.radiationOption);
+		bindAndBuildComboBoxOption(spectrumOptionContainer, model.radiationElement.spectrumOption);
+		doubleTextField(linearPolarRateElementTextField);
 		linearPolarRateElementTextField.textProperty()
 				.bindBidirectional(model.radiationElement.linearPolarRateElement.valueProperty);
 
-		BindingUtils.bindAndBuildParFieldsNoName(wavelengthParContainer, model.radiationElement.wavelengthPar);
-		BindingUtils.bindAndBuildParFieldsNoName(xRayTubeDeltaLambdaParContainer, model.radiationElement.xRayTubeDeltaLambdaPar);
-		BindingUtils.bindAndBuildParFieldsNoName(xRayTubeAlpha2Alpha1RatioParContainer,
-				model.radiationElement.xRayTubeAlpha2Alpha1RatioPar);
+		bindAndBuildParFieldsNoName(wavelengthParContainer, model.radiationElement.wavelengthPar);
+		bindAndBuildParFieldsNoName(xRayTubeDeltaLambdaParContainer, model.radiationElement.xRayTubeDeltaLambdaPar);
+		bindAndBuildParFieldsNoName(xRayTubeAlpha2Alpha1RatioParContainer, model.radiationElement.xRayTubeAlpha2Alpha1RatioPar);
 
-		BindingUtils.doubleTextField(maxSinThetaOvLambdaTextField);
+		doubleTextField(maxSinThetaOvLambdaTextField);
 		maxSinThetaOvLambdaTextField.textProperty().bindBidirectional(model.maxSinThetaOvLambdaElement.valueProperty);
 
 		initGeometryTogles(model.geometryElement);
 
 		powderPatternComponentsListView.setItems(model.powderPatternComponents);
-//		BindingUtils.setupListViewListener(powderPatternComponentsListView, powderPatternComponentsCenterPane, getAppContext());
+//		setupListViewListener(powderPatternComponentsListView, powderPatternComponentsCenterPane, getAppContext());
 
-		BindingUtils.setupSelectionToChildrenListener(this,
-				powderPatternComponentsListView.getSelectionModel().selectedItemProperty(),
+		setupSelectionToChildrenListener(this, powderPatternComponentsListView.getSelectionModel().selectedItemProperty(),
 				powderPatternComponentsStackPane.getChildren(), getAppContext());
-		BindingUtils.autoHeight(powderPatternComponentsListView);
+		autoHeight(powderPatternComponentsListView);
 
 		powderPatternComponentsRemoveButton.disableProperty()
 				.bind(powderPatternComponentsListView.getSelectionModel().selectedItemProperty().isNull());
@@ -165,18 +171,18 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		excludedRegionsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		excludedRegionsTableView.setEditable(true);
 		excludedRegionsTableView.setItems(model.excludeRegions);
-		BindingUtils.autoHeight(excludedRegionsTableView);
+		autoHeight(excludedRegionsTableView);
 		excludedRegionsTableView.setSortPolicy(tw -> {
 			FXCollections.sort(tw.getItems(), EXCLUDE_REGIONS_TABLE_COMPARATOR);
 			return true;
 		});
 
-		BindingUtils.bindDoubleTableColumn(excludedRegionsFromTableColumn, v -> v.fromProperty);
+		bindDoubleTableColumn(excludedRegionsFromTableColumn, v -> v.fromProperty);
 		excludedRegionsFromTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
 			Platform.runLater(() -> excludedRegionsTableView.sort());
 		});
 
-		BindingUtils.bindDoubleTableColumn(excludedRegionsToTableColumn, v -> v.toProperty);
+		bindDoubleTableColumn(excludedRegionsToTableColumn, v -> v.toProperty);
 		excludedRegionsToTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
 			Platform.runLater(() -> excludedRegionsTableView.sort());
 		});
@@ -195,7 +201,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 			geometryToggleGroup.selectToggle(geometryTogglePB);
 		}
 
-		BindingUtils.doubleTextField(geometryOmegaTextField);
+		doubleTextField(geometryOmegaTextField);
 		geometryOmegaTextField.textProperty().bindBidirectional(geometryElement.omegaProperty);
 		geometryOmegaTextField.disableProperty().bind(Bindings.not(geometryTogglePB.selectedProperty()));
 		geometryToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -234,7 +240,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 						.getConstructor();
 				PowderPatternBackgroundModel<?> newInstance = constructor.newInstance();
 
-				newInstance.setName(BindingUtils.createUniqueName(newInstance, getModelInstance().powderPatternComponents));
+				newInstance.setName(createUniqueName(newInstance, getModelInstance().powderPatternComponents));
 
 				powderPatternComponentsListView.getItems().add(newInstance);
 				powderPatternComponentsListView.getSelectionModel().select(newInstance);

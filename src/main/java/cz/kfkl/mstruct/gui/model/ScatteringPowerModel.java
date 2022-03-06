@@ -1,11 +1,12 @@
 package cz.kfkl.mstruct.gui.model;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.newChanged;
+
 import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.images.FramedRectangle;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.ImageWithBackgroud;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
@@ -40,7 +41,7 @@ public abstract class ScatteringPowerModel<C extends BaseController<?, ?>> exten
 		super.bindToElement(parentModelElement, wrappedElement);
 
 		colorProperty = new SimpleObjectProperty<>(colorFromColourStr());
-		colorProperty.addListener(BindingUtils.newChanged(v -> this.colorToColourStr(v)));
+		colorProperty.addListener(newChanged(v -> this.colorToColourStr(v)));
 	}
 
 	@Override

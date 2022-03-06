@@ -1,5 +1,6 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenPropertySet;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.validateIsNull;
 
@@ -23,7 +24,6 @@ import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.ui.chart.JobOutputExporter;
 import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.ListCellWithIcon;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
@@ -199,7 +199,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 //				jobTabPane.getTabs().remove(1, jobTabPane.getTabs().size());
 				newJob.updateTabs(mainController, this);
 
-				BindingUtils.doWhenPropertySet(v -> datRowsCountLabel.setText(Integer.toString(v.getRows().size())),
+				doWhenPropertySet(v -> datRowsCountLabel.setText(Integer.toString(v.getRows().size())),
 						newJob.getDatTableProperty());
 
 				jobStatusLabel.textProperty().bind(newJob.getStatusProperty().asString());

@@ -1,7 +1,8 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+
 import cz.kfkl.mstruct.gui.model.AtomElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -33,10 +34,10 @@ public class ScattererAtomController extends BaseController<AtomElement, Crystal
 		scattererTypeLabel.textProperty().set(model.getType());
 		scaterringPowerTextField.textProperty().bindBidirectional(model.scattPowProperty);
 
-		BindingUtils.bindAndBuildParFieldsNoName(xParContainer, model.xPar);
-		BindingUtils.bindAndBuildParFieldsNoName(yParContainer, model.yPar);
-		BindingUtils.bindAndBuildParFieldsNoName(zParContainer, model.zPar);
-		BindingUtils.bindAndBuildParFieldsNoName(occupParContainer, model.occupPar);
+		bindAndBuildParFieldsNoName(xParContainer, model.xPar);
+		bindAndBuildParFieldsNoName(yParContainer, model.yPar);
+		bindAndBuildParFieldsNoName(zParContainer, model.zPar);
+		bindAndBuildParFieldsNoName(occupParContainer, model.occupPar);
 	}
 
 }

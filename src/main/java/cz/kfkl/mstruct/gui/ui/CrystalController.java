@@ -104,24 +104,25 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 	@Override
 	public void init() {
-		CrystalModel crystalModel = getModelInstance();
-		crystalName.textProperty().bindBidirectional(crystalModel.getNameProperty());
+		CrystalModel model = getModelInstance();
+
+		crystalName.textProperty().bindBidirectional(model.getNameProperty());
 		doWhenFocuseLost(crystalName, () -> getAppContext().getMainController().getCrystalsListView().refresh());
-		spaceGroup.textProperty().bindBidirectional(crystalModel.getSpaceGroupProperty());
+		spaceGroup.textProperty().bindBidirectional(model.getSpaceGroupProperty());
 
-		bindToggleGroupToPropertyByText(constrainLatticeToggleGroup, crystalModel.constrainLatticeOption);
-		bindToggleGroupToPropertyByText(useOccupancyCorrectionToggleGroup, crystalModel.useOccupancyCorrectionOption);
-		bindToggleGroupToPropertyByText(displayEnantiomerToggleGroup, crystalModel.constrainLatticeOption);
+		bindToggleGroupToPropertyByText(constrainLatticeToggleGroup, model.constrainLatticeOption);
+		bindToggleGroupToPropertyByText(useOccupancyCorrectionToggleGroup, model.useOccupancyCorrectionOption);
+		bindToggleGroupToPropertyByText(displayEnantiomerToggleGroup, model.constrainLatticeOption);
 
-		bindAndBuildParFieldsNoName(aParContainer, crystalModel.aPar);
-		bindAndBuildParFieldsNoName(bParContainer, crystalModel.bPar);
-		bindAndBuildParFieldsNoName(cParContainer, crystalModel.cPar);
+		bindAndBuildParFieldsNoName(aParContainer, model.aPar);
+		bindAndBuildParFieldsNoName(bParContainer, model.bPar);
+		bindAndBuildParFieldsNoName(cParContainer, model.cPar);
 
-		bindAndBuildParFieldsNoName(alphaParContainer, crystalModel.alphaPar);
-		bindAndBuildParFieldsNoName(betaParContainer, crystalModel.betaPar);
-		bindAndBuildParFieldsNoName(gammaParContainer, crystalModel.gammaPar);
+		bindAndBuildParFieldsNoName(alphaParContainer, model.alphaPar);
+		bindAndBuildParFieldsNoName(betaParContainer, model.betaPar);
+		bindAndBuildParFieldsNoName(gammaParContainer, model.gammaPar);
 
-		scatPowersTableView.getItems().addAll(crystalModel.scatterintPowers);
+		scatPowersTableView.getItems().addAll(model.scatterintPowers);
 		scatPowersTableView.setEditable(true);
 		setupSelectionToChildrenListener(this, scatPowersTableView.getSelectionModel().selectedItemProperty(),
 				scatPowersDetailsStackPane.getChildren(), getAppContext());
@@ -144,22 +145,22 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 //		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
 
-		List<String> scatPowNames = crystalModel.scatterintPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
+		List<String> scatPowNames = model.scatterintPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
 				.map((i) -> i.getName()).collect(Collectors.toList());
 
-		bindDoubleTextField(antiBumpScaleTextField, crystalModel.antiBumpScale.valueProperty);
+		bindDoubleTextField(antiBumpScaleTextField, model.antiBumpScale.valueProperty);
 		antiBumpTableView.setEditable(true);
 		DynamicMatrix<AntiBumpDistanceElement> antiBumpDistanceDynamicMatrix = new DynamicMatrix<>(antiBumpTableView,
 				scatPowNames, v -> v.valueProperty);
-		antiBumpDistanceDynamicMatrix.registerTuples(crystalModel.antiBumpDistances, AntiBumpDistanceElement::new);
+		antiBumpDistanceDynamicMatrix.registerTuples(model.antiBumpDistances, AntiBumpDistanceElement::new);
 
-		bindDoubleTextField(bondValenceScaleTextField, crystalModel.bondValenceCostScale.valueProperty);
+		bindDoubleTextField(bondValenceScaleTextField, model.bondValenceCostScale.valueProperty);
 		bondValenceTableView.setEditable(true);
 		DynamicMatrix<BondValenceRoElement> bondValenceDynamicMatrix = new DynamicMatrix<>(bondValenceTableView, scatPowNames,
 				v -> v.valueProperty);
-		bondValenceDynamicMatrix.registerTuples(crystalModel.bondValences, BondValenceRoElement::new);
+		bondValenceDynamicMatrix.registerTuples(model.bondValences, BondValenceRoElement::new);
 
-		scatterersTableView.getItems().addAll(crystalModel.scatterers);
+		scatterersTableView.getItems().addAll(model.scatterers);
 		scatterersTableView.setEditable(true);
 		setupSelectionToChildrenListener(this, scatterersTableView.getSelectionModel().selectedItemProperty(),
 				scatterresDetailsStackPane.getChildren(), getAppContext());

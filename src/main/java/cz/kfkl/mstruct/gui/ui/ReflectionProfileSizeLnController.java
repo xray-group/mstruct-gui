@@ -1,7 +1,9 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+
 import cz.kfkl.mstruct.gui.model.ReflectionProfileSizeLnElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -26,10 +28,10 @@ public class ReflectionProfileSizeLnController
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());
 		componentTypeLabel.textProperty().set(model.getType().toString());
-		BindingUtils.doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
+		doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
 
-		BindingUtils.bindAndBuildParFieldsNoName(mParContainer, model.mPar);
-		BindingUtils.bindAndBuildParFieldsNoName(sigmaParContainer, model.sigmaPar);
+		bindAndBuildParFieldsNoName(mParContainer, model.mPar);
+		bindAndBuildParFieldsNoName(sigmaParContainer, model.sigmaPar);
 	}
 
 }

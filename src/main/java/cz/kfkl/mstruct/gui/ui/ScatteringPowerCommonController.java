@@ -1,7 +1,8 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+
 import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -32,7 +33,7 @@ public class ScatteringPowerCommonController<M extends ScatteringPowerModel<?>> 
 
 		scatteringPowerColorPicker.valueProperty().bindBidirectional(model.colorProperty);
 
-		BindingUtils.bindAndBuildParFieldsNoName(bisoParContainer, model.bisoPar);
+		bindAndBuildParFieldsNoName(bisoParContainer, model.bisoPar);
 	}
 
 }

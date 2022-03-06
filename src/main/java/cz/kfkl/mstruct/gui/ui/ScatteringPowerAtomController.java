@@ -1,7 +1,9 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+
 import cz.kfkl.mstruct.gui.model.ScatteringPowerAtomElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -25,11 +27,11 @@ public class ScatteringPowerAtomController extends ScatteringPowerCommonControll
 		ScatteringPowerAtomElement model = getModelInstance();
 
 		scatteringPowerSymbolTextField.textProperty().bindBidirectional(model.symbolProperty);
-		BindingUtils.doWhenFocuseLost(scatteringPowerSymbolTextField, () -> getParentController().scatteringPowerRecordChanged());
+		doWhenFocuseLost(scatteringPowerSymbolTextField, () -> getParentController().scatteringPowerRecordChanged());
 
-		BindingUtils.bindAndBuildParFieldsNoName(mlErrorParContainer, model.mlErrorPar);
-		BindingUtils.bindAndBuildParFieldsNoName(mlNbGhostParContainer, model.mlNbGhostPar);
-		BindingUtils.bindAndBuildParFieldsNoName(formalChargeParContainer, model.formalChargePar);
+		bindAndBuildParFieldsNoName(mlErrorParContainer, model.mlErrorPar);
+		bindAndBuildParFieldsNoName(mlNbGhostParContainer, model.mlNbGhostPar);
+		bindAndBuildParFieldsNoName(formalChargeParContainer, model.formalChargePar);
 	}
 
 }

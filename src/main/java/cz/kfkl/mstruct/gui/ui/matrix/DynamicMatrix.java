@@ -1,5 +1,7 @@
 package cz.kfkl.mstruct.gui.ui.matrix;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,7 +12,6 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.DoubleTextFieldTableCell;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import javafx.beans.value.ObservableValue;
@@ -129,7 +130,7 @@ public class DynamicMatrix<T extends Tuple> {
 			rows.add(new DynamicMatrixRow<T>(key, this));
 		}
 		this.tableView.getItems().addAll(rows);
-		BindingUtils.autoHeight(tableView);
+		autoHeight(tableView);
 	}
 
 	public T getTuple(String rowKey, String columnKey) {

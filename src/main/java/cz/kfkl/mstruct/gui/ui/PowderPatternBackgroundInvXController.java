@@ -1,7 +1,9 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+
 import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundInvX;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -27,10 +29,9 @@ public class PowderPatternBackgroundInvXController extends BaseController<Powder
 		powderPatternComponentName.textProperty().bindBidirectional(model.getNameProperty());
 		powderPatternComponentTypeLabel.textProperty().set(model.getType().getTypeName());
 
-		BindingUtils.doWhenFocuseLost(powderPatternComponentName,
-				() -> getParentController().powderPatternComponentNameChanged());
+		doWhenFocuseLost(powderPatternComponentName, () -> getParentController().powderPatternComponentNameChanged());
 
-		BindingUtils.bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
+		bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 
 		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
 	}

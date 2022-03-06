@@ -1,7 +1,8 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+
 import cz.kfkl.mstruct.gui.model.ScatteringPowerSphereElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;
 
@@ -15,7 +16,7 @@ public class ScatteringPowerSphereController extends ScatteringPowerCommonContro
 		super.init();
 		ScatteringPowerSphereElement model = getModelInstance();
 
-		BindingUtils.bindAndBuildParFieldsNoName(radiusParContainer, model.radiusPar);
+		bindAndBuildParFieldsNoName(radiusParContainer, model.radiusPar);
 	}
 
 }

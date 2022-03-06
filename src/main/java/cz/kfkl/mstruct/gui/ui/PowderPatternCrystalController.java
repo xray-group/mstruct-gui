@@ -1,5 +1,13 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindlBooleanPropertyToInteger;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.createUniqueName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doubleTextField;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenListener;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -10,7 +18,6 @@ import cz.kfkl.mstruct.gui.model.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.model.ReflectionProfileModel;
 import cz.kfkl.mstruct.gui.model.ReflectionProfileType;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.fxml.FXML;
@@ -73,8 +80,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		powderPatternCrystalInternalNameTextField.textProperty().bind(model.nameProperty);
 		powderPatternCrystalUserNameTextField.textProperty().bindBidirectional(model.userNameProperty);
 
-		BindingUtils.doWhenFocuseLost(powderPatternCrystalUserNameTextField,
-				() -> getAppContext().getMainController().phaseNameUpdated());
+		doWhenFocuseLost(powderPatternCrystalUserNameTextField, () -> getAppContext().getMainController().phaseNameUpdated());
 
 		XmlLinkedModelElement parentModelElement = model.getParentModelElement().getParentModelElement();
 		if (parentModelElement instanceof ObjCrystModel) {
@@ -92,31 +98,30 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 						}
 					});
 		}
-		BindingUtils.bindlBooleanPropertyToInteger(ignoreImagScattFactCheckBox.selectedProperty(),
-				model.ignoreImagScattFactProperty);
-//		BindingUtils.bindAndBuildParFieldsFullLarge(globalBisoParContainer, model.globalBisoPar);
-		BindingUtils.bindAndBuildParFieldsNoName(globalBisoParContainer, model.globalBisoPar);
+		bindlBooleanPropertyToInteger(ignoreImagScattFactCheckBox.selectedProperty(), model.ignoreImagScattFactProperty);
+//		bindAndBuildParFieldsFullLarge(globalBisoParContainer, model.globalBisoPar);
+		bindAndBuildParFieldsNoName(globalBisoParContainer, model.globalBisoPar);
 
 		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
 
 		absoptionCorrectionNameTextField.textProperty().bindBidirectional(model.absorptionCorrElement.nameProperty);
-		BindingUtils.doubleTextField(absoptionDepthTextField);
+		doubleTextField(absoptionDepthTextField);
 		absoptionDepthTextField.textProperty().bindBidirectional(model.absorptionCorrElement.depthProperty);
-		BindingUtils.doubleTextField(absoptionThicknessTextField);
+		doubleTextField(absoptionThicknessTextField);
 		absoptionThicknessTextField.textProperty().bindBidirectional(model.absorptionCorrElement.thicknessProperty);
-		BindingUtils.doubleTextField(absoptionFactorTextField);
+		doubleTextField(absoptionFactorTextField);
 		absoptionFactorTextField.textProperty().bindBidirectional(model.absorptionCorrElement.absorptionFactorProperty);
 
 		reflectionProfileListView.setItems(model.reflectionProfile.reflectionProfilesList);
-//		BindingUtils.setupListViewListener(reflectionProfileListView, reflectionProfileStackPane, getAppContext());
-		BindingUtils.setupSelectionToChildrenListener(this, reflectionProfileListView.getSelectionModel().selectedItemProperty(),
+//		setupListViewListener(reflectionProfileListView, reflectionProfileStackPane, getAppContext());
+		setupSelectionToChildrenListener(this, reflectionProfileListView.getSelectionModel().selectedItemProperty(),
 				reflectionProfileStackPane.getChildren(), getAppContext());
-		BindingUtils.autoHeight(reflectionProfileListView);
+		autoHeight(reflectionProfileListView);
 
 		reflectionProfileRemoveButton.disableProperty()
 				.bind(reflectionProfileListView.getSelectionModel().selectedItemProperty().isNull());
 
-//		BindingUtils.bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
+//		bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 	}
 
 	@FXML
@@ -136,7 +141,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 				ReflectionProfileModel<?> newInstance = constructor.newInstance();
 
 				newInstance.setName(newInstance.getType().getNamePrefix() + getModelInstance().getNameSuffix());
-				newInstance.setName(BindingUtils.createUniqueName(newInstance, reflectionProfileListView.getItems()));
+				newInstance.setName(createUniqueName(newInstance, reflectionProfileListView.getItems()));
 
 				reflectionProfileListView.getItems().add(newInstance);
 				reflectionProfileListView.getSelectionModel().select(newInstance);

@@ -1,8 +1,13 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindStringTableColumn;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+
 import cz.kfkl.mstruct.gui.model.ReflectionProfileStressSimpleElement;
 import cz.kfkl.mstruct.gui.model.StiffnessConstantElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -44,27 +49,27 @@ public class ReflectionProfileStressSimpleController
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());
 		componentTypeLabel.textProperty().set(model.getType().toString());
-		BindingUtils.doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
+		doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
 
-		BindingUtils.bindAndBuildParFieldsNoName(stressParContainer, model.stressPar);
-		BindingUtils.bindAndBuildParFieldsNoName(rvWeightParContainer, model.xECsReussVoigt.rvWeightPar);
+		bindAndBuildParFieldsNoName(stressParContainer, model.stressPar);
+		bindAndBuildParFieldsNoName(rvWeightParContainer, model.xECsReussVoigt.rvWeightPar);
 
 		stiffnessConstantsTableView.setEditable(true);
 		stiffnessConstantsTableView.setItems(model.xECsReussVoigt.stiffnessConstants);
-		BindingUtils.autoHeight(stiffnessConstantsTableView);
+		autoHeight(stiffnessConstantsTableView);
 		stiffnessConstantsTableView.setSortPolicy(tw -> {
 			FXCollections.sort(tw.getItems());
 			return true;
 		});
 
-		BindingUtils.bindStringTableColumn(stiffnessConstantNameTableColumn, v -> v.nameProperty);
+		bindStringTableColumn(stiffnessConstantNameTableColumn, v -> v.nameProperty);
 		stiffnessConstantNameTableColumn.addEventHandler(TableColumn.editCommitEvent(), t -> {
 			Platform.runLater(() -> stiffnessConstantsTableView.sort());
 		});
 		// method to add a TableColumn.editCommitEvent() EventType withyour desired
 		// EventHandler as the second argument.
 
-		BindingUtils.bindDoubleTableColumn(stiffnessConstantValueTableColumn, v -> v.valueProperty);
+		bindDoubleTableColumn(stiffnessConstantValueTableColumn, v -> v.valueProperty);
 		// When variable is renamed, re-evaluate formula
 		// coefficientValueTableColumn.setOnEditCommit(event -> parseFormula());
 

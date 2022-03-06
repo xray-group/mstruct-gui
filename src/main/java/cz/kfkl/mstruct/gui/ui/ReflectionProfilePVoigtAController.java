@@ -1,7 +1,9 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
+
 import cz.kfkl.mstruct.gui.model.ReflectionProfilePVoigtAElement;
-import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -38,16 +40,16 @@ public class ReflectionProfilePVoigtAController
 
 		componentNameTextField.textProperty().bindBidirectional(model.getNameProperty());
 		componentTypeLabel.textProperty().set(model.getType().toString());
-		BindingUtils.doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
+		doWhenFocuseLost(componentNameTextField, () -> getParentController().componentNameChanged());
 
-		BindingUtils.bindAndBuildParFieldsNoName(uParContainer, model.uPar);
-		BindingUtils.bindAndBuildParFieldsNoName(vParContainer, model.vPar);
-		BindingUtils.bindAndBuildParFieldsNoName(wParContainer, model.wPar);
-		BindingUtils.bindAndBuildParFieldsNoName(eta0ParContainer, model.eta0Par);
-		BindingUtils.bindAndBuildParFieldsNoName(eta1ParContainer, model.eta1Par);
-		BindingUtils.bindAndBuildParFieldsNoName(asym0ParContainer, model.asym0Par);
-		BindingUtils.bindAndBuildParFieldsNoName(asym1ParContainer, model.asym1Par);
-		BindingUtils.bindAndBuildParFieldsNoName(asym2ParContainer, model.asym2Par);
+		bindAndBuildParFieldsNoName(uParContainer, model.uPar);
+		bindAndBuildParFieldsNoName(vParContainer, model.vPar);
+		bindAndBuildParFieldsNoName(wParContainer, model.wPar);
+		bindAndBuildParFieldsNoName(eta0ParContainer, model.eta0Par);
+		bindAndBuildParFieldsNoName(eta1ParContainer, model.eta1Par);
+		bindAndBuildParFieldsNoName(asym0ParContainer, model.asym0Par);
+		bindAndBuildParFieldsNoName(asym1ParContainer, model.asym1Par);
+		bindAndBuildParFieldsNoName(asym2ParContainer, model.asym2Par);
 	}
 
 }

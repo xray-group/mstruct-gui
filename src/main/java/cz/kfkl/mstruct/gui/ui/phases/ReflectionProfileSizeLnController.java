@@ -3,7 +3,7 @@ package cz.kfkl.mstruct.gui.ui.phases;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
-import cz.kfkl.mstruct.gui.model.ReflectionProfileSizeLnElement;
+import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileSizeLnElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

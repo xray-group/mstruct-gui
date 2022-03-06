@@ -3,7 +3,7 @@ package cz.kfkl.mstruct.gui.ui.instrumental;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
-import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundInvX;
+import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternBackgroundInvX;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

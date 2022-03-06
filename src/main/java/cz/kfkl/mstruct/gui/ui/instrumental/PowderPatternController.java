@@ -21,11 +21,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.kfkl.mstruct.gui.model.ExcludeXElement;
-import cz.kfkl.mstruct.gui.model.GeometryElement;
-import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundModel;
-import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundType;
-import cz.kfkl.mstruct.gui.model.PowderPatternElement;
+import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
+import cz.kfkl.mstruct.gui.model.instrumental.GeometryElement;
+import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternBackgroundModel;
+import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternBackgroundType;
+import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;

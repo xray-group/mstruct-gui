@@ -8,11 +8,11 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTextField;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindStringTableColumn;
 
-import cz.kfkl.mstruct.gui.model.MoleculeAtomBondAngleElement;
-import cz.kfkl.mstruct.gui.model.MoleculeAtomBondElement;
-import cz.kfkl.mstruct.gui.model.MoleculeAtomDihedralAngleElement;
-import cz.kfkl.mstruct.gui.model.MoleculeAtomElement;
-import cz.kfkl.mstruct.gui.model.MoleculeElement;
+import cz.kfkl.mstruct.gui.model.crystals.MoleculeAtomBondAngleElement;
+import cz.kfkl.mstruct.gui.model.crystals.MoleculeAtomBondElement;
+import cz.kfkl.mstruct.gui.model.crystals.MoleculeAtomDihedralAngleElement;
+import cz.kfkl.mstruct.gui.model.crystals.MoleculeAtomElement;
+import cz.kfkl.mstruct.gui.model.crystals.MoleculeElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.RadioButtonTableCellFactory;
 import javafx.beans.value.WritableValue;

@@ -6,10 +6,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import cz.kfkl.mstruct.gui.model.CrystalModel;
-import cz.kfkl.mstruct.gui.model.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
+import cz.kfkl.mstruct.gui.model.instrumental.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import javafx.beans.property.IntegerProperty;

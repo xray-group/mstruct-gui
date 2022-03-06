@@ -6,7 +6,7 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
-import cz.kfkl.mstruct.gui.model.PowderPatternBackgroundChebyshev;
+import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternBackgroundChebyshev;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

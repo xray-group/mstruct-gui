@@ -2,7 +2,7 @@ package cz.kfkl.mstruct.gui.ui.crystals;
 
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
 
-import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
+import cz.kfkl.mstruct.gui.model.crystals.ScatteringPowerModel;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;

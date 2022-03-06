@@ -3,7 +3,7 @@ package cz.kfkl.mstruct.gui.ui.crystals;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
-import cz.kfkl.mstruct.gui.model.ScatteringPowerAtomElement;
+import cz.kfkl.mstruct.gui.model.crystals.ScatteringPowerAtomElement;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;

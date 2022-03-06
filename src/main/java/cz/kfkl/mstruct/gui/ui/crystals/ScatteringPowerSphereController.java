@@ -2,7 +2,7 @@ package cz.kfkl.mstruct.gui.ui.crystals;
 
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
 
-import cz.kfkl.mstruct.gui.model.ScatteringPowerSphereElement;
+import cz.kfkl.mstruct.gui.model.crystals.ScatteringPowerSphereElement;
 import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;
 

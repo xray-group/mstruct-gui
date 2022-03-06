@@ -6,8 +6,8 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindStringTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
-import cz.kfkl.mstruct.gui.model.ReflectionProfileStressSimpleElement;
-import cz.kfkl.mstruct.gui.model.StiffnessConstantElement;
+import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileStressSimpleElement;
+import cz.kfkl.mstruct.gui.model.phases.StiffnessConstantElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

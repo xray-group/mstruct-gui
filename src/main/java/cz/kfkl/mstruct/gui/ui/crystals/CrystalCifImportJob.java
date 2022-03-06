@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.common.io.MoreFiles;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
-import cz.kfkl.mstruct.gui.model.ImportedCrystal;
+import cz.kfkl.mstruct.gui.model.crystals.ImportedCrystal;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.job.Job;
 import cz.kfkl.mstruct.gui.ui.job.JobRunner;

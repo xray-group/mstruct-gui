@@ -26,4 +26,7 @@ module MStructGUI {
 	opens cz.kfkl.mstruct.gui.ui.phases to javafx.fxml;
 	opens cz.kfkl.mstruct.gui.utils.matrix to javafx.base;
 	opens cz.kfkl.mstruct.gui.model to javafx.graphics, javafx.fxml, javafx.base;
+	opens cz.kfkl.mstruct.gui.model.crystals to javafx.base;
+	opens cz.kfkl.mstruct.gui.model.instrumental to javafx.base;
+	opens cz.kfkl.mstruct.gui.model.phases to javafx.base;
 }

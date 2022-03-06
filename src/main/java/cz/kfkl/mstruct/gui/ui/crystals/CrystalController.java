@@ -10,12 +10,12 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenLis
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cz.kfkl.mstruct.gui.model.AntiBumpDistanceElement;
-import cz.kfkl.mstruct.gui.model.BondValenceRoElement;
-import cz.kfkl.mstruct.gui.model.CrystalModel;
-import cz.kfkl.mstruct.gui.model.ScattererModel;
-import cz.kfkl.mstruct.gui.model.ScatteringPowerAtomElement;
-import cz.kfkl.mstruct.gui.model.ScatteringPowerModel;
+import cz.kfkl.mstruct.gui.model.crystals.AntiBumpDistanceElement;
+import cz.kfkl.mstruct.gui.model.crystals.BondValenceRoElement;
+import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
+import cz.kfkl.mstruct.gui.model.crystals.ScattererModel;
+import cz.kfkl.mstruct.gui.model.crystals.ScatteringPowerAtomElement;
+import cz.kfkl.mstruct.gui.model.crystals.ScatteringPowerModel;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.utils.ImageWithBackgroud;

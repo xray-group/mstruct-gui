@@ -13,10 +13,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
-import cz.kfkl.mstruct.gui.model.CrystalModel;
-import cz.kfkl.mstruct.gui.model.PowderPatternCrystalsModel;
-import cz.kfkl.mstruct.gui.model.ReflectionProfileModel;
-import cz.kfkl.mstruct.gui.model.ReflectionProfileType;
+import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileModel;
+import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileType;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;

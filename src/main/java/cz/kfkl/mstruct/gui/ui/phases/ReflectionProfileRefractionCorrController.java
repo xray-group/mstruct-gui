@@ -4,7 +4,7 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
-import cz.kfkl.mstruct.gui.model.ReflectionProfileRefractionCorrElement;
+import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileRefractionCorrElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

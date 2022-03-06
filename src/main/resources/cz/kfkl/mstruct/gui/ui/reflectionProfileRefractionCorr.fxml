@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fillWidth="true" spacing="4" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ReflectionProfileRefractionCorrController">
+<VBox fillWidth="true" spacing="4" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.phases.ReflectionProfileRefractionCorrController">
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>

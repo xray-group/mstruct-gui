@@ -7,7 +7,7 @@ import java.util.List;
 import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
-import cz.kfkl.mstruct.gui.ui.PowderPatternBackgroundChebyshevController;
+import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundChebyshevController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;

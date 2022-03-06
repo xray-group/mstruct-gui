@@ -5,8 +5,7 @@ import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertTrue;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.ui.IfExistsAction;
-import cz.kfkl.mstruct.gui.ui.ImportedCrystal;
-import cz.kfkl.mstruct.gui.ui.ImportedCrystalsController;
+import cz.kfkl.mstruct.gui.ui.crystals.ImportedCrystalsController;
 
 public class ImportedCrystalsModel implements FxmlFileNameProvider<ImportedCrystalsController> {
 

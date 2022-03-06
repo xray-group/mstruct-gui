@@ -38,6 +38,7 @@ import com.google.common.io.MoreFiles;
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.core.HasAppContext;
 import cz.kfkl.mstruct.gui.model.CrystalModel;
+import cz.kfkl.mstruct.gui.model.ImportedCrystal;
 import cz.kfkl.mstruct.gui.model.ImportedCrystalsModel;
 import cz.kfkl.mstruct.gui.model.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
@@ -46,6 +47,10 @@ import cz.kfkl.mstruct.gui.model.ParametersModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.model.PowderPatternElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
+import cz.kfkl.mstruct.gui.ui.crystals.CrystalCifImportJob;
+import cz.kfkl.mstruct.gui.ui.crystals.ImportedCrystalsController;
+import cz.kfkl.mstruct.gui.ui.job.JobStatus;
+import cz.kfkl.mstruct.gui.ui.optimization.OptimizationController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
@@ -367,7 +372,7 @@ public class MStructGuiController implements HasAppContext {
 
 	}
 
-	void setBottomLabelText(String message, Object... args) {
+	public void setBottomLabelText(String message, Object... args) {
 		String text = String.format(message, args);
 		bottomLabel.setText(text);
 		LOG.info("{}", text);

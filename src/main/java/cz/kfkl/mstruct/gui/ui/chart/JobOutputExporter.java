@@ -1,6 +1,6 @@
 package cz.kfkl.mstruct.gui.ui.chart;
 
-import cz.kfkl.mstruct.gui.ui.Job;
+import cz.kfkl.mstruct.gui.ui.job.Job;
 
 public interface JobOutputExporter {
 

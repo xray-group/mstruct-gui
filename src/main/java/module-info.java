@@ -20,7 +20,10 @@ module MStructGUI {
 	requires javafx.web;
 
 	opens cz.kfkl.mstruct.gui.ui to javafx.graphics, javafx.fxml, javafx.base;
-	opens cz.kfkl.mstruct.gui.ui.matrix to javafx.base;
+	opens cz.kfkl.mstruct.gui.ui.crystals to javafx.fxml;
+	opens cz.kfkl.mstruct.gui.ui.instrumental to javafx.fxml;
+	opens cz.kfkl.mstruct.gui.ui.optimization to javafx.fxml;
+	opens cz.kfkl.mstruct.gui.ui.phases to javafx.fxml;
+	opens cz.kfkl.mstruct.gui.utils.matrix to javafx.base;
 	opens cz.kfkl.mstruct.gui.model to javafx.graphics, javafx.fxml, javafx.base;
-	// opens cz.kfkl.mstruct.gui.test to com.dooapp.fxform, javafx.base;
 }

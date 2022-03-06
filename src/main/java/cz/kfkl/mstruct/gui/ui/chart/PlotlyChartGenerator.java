@@ -9,9 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
-import cz.kfkl.mstruct.gui.ui.Job;
-import cz.kfkl.mstruct.gui.ui.OptimizationJob;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
+import cz.kfkl.mstruct.gui.ui.job.Job;
+import cz.kfkl.mstruct.gui.ui.optimization.OptimizationJob;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 
 public class PlotlyChartGenerator implements JobOutputExporter {

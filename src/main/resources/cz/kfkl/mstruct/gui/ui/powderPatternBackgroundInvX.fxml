@@ -18,7 +18,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
 	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="cz.kfkl.mstruct.gui.ui.PowderPatternBackgroundInvXController">
+	fx:controller="cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInvXController">
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>

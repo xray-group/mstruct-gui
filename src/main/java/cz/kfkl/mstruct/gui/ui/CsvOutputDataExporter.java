@@ -2,6 +2,8 @@ package cz.kfkl.mstruct.gui.ui;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.ui.chart.JobOutputExporter;
+import cz.kfkl.mstruct.gui.ui.job.Job;
+import cz.kfkl.mstruct.gui.ui.optimization.OptimizationJob;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 
 public class CsvOutputDataExporter implements JobOutputExporter {

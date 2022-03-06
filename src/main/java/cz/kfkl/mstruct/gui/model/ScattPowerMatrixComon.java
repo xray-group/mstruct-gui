@@ -1,7 +1,7 @@
 package cz.kfkl.mstruct.gui.model;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
-import cz.kfkl.mstruct.gui.ui.matrix.Tuple;
+import cz.kfkl.mstruct.gui.utils.matrix.Tuple;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementValueProperty;
 import javafx.beans.property.SimpleStringProperty;

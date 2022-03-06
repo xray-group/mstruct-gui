@@ -2,7 +2,7 @@ package cz.kfkl.mstruct.gui.model;
 
 import java.util.List;
 
-import cz.kfkl.mstruct.gui.ui.ReflectionProfileRefractionCorrController;
+import cz.kfkl.mstruct.gui.ui.phases.ReflectionProfileRefractionCorrController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 

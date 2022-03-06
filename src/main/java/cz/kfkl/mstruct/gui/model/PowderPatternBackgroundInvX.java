@@ -3,7 +3,7 @@ package cz.kfkl.mstruct.gui.model;
 import java.util.Collections;
 import java.util.List;
 
-import cz.kfkl.mstruct.gui.ui.PowderPatternBackgroundInvXController;
+import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInvXController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 
 @XmlElementName("PowderPatternBackgroundInvX")

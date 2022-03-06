@@ -1,7 +1,7 @@
 package cz.kfkl.mstruct.gui.model;
 
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
-import cz.kfkl.mstruct.gui.ui.OptimizationController;
+import cz.kfkl.mstruct.gui.ui.optimization.OptimizationController;
 
 public class OptimizaitonModel implements FxmlFileNameProvider<OptimizationController> {
 

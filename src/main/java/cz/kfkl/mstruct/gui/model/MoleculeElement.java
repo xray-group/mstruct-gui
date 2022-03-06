@@ -3,7 +3,7 @@ package cz.kfkl.mstruct.gui.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.kfkl.mstruct.gui.ui.ScattererMoleculeController;
+import cz.kfkl.mstruct.gui.ui.crystals.ScattererMoleculeController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;

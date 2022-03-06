@@ -3,7 +3,7 @@ package cz.kfkl.mstruct.gui.model;
 import java.util.Collections;
 import java.util.List;
 
-import cz.kfkl.mstruct.gui.ui.ScatteringPowerSphereController;
+import cz.kfkl.mstruct.gui.ui.crystals.ScatteringPowerSphereController;
 import cz.kfkl.mstruct.gui.ui.images.Images;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;

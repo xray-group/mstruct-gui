@@ -15,7 +15,7 @@
 
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="4.0"
-	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"	fx:controller="cz.kfkl.mstruct.gui.ui.ImportedCrystalsController">
+	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"	fx:controller="cz.kfkl.mstruct.gui.ui.crystals.ImportedCrystalsController">
 	  
 	<children>
 		<Label text="Select crystals to import:" />

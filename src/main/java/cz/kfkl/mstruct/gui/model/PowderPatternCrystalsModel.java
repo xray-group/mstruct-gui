@@ -5,7 +5,7 @@ import java.util.List;
 import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
-import cz.kfkl.mstruct.gui.ui.PowderPatternController;
+import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;

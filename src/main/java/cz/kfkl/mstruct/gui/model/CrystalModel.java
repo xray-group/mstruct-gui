@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.common.base.Strings;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
-import cz.kfkl.mstruct.gui.ui.CrystalController;
+import cz.kfkl.mstruct.gui.ui.crystals.CrystalController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;

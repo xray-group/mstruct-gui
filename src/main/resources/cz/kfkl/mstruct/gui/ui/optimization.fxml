@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="topBorderPanel" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.OptimizationController">
+<BorderPane fx:id="topBorderPanel" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.optimization.OptimizationController">
 	<top>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" BorderPane.alignment="CENTER">
 			<children>

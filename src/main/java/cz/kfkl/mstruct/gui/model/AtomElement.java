@@ -1,6 +1,6 @@
 package cz.kfkl.mstruct.gui.model;
 
-import cz.kfkl.mstruct.gui.ui.ScattererAtomController;
+import cz.kfkl.mstruct.gui.ui.crystals.ScattererAtomController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import javafx.beans.property.SimpleStringProperty;

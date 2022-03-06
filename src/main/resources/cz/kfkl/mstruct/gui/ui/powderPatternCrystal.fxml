@@ -24,7 +24,7 @@
 
 <VBox fillWidth="true" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
 	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="cz.kfkl.mstruct.gui.ui.PowderPatternCrystalController">
+	fx:controller="cz.kfkl.mstruct.gui.ui.phases.PowderPatternCrystalController">
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 			<children>

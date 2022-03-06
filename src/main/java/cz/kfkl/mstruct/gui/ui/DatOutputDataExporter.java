@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.ui.chart.JobOutputExporter;
+import cz.kfkl.mstruct.gui.ui.job.Job;
+import cz.kfkl.mstruct.gui.ui.optimization.OptimizationJob;
 import cz.kfkl.mstruct.gui.utils.ic.TableReportBuilder;
 
 public class DatOutputDataExporter implements JobOutputExporter {

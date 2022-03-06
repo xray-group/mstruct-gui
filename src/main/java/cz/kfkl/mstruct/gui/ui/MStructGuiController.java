@@ -38,6 +38,7 @@ import com.google.common.io.MoreFiles;
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.core.HasAppContext;
 import cz.kfkl.mstruct.gui.model.CrystalModel;
+import cz.kfkl.mstruct.gui.model.ImportedCrystalsModel;
 import cz.kfkl.mstruct.gui.model.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;

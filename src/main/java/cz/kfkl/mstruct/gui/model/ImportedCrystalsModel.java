@@ -1,10 +1,12 @@
-package cz.kfkl.mstruct.gui.ui;
+package cz.kfkl.mstruct.gui.model;
 
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertTrue;
 
 import java.util.List;
 
-import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
+import cz.kfkl.mstruct.gui.ui.IfExistsAction;
+import cz.kfkl.mstruct.gui.ui.ImportedCrystal;
+import cz.kfkl.mstruct.gui.ui.ImportedCrystalsController;
 
 public class ImportedCrystalsModel implements FxmlFileNameProvider<ImportedCrystalsController> {
 

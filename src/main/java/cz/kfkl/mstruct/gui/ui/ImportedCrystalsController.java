@@ -8,6 +8,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 
+import cz.kfkl.mstruct.gui.model.ImportedCrystalsModel;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
 import cz.kfkl.mstruct.gui.xml.XmlUtils;

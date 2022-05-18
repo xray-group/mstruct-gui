@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox spacing="8.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInterpolatedController">
+	<children> 
+		<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+			<children>
+				<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+					<children>
+						<Label text="Name:" />
+						<TextField fx:id="powderPatternComponentName" prefHeight="19.0" prefWidth="149.0" />
+					</children>
+				</HBox>
+				<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+					<Label layoutX="10.0" layoutY="17.0" text="Type:" />
+					<Label fx:id="powderPatternComponentTypeLabel" layoutX="202.0" layoutY="17.0">
+						<font>
+							<Font name="System Bold Italic" size="12.0" />
+						</font>
+					</Label>
+				</HBox>
+				<HBox fx:id="interpolationModelOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+					<children>
+					</children>
+				</HBox>
+				<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+					<children>
+						<Label text="Scale:" />
+						<TextField fx:id="powderPatternComponentScaleTextField" prefHeight="19.0" prefWidth="80.0" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+		<TableView fx:id="xIntensityListTableView" minHeight="176" prefHeight="250.0" prefWidth="210.0" VBox.vgrow="ALWAYS" editable="true">
+			<columns>
+				<TableColumn fx:id="xIntensityListXTableColumn" prefWidth="68.0" text="X" sortable="false" editable="true"/>
+				<TableColumn fx:id="xIntensityListYTableColumn" prefWidth="68.0" text="Y" sortable="false" editable="true" />
+				<TableColumn fx:id="xIntensityListRefinedTableColumn" prefWidth="59.0" text="Refined" sortable="false" editable="true" />
+			</columns>
+		</TableView>
+		<VBox alignment="CENTER_LEFT" spacing="8">
+			<children>
+				<Button fx:id="xIntensityListAddButton" onAction="#addXIntensityListItem" mnemonicParsing="false"
+					text="Add">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@images/add.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				<Button fx:id="xIntensityListRemoveButton" onAction="#removeXIntensityListItem" mnemonicParsing="false" text="Remove">
+					<graphic>
+						<ImageView>
+							<image>
+								<Image url="@images/delete.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+			</children>
+		</VBox>
+	</children>
+</HBox>

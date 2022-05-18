@@ -9,7 +9,7 @@ import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInvXController
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 
 @XmlElementName("PowderPatternBackgroundInvX")
-public class PowderPatternBackgroundInvX extends PowderPatternBackgroundModel<PowderPatternBackgroundInvXController> {
+public class PowderPatternBackgroundInvX extends PowderPatternBackgroundXFuncCommon<PowderPatternBackgroundInvXController> {
 
 	private static final String FXML_FILE_NAME = "powderPatternBackgroundInvX.fxml";
 

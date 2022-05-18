@@ -13,12 +13,22 @@ public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DoubleTextFieldTableCell.class);
 
+	private StringConverter<T> cellItemToTextConverter;
+
 	/***************************************************************************
 	 * * Static cell factories * *
 	 **************************************************************************/
 
 	public static <S> Callback<TableColumn<S, String>, TableCell<S, String>> forTableColumn() {
-		return list -> new DoubleTextFieldTableCell<S, String>();
+		return list -> new DoubleTextFieldTableCell<S, String>(DoubleTextFormatter.stringDoubleConverter);
+	}
+
+	public static <S> Callback<TableColumn<S, Double>, TableCell<S, Double>> forDoubleTableColumn() {
+		return list -> new DoubleTextFieldTableCell<S, Double>(DoubleTextFormatter.valueConverter);
+	}
+
+	public static <S> Callback<TableColumn<S, Number>, TableCell<S, Number>> forNumberTableColumn() {
+		return list -> new DoubleTextFieldTableCell<S, Number>(DoubleTextFormatter.numbreValueConverter);
 	}
 
 	private TextField textField;
@@ -28,8 +38,9 @@ public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
 	 * Creates a default {@link DoubleTextFieldTableCell} with
 	 * {@link DoubleTextFormatter}.
 	 */
-	public DoubleTextFieldTableCell() {
+	public DoubleTextFieldTableCell(StringConverter<T> cellItemToTextConverter) {
 		super();
+		this.cellItemToTextConverter = cellItemToTextConverter;
 		this.getStyleClass().add("double-text-field-table-cell");
 		this.formatter = new DoubleTextFormatter();
 	}
@@ -56,7 +67,7 @@ public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
 				textField = createTextField();
 			}
 
-			UseCellUtils.startEdit(this, getConverter(), null, null, textField);
+			UseCellUtils.startEdit(this, getCellItemToTextConverter(), null, null, textField);
 		}
 	}
 
@@ -67,26 +78,26 @@ public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
 //	}
 
 	private TextField createTextField() {
-		TextField createTextField = UseCellUtils.createTextField(this, getConverter());
+		TextField createTextField = UseCellUtils.createTextField(this, getCellItemToTextConverter());
 		createTextField.setTextFormatter(formatter);
 		return createTextField;
 	}
 
-	private StringConverter getConverter() {
-		return DoubleTextFormatter.stringDoubleConverter;
+	private StringConverter getCellItemToTextConverter() {
+		return cellItemToTextConverter;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void cancelEdit() {
 		super.cancelEdit();
-		UseCellUtils.cancelEdit(this, getConverter(), null);
+		UseCellUtils.cancelEdit(this, getCellItemToTextConverter(), null);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void updateItem(T item, boolean empty) {
 		super.updateItem(item, empty);
-		UseCellUtils.updateItem(this, getConverter(), null, null, textField);
+		UseCellUtils.updateItem(this, getCellItemToTextConverter(), null, null, textField);
 	}
 }

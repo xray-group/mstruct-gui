@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 
 import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
 import cz.kfkl.mstruct.gui.model.HasUniqueName;
-import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
@@ -18,7 +17,8 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-@XmlMappedSubclasses({ PowderPatternBackgroundInvX.class, PowderPatternBackgroundChebyshev.class })
+@XmlMappedSubclasses({ PowderPatternBackgroundInvX.class, PowderPatternBackgroundChebyshev.class,
+		PowderPatternBackgroundInterpolated.class })
 abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?>> extends XmlLinkedModelElement
 		implements FxmlFileNameProvider<C>, ParamContainer, HasUniqueName {
 
@@ -29,9 +29,6 @@ abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?
 
 	@XmlUniqueElement(isSibling = true)
 	public PowderPatternComponentElement powderPatternComponent = new PowderPatternComponentElement(nameProperty);
-
-	@XmlUniqueElement
-	public OptionUniqueElement xFuncTypeOption = new OptionUniqueElement("X-func.type", 1, "X", "sin(Th)");
 
 	public PowderPatternBackgroundModel() {
 		super();

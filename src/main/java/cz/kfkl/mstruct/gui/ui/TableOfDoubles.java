@@ -1,7 +1,9 @@
 package cz.kfkl.mstruct.gui.ui;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.ToDoubleFunction;
 
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -18,7 +20,11 @@ public class TableOfDoubles {
 		}
 
 		public ObservableValue<Number> getObservableValue(Integer colIndex) {
-			return new SimpleDoubleProperty(table.getRows().get(rowIndex)[colIndex]);
+			return new SimpleDoubleProperty(getValue(colIndex));
+		}
+
+		public double getValue(Integer colIndex) {
+			return table.getRows().get(rowIndex)[colIndex];
 		}
 	}
 
@@ -66,6 +72,10 @@ public class TableOfDoubles {
 		}
 
 		return values;
+	}
+
+	public static Comparator<RowIndex> createComparator(int colIndex) {
+		return Comparator.nullsFirst(Comparator.comparingDouble((ToDoubleFunction<RowIndex>) ri -> ri.getValue(colIndex)));
 	}
 
 }

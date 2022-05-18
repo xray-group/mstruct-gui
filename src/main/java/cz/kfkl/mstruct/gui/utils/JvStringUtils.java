@@ -397,6 +397,16 @@ public class JvStringUtils {
 		}
 	}
 
+	public static String toStringNoDotZero(Number number) {
+		if (number == null) {
+			return null;
+		} else {
+			double d = number.doubleValue();
+			int i = (int) d;
+			return d == i ? Integer.toString(i) : number.toString();
+		}
+	}
+
 	/**
 	 * Parse provided StringProperty value into Double. Null is return if the string
 	 * value is empty or cannot be parsed to Double.

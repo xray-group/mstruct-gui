@@ -180,7 +180,7 @@
 										<Insets bottom="0" left="0" right="0" top="0" />
 									</padding>
 									<left>
-										<VBox BorderPane.alignment="CENTER">
+										<VBox BorderPane.alignment="CENTER"  prefHeight="180.0" >
 											<children>
 												<TableView fx:id="scatPowersTableView" prefHeight="400.0" prefWidth="177.0">
 													<columns>

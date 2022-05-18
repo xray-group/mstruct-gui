@@ -18,7 +18,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 
 @XmlElementName("PowderPatternBackgroundChebyshev")
-public class PowderPatternBackgroundChebyshev extends PowderPatternBackgroundModel<PowderPatternBackgroundChebyshevController> {
+public class PowderPatternBackgroundChebyshev
+		extends PowderPatternBackgroundXFuncCommon<PowderPatternBackgroundChebyshevController> {
 
 	private static final String FXML_FILE_NAME = "powderPatternBackgroundChebyshev.fxml";
 

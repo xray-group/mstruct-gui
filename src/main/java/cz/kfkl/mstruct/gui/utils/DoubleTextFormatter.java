@@ -59,7 +59,7 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 	// note that singleton didn't work, when used it throws
 	// "java.lang.IllegalStateException: Formatter is already used in other control"
 	public DoubleTextFormatter() {
-		super(converter, null, filter);
+		super(valueConverter, null, filter);
 	}
 
 	private static UnaryOperator<TextFormatter.Change> filter = c -> {
@@ -72,7 +72,7 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 		}
 	};
 
-	private static StringConverter<Double> converter = new StringConverter<Double>() {
+	public static StringConverter<Double> valueConverter = new StringConverter<Double>() {
 		@Override
 		public Double fromString(String s) {
 			if (s == null || s.isEmpty()) {
@@ -88,7 +88,24 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 		public String toString(Double d) {
 			return JvStringUtils.toStringNoDotZero(d);
 		}
+	};
 
+	public static StringConverter<Number> numbreValueConverter = new StringConverter<Number>() {
+		@Override
+		public Number fromString(String s) {
+			if (s == null || s.isEmpty()) {
+				return null;
+			} else if ("-".equals(s) || ".".equals(s) || "-.".equals(s)) {
+				return 0.0;
+			} else {
+				return Double.valueOf(s);
+			}
+		}
+
+		@Override
+		public String toString(Number number) {
+			return JvStringUtils.toStringNoDotZero(number);
+		}
 	};
 
 	private static String toStringNoDotZero(Double d) {
@@ -103,8 +120,8 @@ public class DoubleTextFormatter extends TextFormatter<Double> {
 	public static StringConverter<String> stringDoubleConverter = new StringConverter<String>() {
 		@Override
 		public String fromString(String s) {
-			Double d = converter.fromString(s);
-			return converter.toString(d);
+			Double d = valueConverter.fromString(s);
+			return valueConverter.toString(d);
 		}
 
 		@Override

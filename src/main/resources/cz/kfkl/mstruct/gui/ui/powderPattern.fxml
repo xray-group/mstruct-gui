@@ -182,7 +182,7 @@
 						 -->
 						<StackPane fx:id="powderPatternComponentsStackPane" alignment="TOP_LEFT" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity">
 							<padding>
-								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+								<Insets bottom="8.0" left="8.0" right="0.0" top="8.0" />
 							</padding>
 						</StackPane>
 					</center>

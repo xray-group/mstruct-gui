@@ -9,12 +9,20 @@ public class BooleanZeroOneStringFormatter extends StringConverter<Boolean> {
 
 	@Override
 	public String toString(Boolean object) {
+		return formatString(object);
+	}
+
+	public static String formatString(Boolean object) {
 		return object == null ? null : (object.booleanValue() ? TRUE_STRING : FALSE_STRING);
 	}
 
 	@Override
 	public Boolean fromString(String string) {
-		return string == null ? null : FALSE_STRING.equals(string.trim());
+		return parseString(string);
+	}
+
+	public static Boolean parseString(String string) {
+		return string == null ? null : TRUE_STRING.equals(string.trim());
 	}
 
 }

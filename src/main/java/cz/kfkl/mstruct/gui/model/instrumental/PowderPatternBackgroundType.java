@@ -1,7 +1,8 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
 public enum PowderPatternBackgroundType {
-	Chebyshev(PowderPatternBackgroundChebyshev.class, "Chebyshev"), InvX(PowderPatternBackgroundInvX.class, "InvX");
+	Chebyshev(PowderPatternBackgroundChebyshev.class, "Chebyshev"), InvX(PowderPatternBackgroundInvX.class, "InvX"),
+	Interpolated(PowderPatternBackgroundInterpolated.class, "Interpolated");
 
 	private Class<? extends PowderPatternBackgroundModel<?>> modelClass;
 	private String typeName;

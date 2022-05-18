@@ -9,6 +9,10 @@
     -fx-padding: 0px;
 }
 
+.monospace-font {
+    -fx-font: 11 monospace;
+}
+
 .custom-box-border {
     -fx-background-color: -fx-box-border,-fx-background;
     -fx-background-insets: 0, 1;
@@ -32,7 +36,6 @@
     -fx-background-color: -fx-inner-border, -fx-body-color;
     -fx-background-insets: 0, 1; 
 }
-
 
 
 

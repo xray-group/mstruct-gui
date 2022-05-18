@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import javafx.application.Platform;
 
 public class JobRunner {
@@ -34,8 +35,9 @@ public class JobRunner {
 		builder.redirectErrorStream(true);
 
 		try {
-			Process process = builder.start();
+			job.appendJobLogLine("Command line: %s", JvStringUtils.join(" ", builder.command()));
 
+			Process process = builder.start();
 			this.setProcess(process);
 			job.setStatus(JobStatus.Started);
 			this.processCompletitionFuture = process.onExit().thenApply(p1 -> {

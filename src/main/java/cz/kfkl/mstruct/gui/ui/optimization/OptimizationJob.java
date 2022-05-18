@@ -64,6 +64,8 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 	private Set<String> refinedParams;
 
+	private Integer iterations;
+
 	private boolean showConsole;
 	private boolean keepOutput;
 
@@ -256,6 +258,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	}
 
 	private void updateChartTab(BorderPane pane) {
+		pane.setCenter(new Text("no data"));
 
 		doWhenPropertySet(t -> {
 			PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getContext());
@@ -328,6 +331,14 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 	public int getRefinedParamsCount() {
 		return refinedParams.size();
+	}
+
+	public void setIterations(Integer iterations) {
+		this.iterations = iterations;
+	}
+
+	public Integer getIterations() {
+		return iterations;
 	}
 
 }

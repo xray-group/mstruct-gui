@@ -5,6 +5,7 @@ import cz.kfkl.mstruct.gui.ui.optimization.OptimizationJob;
 import cz.kfkl.mstruct.gui.ui.optimization.PingTestJob;
 import cz.kfkl.mstruct.gui.ui.optimization.RefinementJob;
 import cz.kfkl.mstruct.gui.ui.optimization.RefinmentTestJob;
+import cz.kfkl.mstruct.gui.ui.optimization.SimulationJob;
 
 public enum JobType {
 
@@ -12,6 +13,12 @@ public enum JobType {
 		@Override
 		public OptimizationJob createJob(AppContext context) {
 			return new RefinementJob(context);
+		}
+	},
+	DATA_SIMULATION("Data Simulation") {
+		@Override
+		public OptimizationJob createJob(AppContext context) {
+			return new SimulationJob(context);
 		}
 	},
 	GRID_REFINEMENT("Grid Refinement") {

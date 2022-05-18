@@ -28,32 +28,31 @@
 	<top>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" BorderPane.alignment="CENTER">
 			<children>
+				<!-- TODO left for testing, remove at some stage 
 				<Label text="Job:" />
 				<ChoiceBox fx:id="jobTypeChoiceBox" maxWidth="130.0" minWidth="80" prefWidth="-Infinity" HBox.hgrow="ALWAYS" />
-				<Label text="Iteractions:">
+				 -->
+				<Label text="Iterations:">
 					<HBox.margin>
 						<Insets left="4.0" />
 					</HBox.margin>
 				</Label>
-				<Spinner fx:id="iteractionsSpinner" editable="true" prefHeight="25.0" prefWidth="63.0" />
+				<Spinner fx:id="iterationsSpinner" editable="true" prefHeight="25.0" prefWidth="63.0" />
 				<Label text="Output Folder:">
 					<HBox.margin>
 						<Insets left="4.0" />
 					</HBox.margin>
 				</Label>
 				<TextField fx:id="outputFolderNameTextField" maxWidth="180.0" minWidth="100" prefWidth="-Infinity" HBox.hgrow="ALWAYS" />
-				<HBox alignment="CENTER_RIGHT" spacing="8.0" HBox.hgrow="ALWAYS">
+				<CheckBox fx:id="keepOutputFilesCheckBox" mnemonicParsing="false" selected="false" text="Keep Files"/>
+				<HBox alignment="CENTER_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
 					<CheckBox fx:id="showConsoleOutputCheckBox" mnemonicParsing="false" selected="true" text="Show Console" />
-					<CheckBox fx:id="keepOutputFilesCheckBox" mnemonicParsing="false" selected="false" text="Keep Files">
-						<HBox.margin>
-							<Insets left="4.0" />
-						</HBox.margin>
-					</CheckBox>
-					<Button fx:id="runButton" mnemonicParsing="false" onAction="#runButtonAction" text="Run">
-						<HBox.margin>
-							<Insets left="4.0" />
-						</HBox.margin>
-					</Button>
+					
+					<!-- TODO left for testing, remove at some stage
+					<Button fx:id="runButton" mnemonicParsing="false" onAction="#run" text="Run"/>
+					-->
+					<Button fx:id="refineButton" mnemonicParsing="false" onAction="#refine" text="Refine"/>
+					<Button fx:id="simulateButton" mnemonicParsing="false" onAction="#simulate" text="Simulate"/>
 					<HBox.margin>
 						<Insets left="4.0" />
 					</HBox.margin>

@@ -80,11 +80,15 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	@FXML
 	private ChoiceBox<JobType> jobTypeChoiceBox;
 	@FXML
-	private Spinner<Integer> iteractionsSpinner;
+	private Spinner<Integer> iterationsSpinner;
 	@FXML
 	private TextField outputFolderNameTextField;
 	@FXML
 	private Button runButton;
+	@FXML
+	private Button refineButton;
+	@FXML
+	private Button simulateButton;
 
 	@FXML
 	private CheckBox showConsoleOutputCheckBox;
@@ -173,11 +177,12 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 
 		jobTypes.addAll(List.of(JobType.values()));
 
-		jobTypeChoiceBox.getItems().addAll(jobTypes);
-		jobTypeChoiceBox.getSelectionModel().selectFirst();
+		// TODO left for testing, remove at some stage
+//		jobTypeChoiceBox.getItems().addAll(jobTypes);
+//		jobTypeChoiceBox.getSelectionModel().selectFirst();
 
 		int initValue = 10; // model.interations.getValue();
-		iteractionsSpinner.setValueFactory(new IntegerSpinnerValueFactory(0, 999, initValue));
+		iterationsSpinner.setValueFactory(new IntegerSpinnerValueFactory(0, 999, initValue));
 
 		TextFormatter<String> tf = new TextFormatter<>(IDENTITY_STRING_CONVERTER);
 //				(c) -> {
@@ -221,23 +226,44 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 
 		mainController = getAppContext().getMainController();
 		openedFileProperty = mainController.getOpenedFileProperty();
-
-//		removeButton.setGraphic(new ImageView(Images.get("delete.png")));
-//		terminateButton.setGraphic(new ImageView(Images.get("stop.png")));
 	}
 
 	public void setRootModel(ObjCrystModel rootModel) {
 		getModelInstance().setRootModel(rootModel);
 
 		boolean disabled = rootModel == null;
-		jobTypeChoiceBox.setDisable(disabled);
-		iteractionsSpinner.setDisable(disabled);
+		// TODO left for testing, remove at some stage
+//		jobTypeChoiceBox.setDisable(disabled);
+		iterationsSpinner.setDisable(disabled);
 		outputFolderNameTextField.setDisable(disabled);
-		runButton.setDisable(disabled);
+
+		// TODO left for testing, remove at some stage
+//		runButton.setDisable(disabled);
+		refineButton.setDisable(disabled);
+		simulateButton.setDisable(disabled);
+	}
+
+	// TODO left for testing, remove at some stage
+	@FXML
+	public void run() {
+
+		JobType jobType = jobTypeChoiceBox.getSelectionModel().getSelectedItem();
+		assertNotNull(jobType, "No Job type selectd.");
+
+		runChoosenJob(jobType);
 	}
 
 	@FXML
-	public void runButtonAction() {
+	public void refine() {
+		runChoosenJob(JobType.DATA_REFINEMENT);
+	}
+
+	@FXML
+	public void simulate() {
+		runChoosenJob(JobType.DATA_SIMULATION);
+	}
+
+	private void runChoosenJob(JobType jobType) {
 		Instant startTime = Instant.now();
 
 		File openedFile = openedFileProperty.get();
@@ -248,9 +274,9 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 
 		String outputFolderName = formatName(nameWithoutExtension, startTime);
 
-		JobType jobType = jobTypeChoiceBox.getSelectionModel().getSelectedItem();
-		assertNotNull(jobType, "No Job type selectd.");
 		OptimizationJob job = jobType.createJob(getAppContext());
+
+		job.setIterations(iterationsSpinner.getValue());
 
 		job.setName(outputFolderName);
 		job.setShowConsole(showConsoleOutputCheckBox.selectedProperty().get());

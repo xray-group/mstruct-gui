@@ -436,6 +436,7 @@ public final class BindingUtils {
 			column.setUserData(colIndex);
 
 			column.setCellValueFactory((cdf) -> cdf.getValue().getObservableValue((Integer) cdf.getTableColumn().getUserData()));
+			column.setCellFactory(DoubleTextFieldTableCell.forNumberTableColumn());
 			tableView.getColumns().add(column);
 		}
 	}

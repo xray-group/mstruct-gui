@@ -91,7 +91,7 @@ var Iobs = this.signSqrt([${dat_Iobs}]);
 var ICalc = this.signSqrt([${dat_ICalc}]);
 //var ii = [${Xdat_Iobs-Icalc}];
 //var Weight = [${Xdat_Weight];
-//var Comp0 =[${Xdat_Comp0}];
+var Comp0 = this.signSqrt([${dat_Comp0}]);
 
 //For scatter type of traces see here:
 //  https://plotly.com/javascript/reference/scatter/
@@ -171,6 +171,16 @@ var traceICalc = {
   name: 'ICalc'
 };
 
+var traceComp0 = {
+  x: tt,
+  y: Comp0,
+  marker: {
+    color: 'grey'
+  },
+  mode: 'scatter',
+  name: 'Background'
+};
+
 
  var layout = {
 		margin: { t: 35},
@@ -209,6 +219,6 @@ var config = {
 	displaylogo: false
 };
 	
-Plotly.newPlot( document.getElementById('graphDivId'), [traceFhkl, 	traceIhkl, traceIhklFittedToIcalc, traceFWHM, traceB, traceIobs, traceICalc], layout, config);
+Plotly.newPlot( document.getElementById('graphDivId'), [traceFhkl, 	traceIhkl, traceIhklFittedToIcalc, traceFWHM, traceB, traceIobs, traceICalc, traceComp0], layout, config);
 </script>
 </body>

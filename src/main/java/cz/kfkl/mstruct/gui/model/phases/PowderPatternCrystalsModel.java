@@ -46,7 +46,8 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	public ParUniqueElement globalBisoPar = new ParUniqueElement("globalBiso");
 
 	@XmlUniqueElement(isSibling = true)
-	public PowderPatternComponentElement powderPatternComponent = new PowderPatternComponentElement(nameProperty);
+	public PowderPatternComponentWithScaleParElement powderPatternComponent = new PowderPatternComponentWithScaleParElement(
+			nameProperty);
 
 	@XmlUniqueElement
 	public AbsorptionCorrElement absorptionCorrElement = new AbsorptionCorrElement();
@@ -88,7 +89,7 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 
 	@Override
 	public List<ParUniqueElement> getParams() {
-		return List.of(globalBisoPar);
+		return List.of(globalBisoPar, powderPatternComponent.scalePar);
 	}
 
 	@Override

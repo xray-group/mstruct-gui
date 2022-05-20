@@ -50,9 +50,8 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 
 	@FXML
 	private HBox globalBisoParContainer;
-
 	@FXML
-	private TextField powderPatternComponentScaleTextField;
+	private HBox powderPatternComponentScaleParContainer;
 
 	@FXML
 	private TextField absoptionCorrectionNameTextField;
@@ -104,8 +103,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		bindlBooleanPropertyToInteger(ignoreImagScattFactCheckBox.selectedProperty(), model.ignoreImagScattFactProperty);
 //		bindAndBuildParFieldsFullLarge(globalBisoParContainer, model.globalBisoPar);
 		bindAndBuildParFieldsNoName(globalBisoParContainer, model.globalBisoPar);
-
-		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
+		bindAndBuildParFieldsNoName(powderPatternComponentScaleParContainer, model.powderPatternComponent.scalePar);
 
 		absoptionCorrectionNameTextField.textProperty().bindBidirectional(model.absorptionCorrElement.nameProperty);
 		doubleTextField(absoptionDepthTextField);

@@ -222,10 +222,6 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		}
 	}
 
-	public ObjectProperty<TableOfDoubles> getTabularDataProperty() {
-		return datTableProperty;
-	}
-
 	public void updateTabs(MStructGuiController mainController, OptimizationController optimizationController) {
 
 		updateFittedParamsTableTab(mainController, optimizationController.fittedParamsTab);

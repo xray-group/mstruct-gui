@@ -60,6 +60,9 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@XmlElementList
 	public ObservableList<ExcludeXElement> excludeRegions = FXCollections.observableArrayList();
 
+	@XmlUniqueElement("XIobsSigmaWeightList")
+	public SingleValueUniqueElement xIobsSigmaWeightListElement = new SingleValueUniqueElement("");
+
 	public PowderPatternElement() {
 		this.nameProperty.set(DEFAULT_PATTERN_NAME);
 	}

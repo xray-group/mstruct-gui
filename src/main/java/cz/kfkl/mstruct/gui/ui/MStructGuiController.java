@@ -5,6 +5,7 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.initTableView;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.loadViewAndInitController;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupListViewListener;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
+import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,12 +24,9 @@ import java.util.Set;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.jdom2.xpath.XPathExpression;
-import org.jdom2.xpath.XPathFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,13 +38,13 @@ import cz.kfkl.mstruct.gui.core.HasAppContext;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParametersModel;
+import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
 import cz.kfkl.mstruct.gui.model.crystals.ImportedCrystal;
 import cz.kfkl.mstruct.gui.model.crystals.ImportedCrystalsModel;
 import cz.kfkl.mstruct.gui.model.instrumental.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
-import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.ui.crystals.CrystalCifImportJob;
 import cz.kfkl.mstruct.gui.ui.crystals.ImportedCrystalsController;
 import cz.kfkl.mstruct.gui.ui.job.JobStatus;
@@ -75,7 +73,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
@@ -88,11 +85,15 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class MStructGuiController implements HasAppContext {
 
+	private static final int EXPECTED_DAT_FILE_ROWS = 4;
+
 	private static final Logger LOG = LoggerFactory.getLogger(MStructGuiController.class);
 
 	public static final ExtensionFilter ALL_TYPES_EXTENSION_FILTER = new FileChooser.ExtensionFilter("All types", "*.*");
-	private static final ExtensionFilter MSTRUCT_EXTENSION_FILTER = new FileChooser.ExtensionFilter("MStruct ObjCryst", "*.xml");
+	private static final ExtensionFilter MSTRUCT_XML_EXTENSION_FILTER = new FileChooser.ExtensionFilter("MStruct ObjCryst",
+			"*.xml");
 	private static final ExtensionFilter CIF_EXTENSION_FILTER = new FileChooser.ExtensionFilter("CIF Crystals", "*.cif");
+	private static final ExtensionFilter DAT_EXTENSION_FILTER = new FileChooser.ExtensionFilter("Tablated Textual Data", "*.dat");
 //XIobsSigmaWeight
 	private static final String[] DATA_TABLE_COLUMNS = new String[] { "2Theta/TOF", "Iobs", "Sigma", "Weight" };
 
@@ -101,9 +102,6 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	private BorderPane topBorderPanel;
-
-	@FXML
-	private MenuBar menuBar;
 
 	@FXML
 	private MenuItem saveMenuItem;
@@ -240,7 +238,7 @@ public class MStructGuiController implements HasAppContext {
 //		try {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open MStruct ObjCryst XML File");
-		configureMStructExtensionFilters(fileChooser);
+		configureExtensionFilter(fileChooser, MSTRUCT_XML_EXTENSION_FILTER);
 
 		fileChooser.setInitialDirectory(appContext.getLastSelectedFileDirectoryOrDefault());
 		File selectedFile = fileChooser.showOpenDialog(topBorderPanel.getScene().getWindow());
@@ -254,20 +252,12 @@ public class MStructGuiController implements HasAppContext {
 //		}
 	}
 
-	private void configureMStructExtensionFilters(FileChooser fileChooser) {
+	private void configureExtensionFilter(FileChooser fileChooser, ExtensionFilter specialFilterilter) {
 		ObservableList<ExtensionFilter> extensionFilters = fileChooser.getExtensionFilters();
 		extensionFilters.add(ALL_TYPES_EXTENSION_FILTER);
-		extensionFilters.add(MSTRUCT_EXTENSION_FILTER);
+		extensionFilters.add(specialFilterilter);
 
-		fileChooser.setSelectedExtensionFilter(MSTRUCT_EXTENSION_FILTER);
-	}
-
-	private void configureCifExtensionFilters(FileChooser fileChooser) {
-		ObservableList<ExtensionFilter> extensionFilters = fileChooser.getExtensionFilters();
-		extensionFilters.add(ALL_TYPES_EXTENSION_FILTER);
-		extensionFilters.add(CIF_EXTENSION_FILTER);
-
-		fileChooser.setSelectedExtensionFilter(CIF_EXTENSION_FILTER);
+		fileChooser.setSelectedExtensionFilter(specialFilterilter);
 	}
 
 	public void openSelectedFile(File selectedFile) {
@@ -315,33 +305,25 @@ public class MStructGuiController implements HasAppContext {
 
 			optimizationController.setRootModel(rootModel);
 
-			XPathFactory xpf = XPathFactory.instance();
-			XPathExpression<Element> expr = xpf.compile(INPUT_DATA_ELEMENT_NAME, Filters.element());
-
-			List<Element> list = expr.evaluate(openedDocument);
-			if (list.size() > 1) {
-				// TODO report as warning
-			}
-			Element dataElement = list.isEmpty() ? null : list.get(0);
-			String text = dataElement == null ? "" : dataElement.getTextTrim();
-			configInputDataTable(text);
+			configInputDataTable(findSingleXIobsSigmaWeightListElement().valueProperty.get());
 
 		} catch (Exception e) {
 			throw new PopupErrorException(e, "Failed to parse the xml file [%s]", selectedFile);
 		}
 	}
 
+	private SingleValueUniqueElement findSingleXIobsSigmaWeightListElement() {
+		return rootModel.getFirstPowderPattern().xIobsSigmaWeightListElement;
+	}
+
 	private void configInputDataTable(String data) {
 
-		TableView<RowIndex> dataTableView = inputDataTableView;
 		String[] columnNames = DATA_TABLE_COLUMNS;
 
-		initTableView(dataTableView, columnNames);
+		initTableView(inputDataTableView, columnNames);
 
-		TabularDataParser parser = new TabularDataParser();
-		TableOfDoubles tabularData = parser.parse(data);
+		updateInputData(createInputDataParser().parse(data));
 
-		dataTableView.getItems().addAll(tabularData.getRowIndexes());
 	}
 
 	public ParametersController initParametersTab(Tab tabParameters) {
@@ -391,7 +373,7 @@ public class MStructGuiController implements HasAppContext {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save MStruct ObjCryst XML File");
 
-		configureMStructExtensionFilters(fileChooser);
+		configureExtensionFilter(fileChooser, MSTRUCT_XML_EXTENSION_FILTER);
 
 		fileChooser.setInitialDirectory(appContext.getLastSelectedFileDirectoryOrDefault());
 		File selectedFile = fileChooser.showSaveDialog(topBorderPanel.getScene().getWindow());
@@ -420,7 +402,7 @@ public class MStructGuiController implements HasAppContext {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open Crystal CIF File");
-			configureCifExtensionFilters(fileChooser);
+			configureExtensionFilter(fileChooser, CIF_EXTENSION_FILTER);
 
 			fileChooser.setInitialDirectory(appContext.getLastSelectedCifFileDirectoryOrDefault());
 			File selectedFile = fileChooser.showOpenDialog(topBorderPanel.getScene().getWindow());
@@ -481,7 +463,7 @@ public class MStructGuiController implements HasAppContext {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open MStruct ObjCryst XML File");
-			configureMStructExtensionFilters(fileChooser);
+			configureExtensionFilter(fileChooser, MSTRUCT_XML_EXTENSION_FILTER);
 
 			fileChooser.setInitialDirectory(appContext.getLastSelectedFileDirectoryOrDefault());
 			File selectedFile = fileChooser.showOpenDialog(topBorderPanel.getScene().getWindow());
@@ -585,6 +567,82 @@ public class MStructGuiController implements HasAppContext {
 				importedCrystal.existingCrystal = existingCrystal;
 			}
 		}
+	}
+
+	@FXML
+	void importDataFromDat(ActionEvent event) {
+
+		try {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open MStruct Input Data DAT File");
+			configureExtensionFilter(fileChooser, DAT_EXTENSION_FILTER);
+
+			fileChooser.setInitialDirectory(appContext.getLastSelectedDatFileDirectoryOrDefault());
+			File selectedFile = fileChooser.showOpenDialog(topBorderPanel.getScene().getWindow());
+			if (selectedFile != null) {
+				importDatFile(selectedFile);
+			}
+		} catch (PopupErrorException pee) {
+			pee.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR, pee.getMessage());
+			alert.showAndWait();
+		}
+	}
+
+	private void importDatFile(File selectedFile) {
+		appContext.setLastSelectedDatFileDirectory(selectedFile.getParentFile());
+
+		assertTrue(selectedFile.exists(), "The input file [%s] doesn't exist, full path: %s", selectedFile.getName(),
+				selectedFile);
+		try {
+			TableOfDoubles tabularData = createInputDataParser().parse(selectedFile);
+
+			inputDataTableView.getItems().clear();
+			updateInputData(tabularData);
+
+			SingleValueUniqueElement xIobsSigmaWeightList = findSingleXIobsSigmaWeightListElement();
+			xIobsSigmaWeightList.valueProperty.set(tableToString(tabularData, xIobsSigmaWeightList.getXmlLevel()));
+		} catch (Exception e) {
+			throw new PopupErrorException(e, "Exception parsing output dat file [%s]: %s", selectedFile,
+					e.getStackTrace().toString());
+		}
+	}
+
+	private void updateInputData(TableOfDoubles tabularData) {
+		calculateSigmaWeight(tabularData);
+		inputDataTableView.getItems().addAll(tabularData.getRowIndexes());
+		inputDataTableView.refresh();
+	}
+
+	private TabularDataParser createInputDataParser() {
+		TabularDataParser parser = new TabularDataParser();
+		parser.setExpectedRows(EXPECTED_DAT_FILE_ROWS);
+		return parser;
+	}
+
+	private void calculateSigmaWeight(TableOfDoubles tabularData) {
+		// TODO validation, some reporting of calculated rows
+		for (double[] row : tabularData.getRows()) {
+			if (row[2] == TabularDataParser.DEFAULT_DOUBLE) {
+				if (row[1] != 0) {
+					row[2] = Math.sqrt(row[1]);
+				}
+			}
+
+			if (row[3] == TabularDataParser.DEFAULT_DOUBLE) {
+				if (row[1] != 0) {
+					row[3] = 1.0 / row[1];
+				}
+			}
+		}
+	}
+
+	// TODO consider different formatting
+	private String tableToString(TableOfDoubles tabularData, int xmlIndent) {
+		String indentStrInner = XmlUtils.indentString(xmlIndent + 1);
+		return "\n" + indentStrInner
+				+ JvStringUtils.join("\n" + indentStrInner, tabularData.getColumnsDataJoined(" ", 0, 1, 2, 3)) + "\n"
+				+ XmlUtils.indentString(xmlIndent);
 	}
 
 	@FXML

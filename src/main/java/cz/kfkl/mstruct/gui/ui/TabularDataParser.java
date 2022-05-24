@@ -13,7 +13,7 @@ import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 
 public class TabularDataParser {
 
-	private static final double DEFAULT_DOUBLE = 0;
+	public static final double DEFAULT_DOUBLE = 0;
 
 	private static final String COMMENT_PREFIX = "#";
 
@@ -82,6 +82,10 @@ public class TabularDataParser {
 		}
 
 		return arrayOfDoubles;
+	}
+
+	public void setExpectedRows(Integer expectedRows) {
+		this.expectedRows = expectedRows;
 	}
 
 	private double defaultDouble(Double dbl) {

@@ -10,7 +10,9 @@ import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
 import cz.kfkl.mstruct.gui.model.instrumental.InstrumentalModel;
+import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
+import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -104,6 +106,18 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 			}
 		}
 		return null;
+	}
+
+	// TODO if we support multiple Instruments (not only "pattern0") this would be
+	// done differently
+	public PowderPatternElement getFirstPowderPattern() {
+		for (InstrumentalModel instModel : instruments) {
+			if (instModel instanceof PowderPatternElement) {
+				return (PowderPatternElement) instModel;
+			}
+		}
+
+		throw new UnexpectedException("An instrumtal PowderPattern model should be created first.");
 	}
 
 }

@@ -51,8 +51,12 @@ public class XmlUtils {
 	}
 
 	private static Text createIndentText(int level) {
-		Text indent = new Text("\n" + Strings.repeat("  ", level));
+		Text indent = new Text("\n" + indentString(level));
 		return indent;
+	}
+
+	public static String indentString(int level) {
+		return Strings.repeat("  ", level);
 	}
 
 	public static void removeWithIndent(Element parent, Element elementToRemove) {

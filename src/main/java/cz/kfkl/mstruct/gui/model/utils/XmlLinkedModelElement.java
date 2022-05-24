@@ -538,6 +538,10 @@ public class XmlLinkedModelElement {
 		XmlUtils.addNewElementAfter(parentElement, newElement, addAfterElement, xmlLevel + 1, indentStyle);
 	}
 
+	public int getXmlLevel() {
+		return xmlLevel;
+	}
+
 	public XmlLinkedModelElement getParentModelElement() {
 		return parentModelElement;
 	}

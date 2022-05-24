@@ -24,7 +24,8 @@ public class TableOfDoubles {
 		}
 
 		public double getValue(Integer colIndex) {
-			return table.getRows().get(rowIndex)[colIndex];
+			double[] ds = table.getRows().get(rowIndex);
+			return ds.length > colIndex ? ds[colIndex] : 0;
 		}
 	}
 

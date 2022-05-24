@@ -21,6 +21,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -28,7 +29,7 @@
 	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="cz.kfkl.mstruct.gui.ui.MStructGuiController">
 	<top>
-		<MenuBar fx:id="menuBar" prefHeight="27.0" BorderPane.alignment="CENTER">
+		<MenuBar prefHeight="27.0" BorderPane.alignment="CENTER">
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>
@@ -67,11 +68,18 @@
 						<MenuItem mnemonicParsing="false" onAction="#importCrystalsFromXml" text="Import XML..." />
 					</items>
 				</Menu>
+				<Menu mnemonicParsing="false" text="Data">
+					<items>
+						<MenuItem mnemonicParsing="false" onAction="#importDataFromDat" text="Import Input DAT..." />
+					</items>
+				</Menu>
+				<!--
 				<Menu mnemonicParsing="false" text="Help (TODO)">
 					<items>
 						<MenuItem mnemonicParsing="false" text="About" />
 					</items>
-				</Menu>
+				</Menu> 
+				 -->
 			</menus>
 			<BorderPane.margin>
 				<Insets />

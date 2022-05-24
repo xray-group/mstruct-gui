@@ -37,6 +37,7 @@ public class AppContext {
 	private File appLocationDir;
 	private File lastSelectedFileDirectory;
 	private File lastSelectedCifFileDirectory;
+	private File lastSelectedDatFileDirectory;
 
 	private MStructGuiController mainController;
 	private File foxExeFile;
@@ -173,6 +174,20 @@ public class AppContext {
 
 	public void setLastSelectedCifFileDirectory(File lastSelectedCifFileDirectory) {
 		this.lastSelectedCifFileDirectory = lastSelectedCifFileDirectory;
+	}
+
+	public File getLastSelectedDatFileDirectoryOrDefault() {
+		File dir = null;
+		if (lastSelectedDatFileDirectory == null) {
+			dir = getLastSelectedFileDirectoryOrDefault();
+		} else {
+			dir = lastSelectedDatFileDirectory;
+		}
+		return dir;
+	}
+
+	public void setLastSelectedDatFileDirectory(File lastSelectedDatFileDirectory) {
+		this.lastSelectedDatFileDirectory = lastSelectedDatFileDirectory;
 	}
 
 	public String loadPlotlyJs() {

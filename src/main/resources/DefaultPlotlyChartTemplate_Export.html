@@ -70,6 +70,16 @@ var signSqrt = function(values) {
 	}
 };
 
+var diffArray = function(a, b) {
+	var d = [];
+
+	for (var i = 0; i < b.length; i++) {
+		d.push(a[i] - b[i]);
+	}
+
+	return d;
+};
+
 </script>
 </head>
 
@@ -90,6 +100,7 @@ var tt = [${dat_2Theta/TOF}];
 var Iobs = this.signSqrt([${dat_Iobs}]);
 var ICalc = this.signSqrt([${dat_ICalc}]);
 //var ii = [${Xdat_Iobs-Icalc}];
+var oCdiff = this.diffArray(Iobs, ICalc);
 //var Weight = [${Xdat_Weight];
 var Comp0 = this.signSqrt([${dat_Comp0}]);
 
@@ -158,7 +169,7 @@ var traceIobs = {
     symbol: 'circle-open'
   },
   mode: 'markers',
-  name: 'Iobs'
+  name: 'measured'
 };
 
 var traceICalc = {
@@ -167,58 +178,74 @@ var traceICalc = {
   marker: {
     color: 'blue'
   },
-  mode: 'area',
-  name: 'ICalc'
+  name: 'calculated'
+};
+
+var traceOCdiff = {
+  x: tt,
+  y: oCdiff,
+  fill: 'tozeroy',
+  type: 'scatter',
+  line: {
+    color: 'limegreen',
+    width: 1
+  },
+  name: 'difference'
 };
 
 var traceComp0 = {
   x: tt,
   y: Comp0,
-  marker: {
+  line: {
+    dash: 'dot',
     color: 'grey'
   },
   mode: 'scatter',
-  name: 'Background'
+  name: 'background'
 };
 
 
  var layout = {
-		margin: { t: 35},
-		autosize: true,
-		font: {
-			family: "tahoma,arial,verdana,sans-serif",
-			size: 12
-		},
-		legend: {
-			y: '0.6',
-			xanchor: 'middle'
-		},
-		xaxis: {
-			domain: [0, 0.8]
-		},
-		yaxis2: {
-			title: 'y2',
-			titlefont: {color: 'rgb(148, 103, 189)'},
-			tickfont: {color: 'rgb(148, 103, 189)'},
-			overlaying: 'y',
-			side: 'right',
-			position: 0.9
-		},
-		yaxis3: {
-			title: 'deg',
-			titlefont: {color: 'rgb(148, 103, 189)'},
-			tickfont: {color: 'rgb(148, 103, 189)'},
-			overlaying: 'y',
-			side: 'right'
-		},
-		annotations : annotations
-	};
+	margin: { t: 35},
+	autosize: true,
+	font: {
+		family: "tahoma,arial,verdana,sans-serif",
+		size: 12
+	},
+	legend: {
+		y: '0.6',
+		xanchor: 'middle'
+	},
+ 	xaxis: {
+		title: '2\u03F4 (deg)',
+		domain: [0, 0.8]
+ 	},
+	yaxis: {
+		title: 'Intensity (square root of counts)',
+	},
+	yaxis2: {
+		title: 'y2',
+		titlefont: {color: 'rgb(148, 103, 189)'},
+		tickfont: {color: 'rgb(148, 103, 189)'},
+		overlaying: 'y',
+		side: 'right',
+		position: 0.9
+	},
+	yaxis3: {
+		title: 'deg',
+		titlefont: {color: 'rgb(148, 103, 189)'},
+		tickfont: {color: 'rgb(148, 103, 189)'},
+		overlaying: 'y',
+		side: 'right'
+	},
+	annotations : annotations
+};
 	
 var config = {
 	responsive: true,
 	displaylogo: false
 };
 	
-Plotly.newPlot( document.getElementById('graphDivId'), [traceFhkl, 	traceIhkl, traceIhklFittedToIcalc, traceFWHM, traceB, traceIobs, traceICalc, traceComp0], layout, config);
+Plotly.newPlot( document.getElementById('graphDivId'), [traceFhkl, 	traceIhkl, traceIhklFittedToIcalc, traceFWHM, traceB, traceIobs, traceICalc, traceOCdiff, traceComp0], layout, config);
 </script>
 </body>

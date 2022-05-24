@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.ui.ParametersController;
@@ -61,6 +62,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private ObjectProperty<TableOfDoubles> datTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<TableOfDoubles> hklTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty = new SimpleObjectProperty<>();
+	private List<ExcludeXElement> excludeRegions;
 
 	private Set<String> refinedParams;
 
@@ -210,8 +212,13 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 				Map<String, ParUniqueElement> map = ParametersController.createParamsLookup(rootModel);
 				LOG.debug("XML output params loaded [{}]", map.size());
+				List<ExcludeXElement> excludeRegions = rootModel.getExcludeRegions();
 
-				Platform.runLater(() -> this.fittedParamsProperty.set(map));
+				Platform.runLater(() -> {
+					this.fittedParamsProperty.set(map);
+					this.excludeRegions = excludeRegions;
+
+				});
 			} catch (Exception e) {
 				this.appendJobLogLineLater("Exception parsing output xml file [%s]: %s", outXmlFile,
 						e.getStackTrace().toString());
@@ -292,6 +299,10 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 	public ObjectProperty<TableOfDoubles> getHklTableProperty() {
 		return hklTableProperty;
+	}
+
+	public List<ExcludeXElement> getExcludeRegions() {
+		return excludeRegions;
 	}
 
 	public abstract List<String> getCommandList();

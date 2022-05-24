@@ -9,6 +9,7 @@ import java.util.Set;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
+import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.model.instrumental.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
@@ -118,6 +119,10 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 		}
 
 		throw new UnexpectedException("An instrumtal PowderPattern model should be created first.");
+	}
+
+	public List<ExcludeXElement> getExcludeRegions() {
+		return getFirstPowderPattern().excludeRegions;
 	}
 
 }

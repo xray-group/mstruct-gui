@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
+import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.job.Job;
 import cz.kfkl.mstruct.gui.ui.optimization.OptimizationJob;
@@ -20,7 +21,10 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 
 	private static final String PLOTLY_JS_MIN = "${plotly_js_min}";
 
+	private static final String EXCLUDE_REGIONS = "${exclude_regions}";
+
 	private static final String HKL_LABELS = "${hkl_Labels}";
+
 	private static Map<String, Integer> datPlaceholders = new LinkedHashMap<>();
 	static {
 		datPlaceholders.put("${dat_2Theta/TOF}", 0);
@@ -48,6 +52,8 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 
 	private Job job;
 
+	private List<ExcludeXElement> excludeRegions;
+
 	public PlotlyChartGenerator(AppContext appContext) {
 		this.appContext = appContext;
 	}
@@ -69,6 +75,7 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 			OptimizationJob optJob = (OptimizationJob) job;
 			this.datTable = optJob.getDatTableProperty().get();
 			this.hklTable = optJob.getHklTableProperty().get();
+			this.excludeRegions = optJob.getExcludeRegions();
 		}
 
 	}
@@ -105,7 +112,34 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 
 		res = res.replace(PLOTLY_JS_MIN, loadPlotlyJS());
 
+		if (excludeRegions != null) {
+			res = res.replace(EXCLUDE_REGIONS, formatExcludeRegions(excludeRegions));
+		}
+
 		return res;
+	}
+
+	private String formatExcludeRegions(List<ExcludeXElement> regions) {
+		StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (ExcludeXElement ee : regions) {
+			Double from = ee.from();
+			Double to = ee.to();
+			if (from != null && to != null) {
+				if (isFirst) {
+					isFirst = false;
+				} else {
+					sb.append(", ");
+				}
+
+				sb.append('[');
+				sb.append(JvStringUtils.toStringNoDotZero(from));
+				sb.append(", ");
+				sb.append(JvStringUtils.toStringNoDotZero(to));
+				sb.append(']');
+			}
+		}
+		return sb.toString();
 	}
 
 	private CharSequence loadPlotlyJS() {

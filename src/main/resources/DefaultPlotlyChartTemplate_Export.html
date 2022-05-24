@@ -103,6 +103,7 @@ var ICalc = this.signSqrt([${dat_ICalc}]);
 var oCdiff = this.diffArray(Iobs, ICalc);
 //var Weight = [${Xdat_Weight];
 var Comp0 = this.signSqrt([${dat_Comp0}]);
+var excludeRegions = [${exclude_regions}];
 
 //For scatter type of traces see here:
 //  https://plotly.com/javascript/reference/scatter/
@@ -204,6 +205,25 @@ var traceComp0 = {
   name: 'background'
 };
 
+var shapes = [];
+
+for (var i = 0; i < excludeRegions.length; i++) {
+	shapes.push({
+		type: 'rect',
+		xref: 'x',
+		yref: 'paper',
+		x0: excludeRegions[i][0],
+		y0: 0,
+		x1: excludeRegions[i][1],
+		y1: 1,
+		fillcolor: '#e3e3e3',
+		opacity: 0.5,
+		line: {
+			width: 0
+		}
+	});
+}
+
 
  var layout = {
 	margin: { t: 35},
@@ -238,7 +258,8 @@ var traceComp0 = {
 		overlaying: 'y',
 		side: 'right'
 	},
-	annotations : annotations
+	annotations : annotations,
+	shapes : shapes
 };
 	
 var config = {

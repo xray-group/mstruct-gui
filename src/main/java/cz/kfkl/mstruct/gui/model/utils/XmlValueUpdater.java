@@ -35,7 +35,7 @@ public abstract class XmlValueUpdater<T> implements ChangeListener<T> {
 		if (xmlValue == null) {
 			T defaultValue = ssp.getValue();
 			if (defaultValue != null) {
-				LOG.debug("Using default value [{}]", defaultValue);
+				LOG.debug("Using default value [{}] for property [{}]", defaultValue, ssp);
 				convertAndSetValue(defaultValue);
 			}
 		} else {

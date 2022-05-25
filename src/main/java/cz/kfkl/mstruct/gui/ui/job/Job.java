@@ -84,7 +84,16 @@ public abstract class Job {
 			} else {
 				setStatus(JobStatus.Finished);
 			}
+			jobFinishedAction();
 		}
+	}
+
+	/**
+	 * To be overwritten if needed.
+	 * <p>
+	 * It is called only if the job finished on its own, i.e. wasn't terminated.
+	 */
+	protected void jobFinishedAction() {
 	}
 
 	public void terminate() {
@@ -130,5 +139,10 @@ public abstract class Job {
 
 	protected void jobDoneAction() {
 	};
+
+	@Override
+	public String toString() {
+		return getName();
+	}
 
 }

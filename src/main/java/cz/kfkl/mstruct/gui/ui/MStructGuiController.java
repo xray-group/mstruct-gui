@@ -602,6 +602,7 @@ public class MStructGuiController implements HasAppContext {
 
 			SingleValueUniqueElement xIobsSigmaWeightList = findSingleXIobsSigmaWeightListElement();
 			xIobsSigmaWeightList.valueProperty.set(tableToString(tabularData, xIobsSigmaWeightList.getXmlLevel()));
+			setBottomLabelText("Input data imported from [%s].", selectedFile);
 		} catch (Exception e) {
 			throw new PopupErrorException(e, "Exception parsing output dat file [%s]: %s", selectedFile,
 					e.getStackTrace().toString());

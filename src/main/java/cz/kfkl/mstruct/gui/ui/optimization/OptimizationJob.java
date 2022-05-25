@@ -4,9 +4,14 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenPropertySet;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.initTableView;
 
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -20,6 +25,7 @@ import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.ui.ParametersController;
+import cz.kfkl.mstruct.gui.ui.PoupupErrorExceptionHandler;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.ui.TabularDataParser;
@@ -27,14 +33,20 @@ import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
 import cz.kfkl.mstruct.gui.ui.job.Job;
 import cz.kfkl.mstruct.gui.ui.job.JobRunner;
 import cz.kfkl.mstruct.gui.ui.job.TextBuffer;
+import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
@@ -52,12 +64,30 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private static final String[] HKL_TABLE_COLUMNS = new String[] { "h", "k", "l", "2Theta", "|Fhkl|^2", "Ihkl", "FWHM(deg)",
 			"B(deg)" };
 
+	private static Map<Pattern, BiConsumer<OptimizationJob, Matcher>> consolePatterns = new LinkedHashMap<>();
+
+	// TODO make this configurable
+	static {
+		consolePatterns.put(Pattern.compile("Warning: (.*)"),
+				(job, matcher) -> job.failed("Console Warning: %s", matcher.group(1)));
+		consolePatterns.put(Pattern.compile("Rw-factor : ([\\d\\.]*)"), (job, matcher) -> job.rwFactor.set(matcher.group(1)));
+		consolePatterns.put(Pattern.compile("GoF: ([\\d\\.]*)"), (job, matcher) -> job.goF.set(matcher.group(1)));
+		consolePatterns.put(Pattern.compile("finished cycle #([\\d]*)/"), (job, matcher) -> {
+			updateProgress(job, matcher.group(1));
+		});
+	}
+
+	private String lastConsoleLine = "";
+
 	private File resultDir;
 	private File inputFile;
 
+	private OptimizationController optimizationController;
+
+	private SimpleStringProperty rwFactor = new SimpleStringProperty("N/A");
+	private SimpleStringProperty goF = new SimpleStringProperty("N/A");
+
 	private StringBuilder consoleStringBuilder;
-	private TextArea activeConsoleTextArea;
-	private TextArea activeJobLogsTextArea;
 
 	private ObjectProperty<TableOfDoubles> datTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<TableOfDoubles> hklTableProperty = new SimpleObjectProperty<>();
@@ -67,6 +97,19 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private Set<String> refinedParams;
 
 	private Integer iterations;
+
+	// TODO consider moving these two to a parent (newly created, the
+	// jobFinishedAction method wouldn't be needed then
+	private SimpleStringProperty progress = new SimpleStringProperty("0");
+
+	private ObservableDoubleValue progressPercentage = Bindings.createDoubleBinding(() -> {
+		Double progressDouble = JvStringUtils.parseDoubleSilently(progress.get());
+		double progressPercent = 0;
+		if (progressDouble != null) {
+			progressPercent = iterations > 0 ? (progressDouble / iterations) : 1;
+		}
+		return progressPercent;
+	}, progress);
 
 	private boolean showConsole;
 	private boolean keepOutput;
@@ -81,26 +124,47 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	@Override
 	public void appendText(String text) {
 		consoleStringBuilder.append(text);
-		if (activeConsoleTextArea != null) {
-			activeConsoleTextArea.appendText(text);
+		analyseConsole(text);
+		if (optimizationController != null) {
+			optimizationController.consoleTextArea.appendText(text);
 		}
 	}
 
-	public void setActiveConsoleTextArea(TextArea textArea) {
-		this.activeConsoleTextArea = textArea;
+	private void analyseConsole(String text) {
+
+		for (String line : (lastConsoleLine + text).split("\n", -2)) {
+			if (line.length() > 0) {
+				for (Entry<Pattern, BiConsumer<OptimizationJob, Matcher>> patternEntry : consolePatterns.entrySet()) {
+					Pattern pattern = patternEntry.getKey();
+					Matcher matcher = pattern.matcher(line);
+					while (matcher.find()) {
+						BiConsumer<OptimizationJob, Matcher> consumer = patternEntry.getValue();
+						consumer.accept(this, matcher);
+					}
+				}
+			}
+
+			// the console appender may continue writing to the last line...
+			this.lastConsoleLine = line;
+		}
+	}
+
+	private static void updateProgress(OptimizationJob job, String progressStr) {
+		job.progress.set(progressStr);
+		LOG.debug("Job [{}] parsed progress: {}", job, progressStr);
 	}
 
 	@Override
 	protected void appendJobLogText(String text) {
 		super.appendJobLogText(text);
 
-		if (activeJobLogsTextArea != null) {
-			activeJobLogsTextArea.appendText(text);
+		if (optimizationController != null) {
+			optimizationController.jobsLogsTextArea.appendText(text);
 		}
 	}
 
-	public void setActiveJobLogsTextArea(TextArea textArea) {
-		this.activeJobLogsTextArea = textArea;
+	public void setActiveJob(OptimizationController optimizationController) {
+		this.optimizationController = optimizationController;
 	}
 
 	public File getResultDir() {
@@ -155,8 +219,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 				TableOfDoubles tabularData = parser.parse(outDatFile);
 				Platform.runLater(() -> datFileParsed(tabularData));
 			} catch (Exception e) {
-				this.appendJobLogLineLater("Exception parsing output dat file [%s]: %s", outDatFile,
-						e.getStackTrace().toString());
+				reportOutputFileParsingException(outDatFile, "dat", e);
 			}
 
 		} else {
@@ -173,19 +236,18 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	 * Is called from a separate, non FX thread.
 	 */
 	protected void processHklFile() {
-		File outDatFile = new File(resultDir, HKL_FILE_NAME);
-		if (outDatFile.exists()) {
+		File outHklFile = new File(resultDir, HKL_FILE_NAME);
+		if (outHklFile.exists()) {
 			try {
 				TabularDataParser parser = new TabularDataParser();
-				TableOfDoubles tabularData = parser.parse(outDatFile);
+				TableOfDoubles tabularData = parser.parse(outHklFile);
 				Platform.runLater(() -> this.hklFileParsed(tabularData));
 			} catch (Exception e) {
-				this.appendJobLogLineLater("Exception parsing output hkl file [%s]: %s", outDatFile,
-						e.getStackTrace().toString());
+				reportOutputFileParsingException(outHklFile, "hkl", e);
 			}
 
 		} else {
-			this.failedLater("The output hkl file [%s] doesn't exist, full path: %s", outDatFile.getName(), outDatFile);
+			this.failedLater("The output hkl file [%s] doesn't exist, full path: %s", outHklFile.getName(), outHklFile);
 		}
 	}
 
@@ -220,8 +282,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 				});
 			} catch (Exception e) {
-				this.appendJobLogLineLater("Exception parsing output xml file [%s]: %s", outXmlFile,
-						e.getStackTrace().toString());
+				reportOutputFileParsingException(outXmlFile, "xml", e);
 			}
 
 		} else {
@@ -229,12 +290,40 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		}
 	}
 
-	public void updateTabs(MStructGuiController mainController, OptimizationController optimizationController) {
+	private void reportOutputFileParsingException(File outXmlFile, String fileType, Exception e) {
+		String stacktraceMessages = PoupupErrorExceptionHandler.extractStacktraceMessages(e);
+		String shortMsg = "Exception parsing output " + fileType + " file";
+		LOG.warn(shortMsg + " [{}]: {}", outXmlFile, stacktraceMessages);
+		LOG.debug(shortMsg, e);
+		this.failed(shortMsg + " [%s]: %s", outXmlFile, stacktraceMessages);
+	}
 
+	public void updateTabs(MStructGuiController mainController, OptimizationController optimizationController) {
+		updateOutputTab(optimizationController);
 		updateFittedParamsTableTab(mainController, optimizationController.fittedParamsTab);
 		updateDataTableTab(optimizationController);
 		updateHklTableTab(optimizationController.outputHklTableView);
 		updateChartTab(optimizationController.chartTabTitledPane);
+
+		this.optimizationController = optimizationController;
+	}
+
+	private void updateOutputTab(OptimizationController optimizationController) {
+
+		optimizationController.jobStatusLabel.textProperty().bind(this.getStatusProperty().asString());
+		ObjectBinding<Image> imageBinding = Bindings.createObjectBinding(() -> this.getStatusProperty().get().getImage(),
+				this.getStatusProperty());
+		optimizationController.jobStatusImageView.imageProperty().bind(imageBinding);
+
+		optimizationController.jobRwFactorLabel.textProperty().bind(rwFactor);
+		optimizationController.jobGoFLabel.textProperty().bind(goF);
+		optimizationController.jobProgressLabel.textProperty().bind(progress.concat(" / " + getIterations()));
+		optimizationController.jobProgressBar.progressProperty().bind(progressPercentage);
+
+		optimizationController.jobParamsRefinedLabel.textProperty().set(Integer.toString(this.getRefinedParamsCount()));
+
+		optimizationController.consoleTextArea.setText(this.getConsoleText());
+		optimizationController.jobsLogsTextArea.setText(this.getJobLogsText());
 	}
 
 	private void updateFittedParamsTableTab(MStructGuiController mainController, Tab fittedParamsTab) {
@@ -250,7 +339,10 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 		initTableView(optimizationController.outputDataTableView, DATA_TABLE_COLUMNS);
 
-		doWhenPropertySet(t -> optimizationController.outputDataTableView.getItems().addAll(t.getRowIndexes()), datTableProperty);
+		doWhenPropertySet(t -> {
+			optimizationController.datRowsCountLabel.setText(Integer.toString(t.getRows().size()));
+			optimizationController.outputDataTableView.getItems().addAll(t.getRowIndexes());
+		}, datTableProperty);
 	}
 
 	private void updateHklTableTab(TableView<RowIndex> dataTableView) {
@@ -325,6 +417,14 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		this.processXmlOutFile();
 		this.processHklFile();
 		this.processDatFile();
+	}
+
+	@Override
+	protected void jobFinishedAction() {
+		this.progressPercentage = new SimpleDoubleProperty(1.0);
+		if (optimizationController != null) {
+			optimizationController.jobProgressBar.progressProperty().bind(progressPercentage);
+		}
 	}
 
 	@Override

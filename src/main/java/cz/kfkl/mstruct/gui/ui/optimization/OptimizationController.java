@@ -1,6 +1,5 @@
 package cz.kfkl.mstruct.gui.ui.optimization;
 
-import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenPropertySet;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.validateIsNull;
 
@@ -36,8 +35,6 @@ import cz.kfkl.mstruct.gui.ui.job.JobType;
 import cz.kfkl.mstruct.gui.utils.ListCellWithIcon;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,7 +54,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -115,23 +111,25 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	@FXML
 	private Tab outputTab;
 	@FXML
-	private Label jobStatusLabel;
+	Label jobStatusLabel;
 	@FXML
-	private ImageView jobStatusImageView;
+	ImageView jobStatusImageView;
 	@FXML
-	private ProgressBar jobProgressBar;
+	ProgressBar jobProgressBar;
 	@FXML
-	private Label jobProgressLabel;
+	Label jobProgressLabel;
 	@FXML
-	private Label jobRwFactorLabel;
+	Label jobRwFactorLabel;
 	@FXML
-	private Label jobParamsRefinedLabel;
+	Label jobGoFLabel;
+	@FXML
+	Label jobParamsRefinedLabel;
 	@FXML
 	Label datRowsCountLabel;
 	@FXML
-	private TextArea consoleTextArea;
+	TextArea consoleTextArea;
 	@FXML
-	private TextArea jobsLogsTextArea;
+	TextArea jobsLogsTextArea;
 
 	@FXML
 	Tab fittedParamsTab;
@@ -185,12 +183,6 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		iterationsSpinner.setValueFactory(new IntegerSpinnerValueFactory(0, 999, initValue));
 
 		TextFormatter<String> tf = new TextFormatter<>(IDENTITY_STRING_CONVERTER);
-//				(c) -> {
-//			String text = c.getControlNewText();
-//			String newText = text == null || text.isBlank() ? "${timeStamp}" : text;
-//			c.setText(newText);
-//			return c;
-//		});
 		outputFolderNameTextField.setTextFormatter(tf);
 
 		jobsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -198,29 +190,12 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 				(lv) -> (new ListCellWithIcon<>(j -> new ImageView(j.getStatus().getImage()), j -> j.toString())));
 
 		jobsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldJob, newJob) -> {
-			if (oldJob != null) {
-				oldJob.setActiveConsoleTextArea(null);
-				oldJob.setActiveJobLogsTextArea(null);
-			}
+
 			if (newJob != null && newJob != oldJob) {
-				consoleTextArea.setText(newJob.getConsoleText());
-				newJob.setActiveConsoleTextArea(consoleTextArea);
-				jobParamsRefinedLabel.textProperty().set(Integer.toString(newJob.getRefinedParamsCount()));
-
-				jobsLogsTextArea.setText(newJob.getJobLogsText());
-				newJob.setActiveJobLogsTextArea(jobsLogsTextArea);
-
-//				jobTabPane.getTabs().remove(1, jobTabPane.getTabs().size());
+				if (oldJob != null) {
+					oldJob.setActiveJob(null);
+				}
 				newJob.updateTabs(mainController, this);
-
-				doWhenPropertySet(v -> datRowsCountLabel.setText(Integer.toString(v.getRows().size())),
-						newJob.getDatTableProperty());
-
-				jobStatusLabel.textProperty().bind(newJob.getStatusProperty().asString());
-				ObjectBinding<Image> imageBinding = Bindings
-						.createObjectBinding(() -> newJob.getStatusProperty().get().getImage(), newJob.getStatusProperty());
-				jobStatusImageView.imageProperty().bind(imageBinding);
-
 			}
 		});
 

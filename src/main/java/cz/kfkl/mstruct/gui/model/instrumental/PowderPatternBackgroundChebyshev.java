@@ -8,11 +8,13 @@ import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundChebyshevController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
+import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -24,6 +26,9 @@ public class PowderPatternBackgroundChebyshev
 	private static final String FXML_FILE_NAME = "powderPatternBackgroundChebyshev.fxml";
 
 	private static final String COEFFICIENT_NAME_PATTERN = CoefficientParElement.BACKGROUND_COEF_NAME_PREFIX + "%s";
+
+	@XmlUniqueElement(isSibling = true)
+	public PowderPatternComponentElement powderPatternComponent = new PowderPatternComponentElement(nameProperty);
 
 	@XmlAttributeProperty("Polynomial_degree")
 	public IntegerProperty polynomialDegreeProperty = new SimpleIntegerProperty(2);
@@ -61,6 +66,11 @@ public class PowderPatternBackgroundChebyshev
 		polynomialDegreeProperty.set(newDegree);
 		removeExtraCoeficients();
 		addMissingCoeficients();
+	}
+
+	@Override
+	public Element getLastOwnedXmlElement() {
+		return powderPatternComponent.getLastOwnedXmlElement();
 	}
 
 	@Override

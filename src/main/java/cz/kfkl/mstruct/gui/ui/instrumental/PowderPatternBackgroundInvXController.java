@@ -1,5 +1,6 @@
 package cz.kfkl.mstruct.gui.ui.instrumental;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
@@ -21,7 +22,7 @@ public class PowderPatternBackgroundInvXController extends BaseController<Powder
 	private HBox xFuncTypeOptionContainer;
 
 	@FXML
-	private TextField powderPatternComponentScaleTextField;
+	private HBox powderPatternComponentScaleParContainer;
 
 	@Override
 	public void init() {
@@ -34,7 +35,7 @@ public class PowderPatternBackgroundInvXController extends BaseController<Powder
 
 		bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
 
-		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
+		bindAndBuildParFieldsNoName(powderPatternComponentScaleParContainer, model.powderPatternComponent.scalePar);
 	}
 
 }

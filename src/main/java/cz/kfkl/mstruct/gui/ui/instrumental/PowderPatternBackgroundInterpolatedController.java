@@ -33,9 +33,6 @@ public class PowderPatternBackgroundInterpolatedController
 	private HBox interpolationModelOptionContainer;
 
 	@FXML
-	private TextField powderPatternComponentScaleTextField;
-
-	@FXML
 	private TableView<XIntensityListItem> xIntensityListTableView;
 
 	@FXML
@@ -60,8 +57,6 @@ public class PowderPatternBackgroundInterpolatedController
 		doWhenFocuseLost(powderPatternComponentName, () -> getParentController().powderPatternComponentNameChanged());
 
 		bindAndBuildRadioButtonsOption(interpolationModelOptionContainer, model.interpolationModelOption);
-
-		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
 
 		xIntensityListTableView.getItems().clear();
 

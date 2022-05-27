@@ -34,9 +34,6 @@ public class PowderPatternBackgroundChebyshevController
 	private HBox xFuncTypeOptionContainer;
 
 	@FXML
-	private TextField powderPatternComponentScaleTextField;
-
-	@FXML
 	private Spinner<Integer> polynomialDegreeSpinner;
 
 	@FXML
@@ -58,8 +55,6 @@ public class PowderPatternBackgroundChebyshevController
 		doWhenFocuseLost(powderPatternComponentName, () -> getParentController().powderPatternComponentNameChanged());
 
 		bindAndBuildRadioButtonsOption(xFuncTypeOptionContainer, model.xFuncTypeOption);
-
-		powderPatternComponentScaleTextField.textProperty().bindBidirectional(model.powderPatternComponent.scaleProperty);
 
 		polynomialDegreeSpinner.setValueFactory(new IntegerSpinnerValueFactory(0, 16, model.polynomialDegreeProperty.getValue()));
 		// model.polynomialDegreeProperty.bind(polynomialDegreeSpinner.valueProperty());

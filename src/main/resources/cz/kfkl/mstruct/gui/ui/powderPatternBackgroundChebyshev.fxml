@@ -32,12 +32,6 @@
       			<children>
 				</children>
       		</HBox>
-      		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
-      			<children>
-      				<Label text="Scale:" />
-      				<TextField fx:id="powderPatternComponentScaleTextField" prefHeight="19.0" prefWidth="80.0"/>
-      			</children>
-      		</HBox>
       	</children>
       </VBox>
       <VBox >

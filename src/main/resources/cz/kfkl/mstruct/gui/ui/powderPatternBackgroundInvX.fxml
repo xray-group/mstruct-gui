@@ -12,12 +12,14 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-	xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+<VBox fillWidth="true" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInvXController">
 	<children>
 		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
@@ -38,11 +40,15 @@
 			<children>
 			</children>
 		</HBox>
-		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
+		<GridPane hgap="8" VBox.vgrow="ALWAYS">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+				<ColumnConstraints fillWidth="true" hgrow="ALWAYS" minWidth="380.0" />
+			</columnConstraints>
 			<children>
-				<Label text="Scale:" />
-				<TextField fx:id="powderPatternComponentScaleTextField" prefHeight="19.0" prefWidth="80.0" />
+				<Label text="Scale" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+				<HBox fx:id="powderPatternComponentScaleParContainer" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="30.0" spacing="4.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 			</children>
-		</HBox>
+		</GridPane>
 	</children>
 </VBox>

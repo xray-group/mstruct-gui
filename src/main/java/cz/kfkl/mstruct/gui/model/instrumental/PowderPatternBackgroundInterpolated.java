@@ -9,6 +9,7 @@ import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.TabularDataParser;
@@ -32,6 +33,9 @@ public class PowderPatternBackgroundInterpolated
 
 	private static final String NEW_LINE = "\n";
 	private static final String INDENT = "  ";
+
+	@XmlUniqueElement(isSibling = true)
+	public PowderPatternComponentElement powderPatternComponent = new PowderPatternComponentElement(nameProperty);
 
 	@XmlUniqueElement
 	public OptionUniqueElement interpolationModelOption = new OptionUniqueElement("Interpolation Model", 1, "Linear", "Spline");
@@ -118,6 +122,11 @@ public class PowderPatternBackgroundInterpolated
 	@Override
 	public PowderPatternBackgroundType getType() {
 		return PowderPatternBackgroundType.Interpolated;
+	}
+
+	@Override
+	public Element getLastOwnedXmlElement() {
+		return powderPatternComponent.getLastOwnedXmlElement();
 	}
 
 	@Override

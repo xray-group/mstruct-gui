@@ -97,113 +97,144 @@ var FWHM = [${hkl_FWHM}];
 var B = [${hkl_B}];
 
 var tt = [${dat_2Theta/TOF}];
-var Iobs = this.signSqrt([${dat_Iobs}]);
-var ICalc = this.signSqrt([${dat_ICalc}]);
+var IobsSrc = [${dat_Iobs}];
+var ICalcSrc = [${dat_ICalc}];
+var Comp0Src = [${dat_Comp0}];
+
 //var ii = [${Xdat_Iobs-Icalc}];
-var oCdiff = this.diffArray(Iobs, ICalc);
 //var Weight = [${Xdat_Weight];
-var Comp0 = this.signSqrt([${dat_Comp0}]);
+
 var excludeRegions = [${exclude_regions}];
 
 //For scatter type of traces see here:
 //  https://plotly.com/javascript/reference/scatter/
 
+var data, datasetSqrtOn, datasetSqrtOff,
+	useSqrt = true,
+	graphDiv = document.getElementById('graphDivId');
 
-var traceFhkl = {
-  x: Theta,
-  y: Fhkl,
-  yaxis: 'y2',
-  mode: 'markers',
-  name: '|Fhkl|^2 (y2)'
+
+var calculateTraces = function(doSqrt) {
+	var Iobs, ICalc, Comp0, oCdiff,
+	traceFhkl, traceIhkl,
+	IhklFitted,
+	traceIhklFittedToIcalc, traceFWHM, traceB, 
+	traceIobs, traceICalc, traceOCdiff, traceComp0,
+	annotations;
+		
+	if (doSqrt) {
+		Iobs = this.signSqrt(IobsSrc);
+		ICalc = this.signSqrt(ICalcSrc);
+		Comp0 = this.signSqrt(Comp0Src);
+	} else {
+		Iobs = IobsSrc;
+		ICalc = ICalcSrc;
+		Comp0 = Comp0Src;
+	}
+	
+	oCdiff = this.diffArray(Iobs, ICalc);
+
+	traceFhkl = {
+	  x: Theta,
+	  y: Fhkl,
+	  yaxis: 'y2',
+	  mode: 'markers',
+	  name: '|Fhkl|^2 (y2)'
+	};
+
+	traceIhkl = {
+	  x: Theta,
+	  y: Ihkl,
+	  text: hkl,
+	  textposition: 'top',
+	  yaxis: 'y2',
+	  mode: 'markers+text',
+	  name: 'Ihkl (y2)'
+	};
+
+	IhklFitted = this.fitToCurve(tt, ICalc, Theta);
+	annotations = this.createAnnotations(Theta, IhklFitted, hkl);
+
+	traceIhklFittedToIcalc = {
+	  x: Theta,
+	  y: IhklFitted,
+	  marker: {
+		color: 'grey',
+		symbol: 'circle-open'
+	  },
+	  text: hkl,
+	  textposition: 'top',
+	  mode: 'markers',
+	  name: 'Ihkl Fitted'
+	};
+
+	traceFWHM = {
+	  x: Theta,
+	  y: FWHM,
+	  yaxis: 'y3',
+	  mode: 'markers',
+	  name: 'FWHM(deg) '
+	};
+
+	traceB = {
+	  x: Theta,
+	  y: B,
+	  yaxis: 'y3',
+	  mode: 'scatter',
+	  //fill: 'tozeroy',
+	  name: ' B(deg)'
+	};
+
+	traceIobs = {
+	  x: tt,
+	  y: Iobs,
+	  marker: {
+		color: 'red',
+		symbol: 'circle-open'
+	  },
+	  mode: 'markers',
+	  name: 'measured'
+	};
+
+	traceICalc = {
+	  x: tt,
+	  y: ICalc,
+	  marker: {
+		color: 'blue'
+	  },
+	  name: 'calculated'
+	};
+
+	traceOCdiff = {
+	  x: tt,
+	  y: oCdiff,
+	  fill: 'tozeroy',
+	  type: 'scatter',
+	  line: {
+		color: 'limegreen',
+		width: 1
+	  },
+	  name: 'difference'
+	};
+
+	traceComp0 = {
+	  x: tt,
+	  y: Comp0,
+	  line: {
+		dash: 'dot',
+		color: 'grey'
+	  },
+	  mode: 'scatter',
+	  name: 'background'
+	};
+	return {
+		data: [traceFhkl, traceIhkl, traceIhklFittedToIcalc, traceFWHM, traceB, traceIobs, traceICalc, traceOCdiff, traceComp0],
+		annotations: annotations
+	};
 };
 
-var traceIhkl = {
-  x: Theta,
-  y: Ihkl,
-  text: hkl,
-  textposition: 'top',
-  yaxis: 'y2',
-  mode: 'markers+text',
-  name: 'Ihkl (y2)'
-};
-
-var IhklFitted = this.fitToCurve(tt, ICalc, Theta);
-var annotations = this.createAnnotations(Theta, IhklFitted, hkl);
-
-var traceIhklFittedToIcalc = {
-  x: Theta,
-  y: IhklFitted,
-  marker: {
-    color: 'grey',
-    symbol: 'circle-open'
-  },
-  text: hkl,
-  textposition: 'top',
-  mode: 'markers',
-  name: 'Ihkl Fitted'
-};
-
-
-
-var traceFWHM = {
-  x: Theta,
-  y: FWHM,
-  yaxis: 'y3',
-  mode: 'markers',
-  name: 'FWHM(deg) '
-};
-
-var traceB = {
-  x: Theta,
-  y: B,
-  yaxis: 'y3',
-  mode: 'scatter',
-  //fill: 'tozeroy',
-  name: ' B(deg)'
-};
-
-var traceIobs = {
-  x: tt,
-  y: Iobs,
-  marker: {
-    color: 'red',
-    symbol: 'circle-open'
-  },
-  mode: 'markers',
-  name: 'measured'
-};
-
-var traceICalc = {
-  x: tt,
-  y: ICalc,
-  marker: {
-    color: 'blue'
-  },
-  name: 'calculated'
-};
-
-var traceOCdiff = {
-  x: tt,
-  y: oCdiff,
-  fill: 'tozeroy',
-  type: 'scatter',
-  line: {
-    color: 'limegreen',
-    width: 1
-  },
-  name: 'difference'
-};
-
-var traceComp0 = {
-  x: tt,
-  y: Comp0,
-  line: {
-    dash: 'dot',
-    color: 'grey'
-  },
-  mode: 'scatter',
-  name: 'background'
-};
+datasetSqrtOn = this.calculateTraces(true);
+datasetSqrtOff = this.calculateTraces(false);
 
 var shapes = [];
 
@@ -224,8 +255,7 @@ for (var i = 0; i < excludeRegions.length; i++) {
 	});
 }
 
-
- var layout = {
+var layout = {
 	margin: { t: 35},
 	autosize: true,
 	font: {
@@ -241,7 +271,7 @@ for (var i = 0; i < excludeRegions.length; i++) {
 		domain: [0, 0.8]
  	},
 	yaxis: {
-		title: 'Intensity (square root of counts)',
+		title: '',
 	},
 	yaxis2: {
 		title: 'y2',
@@ -258,15 +288,55 @@ for (var i = 0; i < excludeRegions.length; i++) {
 		overlaying: 'y',
 		side: 'right'
 	},
-	annotations : annotations,
+	annotations :  [],
 	shapes : shapes
+};
+
+var setLayoutSqrtToggles = function() {
+	layout.annotations = useSqrt ? datasetSqrtOn.annotations : datasetSqrtOff.annotations;
+	layout.yaxis.title = useSqrt ? 'Intensity (square root of counts)' : 'Intensity (counts)';
+	data = useSqrt ? datasetSqrtOn.data : datasetSqrtOff.data;
+};
+
+var switchSqrt = function() {
+	useSqrt = ! useSqrt;
+	setLayoutSqrtToggles()
+
+	// https://plotly.com/javascript/plotlyjs-function-reference/#plotlyreact
+	Plotly.react(graphDiv, data, layout, config);
+};
+
+setLayoutSqrtToggles();
+
+var sqrtIcon = {
+	'width': 500,
+	'height': 600,
+	'path': 'M576 32.01c0-17.69-14.33-31.1-32-31.1l-224-.0049c-14.69 0-27.48 10-31.05 24.25L197.9 388.3L124.6 241.7C119.2 230.9 108.1 224 96 224L32 224c-17.67 0-32 14.31-32 31.1s14.33 32 32 32h44.22l103.2 206.3c5.469 10.91 16.6 17.68 28.61 17.68c1.172 0 2.323-.0576 3.495-.1826c13.31-1.469 24.31-11.06 27.56-24.06l105.9-423.8H544C561.7 64.01 576 49.7 576 32.01zM566.6 233.4c-12.5-12.5-32.75-12.5-45.25 0L480 274.8l-41.38-41.37c-12.5-12.5-32.75-12.5-45.25 0s-12.5 32.75 0 45.25l41.38 41.38l-41.38 41.38c-12.5 12.5-12.5 32.75 0 45.25C399.6 412.9 407.8 416 416 416s16.38-3.125 22.62-9.375L480 365.3l41.38 41.38C527.6 412.9 535.8 416 544 416s16.38-3.125 22.62-9.375c12.5-12.5 12.5-32.75 0-45.25l-41.38-41.38L566.6 278.6C579.1 266.1 579.1 245.9 566.6 233.4z'
 };
 	
 var config = {
 	responsive: true,
-	displaylogo: false
+	//editable: true,
+	displaylogo: false,
+	displayModeBar: true,
+
+	// https://plotly.com/python/configuration-options/
+	modeBarButtons: [[{
+        name: 'Intesity is square root of counts',
+		attr: 'sqrtToggle',
+		icon: sqrtIcon,
+		val: 'x',
+		toggle: true,
+		click: this.switchSqrt
+    }],
+	['zoom2d', 'pan2d'],
+	['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
+	['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian'],
+	['toImage']]
 };
-	
-Plotly.newPlot( document.getElementById('graphDivId'), [traceFhkl, 	traceIhkl, traceIhklFittedToIcalc, traceFWHM, traceB, traceIobs, traceICalc, traceOCdiff, traceComp0], layout, config);
+
+Plotly.newPlot(graphDiv, data, layout, config);
+
+
 </script>
 </body>

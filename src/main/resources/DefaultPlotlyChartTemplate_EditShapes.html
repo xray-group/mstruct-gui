@@ -80,6 +80,20 @@ var diffArray = function(a, b) {
 	return d;
 };
 
+var minMaxArray = function(array) {
+	var min = Number.POSITIVE_INFINITY, max = Number.NEGATIVE_INFINITY;
+
+	for (var i = 0; i < array.length; i++) {
+		var val = array[i];
+		if (val < min)
+			min = val;
+		if (val > max)
+			max = val;
+	}
+
+	return { min: min, max: max};
+};
+
 </script>
 </head>
 
@@ -112,6 +126,7 @@ var excludeRegionsEdited = [${exclude_regions_edited}];
 
 var data, datasetSqrtOn, datasetSqrtOff,
 	useSqrt = true,
+	tTminMax = minMaxArray(tt);
 	graphDiv = document.getElementById('graphDivId');
 
 
@@ -244,9 +259,9 @@ var createExcludedRegionShape = function(x0, x1, edited) {
 		xref: 'x',
 		yref: 'paper',
 		x0: x0,
-		y0: 0,
+		y0: -4,
 		x1: x1,
-		y1: 1,
+		y1: 5,
 		fillcolor: edited ? '#a3f3a3' : '#f0f0a3',
 		opacity: 0.35,
 		line: {
@@ -268,8 +283,14 @@ addExcludedRegions(excludeRegionsEdited, true);
 
 
  var layout = {
-	margin: { t: 25},
+	margin: { t: 40},
+	hovermode: 'closest',
 	autosize: true,
+	title: { 
+		text: 'add, resize, move or remove excluded regions',
+		xanchor: 'left',
+		x: 0.04
+	},	 
 	font: {
 		family: "tahoma,arial,verdana,sans-serif",
 		size: 12
@@ -328,27 +349,99 @@ var sqrtIcon = {
 	
 var config = {
 	responsive: true,
-	//editable: true,
+	editable: true,
 	displaylogo: false,
 	displayModeBar: true,
 
 	// https://plotly.com/python/configuration-options/
-	modeBarButtons: [[{
-        name: 'Intesity is square root of counts',
-		attr: 'sqrtToggle',
-		icon: sqrtIcon,
-		val: 'x',
-		toggle: true,
-		click: this.switchSqrt
-    }],
-	['zoom2d', 'pan2d'],
-	['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
-	['toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian'],
-	['toImage']]
+	modeBarButtons: [['drawrect'],
+// list of buttons: https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js
+	['zoom2d', 'pan2d'], 
+	['zoomIn2d', 'zoomOut2d', 'resetScale2d'], 
+	['toggleSpikelines', 'hoverClosestCartesian']]
 };
 
 Plotly.newPlot(graphDiv, data, layout, config);
 
+const shapeChangeRegEx_y0 = /shapes\[([\d])\]\.y0/;
+const shapeChangeRegEx_y1 = /shapes\[([\d])\]\.y1/;
+const shapeChangeRegEx_x0 = /shapes\[([\d])\]\.x0/;
+const shapeChangeRegEx_x1 = /shapes\[([\d])\]\.x1/;
 
+var updateShapes = function(updatedShapes) {
+	shapes = [...updatedShapes];
+	layout.shapes = updatedShapes;
+}
+	
+graphDiv.on('plotly_relayout', function(event) {
+	var relayout = false, 
+		shapeIndex, x0, x1, y0, y1;
+	Object.getOwnPropertyNames(event).forEach(
+		function (val) {
+			var match = val.match(shapeChangeRegEx_x0)
+			if (match) {
+				x0 = event[val];
+				shapeIndex = parseInt(match[1]);
+			}
+
+			var match = val.match(shapeChangeRegEx_x1)
+			if (match) {
+				x1 = event[val];
+				shapeIndex = parseInt(match[1]);
+			}
+
+			var match = val.match(shapeChangeRegEx_y0)
+			if (match) {
+				y0 = event[val];
+				shapeIndex = parseInt(match[1]);
+			}
+
+			var match = val.match(shapeChangeRegEx_y1)
+			if (match) {
+				y1 = event[val];
+				shapeIndex = parseInt(match[1]);
+			}
+		}
+	);
+
+	if (typeof event.shapes !== 'undefined') {
+		var newShapes = event.shapes, 
+			newShape = newShapes[newShapes.length - 1];
+
+		shapes.push(createExcludedRegionShape(newShape.x0, newShape.x1, true));
+		updateShapes(shapes);
+
+		relayout = true;
+	}
+
+	if (typeof shapeIndex !== 'undefined')  {
+//		console.log('  shape [' + shapeIndex + ']: x0: ' + x0 + ', x1: ' + x1 + ', y0: ' + y0 + ', y1: ' + y1);	
+		if (typeof y0 !== 'undefined' && typeof y1 !== 'undefined' && (y0 > 0 || y1 < 1)) {
+			shapes[shapeIndex].y0 = 0;
+			shapes[shapeIndex].y1 = 1;
+			
+			relayout = true;
+		}
+
+		if (typeof x0 !== 'undefined' && typeof x1 !== 'undefined' && (x1 < tTminMax.min || x0 > tTminMax.max)) {
+			shapes[shapeIndex].y0 = 0;
+			shapes[shapeIndex].y1 = 1;
+
+			shapes.splice(shapeIndex,1);
+			updateShapes(shapes);
+			
+			relayout = true;
+		}
+	}
+
+//	console.log(event);
+	if (relayout) {
+//		console.log('  relayout');
+		Plotly.react(graphDiv, data, layout, config);
+	}
+	
+});
+
+	
 </script>
 </body>

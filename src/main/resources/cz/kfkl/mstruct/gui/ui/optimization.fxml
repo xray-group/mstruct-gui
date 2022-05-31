@@ -197,13 +197,13 @@
 							<children>
 								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
 									<children>
-										<Button fx:id="exportOutputCsvButton" mnemonicParsing="false" onAction="#exportOutputDataAsCsv" text="Export CSV">
+										<Button fx:id="exportOutputCsvButton" mnemonicParsing="false" onAction="#exportOutputDataAsCsv" text="Export CSV" disable="true">
 											<HBox.margin>
 												<Insets left="4.0" />
 											</HBox.margin>
 										</Button>
 
-										<Button fx:id="exportOutputDatButton" mnemonicParsing="false" onAction="#exportOutputDataAsDat" text="Export DAT">
+										<Button fx:id="exportOutputDatButton" mnemonicParsing="false" onAction="#exportOutputDataAsDat" text="Export DAT" disable="true">
 											<HBox.margin>
 												<Insets left="4.0" />
 											</HBox.margin>
@@ -251,11 +251,16 @@
 							<children>
 								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
 									<children>
-										<Button fx:id="exportHtmlButton" mnemonicParsing="false" onAction="#exportDatAsHtml" text="Export HTML Chart">
+										<Button fx:id="exportHtmlButton" mnemonicParsing="false" onAction="#exportDatAsHtml" text="Export HTML Chart" disable="true">
 											<HBox.margin>
 												<Insets left="4.0" />
 											</HBox.margin>
 										</Button>
+										<HBox alignment="CENTER_RIGHT" prefHeight="30.0" spacing="8.0" HBox.hgrow="ALWAYS">
+											<children>
+												<Button fx:id="editExcludedRegionsButton" mnemonicParsing="false" onAction="#editExcludedRegions" text="Edit Excluded Regions" disable="true"/>
+											</children>
+										</HBox>
 									</children>
 									<padding>
 										<Insets bottom="4" left="4.0" right="4.0" top="4" />

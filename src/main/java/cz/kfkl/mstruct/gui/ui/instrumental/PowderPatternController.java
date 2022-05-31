@@ -9,13 +9,10 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.createUniqueName;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doubleTextField;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenListener;
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -50,9 +47,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 public class PowderPatternController extends BaseController<PowderPatternElement, MStructGuiController> {
-	private static final Comparator<ExcludeXElement> EXCLUDE_REGIONS_TABLE_COMPARATOR = Comparator
-			.comparing(ExcludeXElement::from, nullsFirst(naturalOrder()))
-			.thenComparing(ExcludeXElement::to, nullsFirst(naturalOrder()));
 
 	private static final Logger LOG = LoggerFactory.getLogger(PowderPatternController.class);
 
@@ -175,7 +169,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 		excludedRegionsTableView.setItems(model.excludeRegions);
 		autoHeight(excludedRegionsTableView);
 		excludedRegionsTableView.setSortPolicy(tw -> {
-			FXCollections.sort(tw.getItems(), EXCLUDE_REGIONS_TABLE_COMPARATOR);
+			FXCollections.sort(tw.getItems(), ExcludeXElement.EXCLUDE_REGIONS_TABLE_COMPARATOR);
 			return true;
 		});
 

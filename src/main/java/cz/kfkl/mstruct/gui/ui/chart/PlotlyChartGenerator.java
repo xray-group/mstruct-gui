@@ -22,6 +22,7 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 	private static final String PLOTLY_JS_MIN = "${plotly_js_min}";
 
 	private static final String EXCLUDE_REGIONS = "${exclude_regions}";
+	private static final String EXCLUDE_REGIONS_EDITED = "${exclude_regions_edited}";
 
 	private static final String HKL_LABELS = "${hkl_Labels}";
 
@@ -53,6 +54,7 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 	private Job job;
 
 	private List<ExcludeXElement> excludeRegions;
+	private List<ExcludeXElement> excludeRegionsEdited;
 
 	public PlotlyChartGenerator(AppContext appContext) {
 		this.appContext = appContext;
@@ -77,11 +79,22 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 			this.hklTable = optJob.getHklTableProperty().get();
 			this.excludeRegions = optJob.getExcludeRegions();
 		}
+	}
 
+	public void setExcludeRegions(List<ExcludeXElement> excludeRegions) {
+		this.excludeRegions = excludeRegions;
+	}
+
+	public void setExcludeRegionsEdited(List<ExcludeXElement> excludeRegionsEdited) {
+		this.excludeRegionsEdited = excludeRegionsEdited;
 	}
 
 	public void useGuiTemplate() {
 		template = appContext.loadGuiTemplate();
+	}
+
+	public void useEditShapesTemplate() {
+		template = appContext.loadEditShapesTemplate();
 	}
 
 	public void useExportTemplate() {
@@ -112,31 +125,32 @@ public class PlotlyChartGenerator implements JobOutputExporter {
 
 		res = res.replace(PLOTLY_JS_MIN, loadPlotlyJS());
 
-		if (excludeRegions != null) {
-			res = res.replace(EXCLUDE_REGIONS, formatExcludeRegions(excludeRegions));
-		}
+		res = res.replace(EXCLUDE_REGIONS, formatExcludeRegions(excludeRegions));
+		res = res.replace(EXCLUDE_REGIONS_EDITED, formatExcludeRegions(excludeRegionsEdited));
 
 		return res;
 	}
 
 	private String formatExcludeRegions(List<ExcludeXElement> regions) {
 		StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (ExcludeXElement ee : regions) {
-			Double from = ee.from();
-			Double to = ee.to();
-			if (from != null && to != null) {
-				if (isFirst) {
-					isFirst = false;
-				} else {
-					sb.append(", ");
-				}
+		if (regions != null) {
+			boolean isFirst = true;
+			for (ExcludeXElement ee : regions) {
+				Double from = ee.from();
+				Double to = ee.to();
+				if (from != null && to != null) {
+					if (isFirst) {
+						isFirst = false;
+					} else {
+						sb.append(", ");
+					}
 
-				sb.append('[');
-				sb.append(JvStringUtils.toStringNoDotZero(from));
-				sb.append(", ");
-				sb.append(JvStringUtils.toStringNoDotZero(to));
-				sb.append(']');
+					sb.append('[');
+					sb.append(JvStringUtils.toStringNoDotZero(from));
+					sb.append(", ");
+					sb.append(JvStringUtils.toStringNoDotZero(to));
+					sb.append(']');
+				}
 			}
 		}
 		return sb.toString();

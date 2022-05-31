@@ -1,5 +1,6 @@
 package cz.kfkl.mstruct.gui.ui.optimization;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.loadViewAndInitController;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.validateIsNull;
 
@@ -21,6 +22,8 @@ import com.google.common.io.MoreFiles;
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.PlotlyChartModel;
+import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.CsvOutputDataExporter;
 import cz.kfkl.mstruct.gui.ui.DatOutputDataExporter;
@@ -38,10 +41,14 @@ import cz.kfkl.mstruct.gui.utils.validation.Validator;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
@@ -69,6 +76,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	private static final String FILE_NAME_PLACEHOLDER = "${fileName}";
 	private static final String DEFAULT_OUTPUT_FOLDER_NAME = FILE_NAME_PLACEHOLDER + "_" + TIME_STAMP_PLACEHOLDER;
 	private static final ExtensionFilter HTML_EXTENSION_FILTER = new FileChooser.ExtensionFilter("HTML", "*.html");
+	private static final String EDIT_MODE_FXML = "optimizationEditRegions.fxml";
 
 	@FXML
 	private BorderPane topBorderPanel;
@@ -99,11 +107,14 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	private Button removeButton;
 
 	@FXML
-	private Button exportOutputCsvButton;
+	public Button exportOutputCsvButton;
 	@FXML
-	private Button exportOutputDatButton;
+	public Button exportOutputDatButton;
+
 	@FXML
-	private Button exportHtmlButton;
+	public Button exportHtmlButton;
+	@FXML
+	public Button editExcludedRegionsButton;
 
 	@FXML
 	private TabPane jobTabPane;
@@ -154,6 +165,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 
 	MStructGuiController mainController;
 	ObjectProperty<File> openedFileProperty;
+	private OptimizationJob activeJob;
 
 	public static final StringConverter<String> IDENTITY_STRING_CONVERTER = new StringConverter<String>() {
 		@Override
@@ -196,6 +208,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 					oldJob.setActiveJob(null);
 				}
 				newJob.updateTabs(mainController, this);
+				activeJob = newJob;
 			}
 		});
 
@@ -313,6 +326,43 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 				showHtmlInNewWindow(htmlChartGenerator.exportedData(), selectedFile.getName());
 			}
 		}
+	}
+
+	@FXML
+	public void editExcludedRegions() {
+
+		if (activeJob != null) {
+			PlotlyChartModel optimizationEditRegionsModel = new PlotlyChartModel(activeJob, getAppContext());
+
+			Dialog editRegionsDialog = new Dialog();
+			DialogPane dialogPane = editRegionsDialog.getDialogPane();
+			editRegionsDialog.setTitle("Edit Excluded Regions");
+
+			loadViewAndInitController(this, getAppContext(), optimizationEditRegionsModel, (view) -> dialogPane.setContent(view));
+
+			dialogPane.getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+			editRegionsDialog.showAndWait();
+
+			if (ButtonType.APPLY == editRegionsDialog.getResult()) {
+				List<ExcludeXElement> updateRegions = optimizationEditRegionsModel.retrieveExcludedRegions();
+				ObjCrystModel rootModel = getModelInstance().getRootModel();
+				rootModel.replaceExcludeRegions(updateRegions);
+				activeJob.setExcludeRegionsEdited(true);
+
+				updateChartTab();
+			}
+		}
+	}
+
+	private void updateChartTab() {
+		List<ExcludeXElement> currentExcludeRegions = getCurrentExcludeRegions();
+		Node chartNode = activeJob.createChartNode(currentExcludeRegions);
+		chartTabTitledPane.setCenter(chartNode);
+	}
+
+	public List<ExcludeXElement> getCurrentExcludeRegions() {
+		ObjCrystModel rootModel = getModelInstance().getRootModel();
+		return rootModel.getExcludeRegions();
 	}
 
 	private File exportJobOutput(JobOutputExporter jobExporter) {

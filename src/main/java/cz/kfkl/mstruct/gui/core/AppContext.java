@@ -32,6 +32,7 @@ public class AppContext {
 	private static final String PLOTLY_JS_PATH = "/js/plotly-latest.min.js";
 
 	private static final String DEFAULT_HTML_GUI_TEMPLATE_PATH = "/DefaultPlotlyChartTemplate_GUI.html";
+	private static final String DEFAULT_HTML_EDIT_TEMPLATE_PATH = "/DefaultPlotlyChartTemplate_EditShapes.html";
 	private static final String DEFAULT_HTML_EXPORT_TEMPLATE_PATH = "/DefaultPlotlyChartTemplate_Export.html";
 
 	private File appLocationDir;
@@ -45,9 +46,11 @@ public class AppContext {
 	private File autoOpenFile;
 
 	private File plotlyChartGuiTemplateFile;
+	private File plotlyChartEditShapesTemplateFile;
 	private File plotlyChartExportTemplateFile;
 
 	private String guiTemplate;
+	private String editShapesTemplate;
 	private String exportTemplate;
 
 	private boolean showExportedChart = true;
@@ -93,6 +96,7 @@ public class AppContext {
 
 		autoOpenFile = findReadableFile(props, "mstruct.gui.open.on.startup");
 		plotlyChartGuiTemplateFile = findReadableFile(props, "mstruct.gui.plotly.chart.gui.template");
+		plotlyChartEditShapesTemplateFile = findReadableFile(props, "mstruct.gui.plotly.chart.edit.template");
 		plotlyChartExportTemplateFile = findReadableFile(props, "mstruct.gui.plotly.chart.export.template");
 
 		showExportedChart = parseBoolean(props, "mstruct.gui.plotly.chart.show.exported", Boolean.TRUE);
@@ -203,6 +207,15 @@ public class AppContext {
 		return guiTemplate;
 	}
 
+	public String loadEditShapesTemplate() {
+		if (editShapesTemplate == null) {
+			File userTemplateFile = getPlotlyChartGuiTemplateFile();
+			editShapesTemplate = loadTemplateOrDefault(userTemplateFile, DEFAULT_HTML_EDIT_TEMPLATE_PATH);
+		}
+
+		return editShapesTemplate;
+	}
+
 	public String loadExportTemplate() {
 		if (exportTemplate == null) {
 			File userTemplateFile = getPlotlyChartExportTemplateFile();
@@ -278,6 +291,10 @@ public class AppContext {
 
 	public File getPlotlyChartGuiTemplateFile() {
 		return plotlyChartGuiTemplateFile;
+	}
+
+	public File getPlotlyChartEditShapesTemplateFile() {
+		return plotlyChartEditShapesTemplateFile;
 	}
 
 	public File getPlotlyChartExportTemplateFile() {

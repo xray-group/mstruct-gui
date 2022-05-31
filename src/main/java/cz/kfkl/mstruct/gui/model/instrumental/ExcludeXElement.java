@@ -1,5 +1,10 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
+import java.util.Comparator;
+
 import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
@@ -12,6 +17,10 @@ import javafx.beans.property.StringProperty;
 
 @XmlElementName("ExcludeX")
 public class ExcludeXElement extends XmlLinkedModelElement {
+
+	public static final Comparator<ExcludeXElement> EXCLUDE_REGIONS_TABLE_COMPARATOR = Comparator
+			.comparing(ExcludeXElement::from, nullsFirst(naturalOrder()))
+			.thenComparing(ExcludeXElement::to, nullsFirst(naturalOrder()));
 
 	@XmlElementValueProperty
 	public StringProperty valueProperty = new SimpleStringProperty();

@@ -18,6 +18,7 @@ module MStructGUI {
 	requires com.google.common;
 	requires org.slf4j;
 	requires javafx.web;
+	requires jdk.jsobject;
 
 	opens cz.kfkl.mstruct.gui.ui to javafx.graphics, javafx.fxml, javafx.base;
 	opens cz.kfkl.mstruct.gui.ui.crystals to javafx.fxml;

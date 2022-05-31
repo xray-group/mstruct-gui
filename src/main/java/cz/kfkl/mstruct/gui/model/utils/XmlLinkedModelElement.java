@@ -151,11 +151,8 @@ public class XmlLinkedModelElement {
 					Map<String, Class<?>> mappedClasses = findMappedClasses(field, genericTypeClass);
 
 					List list = getFieldValueAsList(field);
-
-//					for (Entry<String, Class<?>> mappedClassEntry : mappedClasses.entrySet()) {
-//						String elementName = mappedClassEntry.getKey();
-//						Class mappedClass = mappedClassEntry.getValue();
-
+					XmlLinkedModelElement elementBeforList = previousModelElement;
+					
 					for (Element child : xmlElement.getChildren()) {
 						String elementName = child.getName();
 						Class mappedClass = mappedClasses.get(elementName);
@@ -186,10 +183,9 @@ public class XmlLinkedModelElement {
 					}
 
 					if (list instanceof ObservableList) {
-						((ObservableList) list).addListener(new XmlLinkedObservableListListener(this, previousModelElement));
+						XmlLinkedObservableListListener listener = new XmlLinkedObservableListListener(this, elementBeforList);
+						((ObservableList) list).addListener(listener);
 					}
-//					}
-
 				}
 			}
 		} catch (IllegalAccessException iae) {

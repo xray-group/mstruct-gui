@@ -1,6 +1,7 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,11 +58,11 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@XmlElementList
 	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
 
-	@XmlElementList
-	public ObservableList<ExcludeXElement> excludeRegions = FXCollections.observableArrayList();
-
 	@XmlUniqueElement("XIobsSigmaWeightList")
 	public SingleValueUniqueElement xIobsSigmaWeightListElement = new SingleValueUniqueElement("");
+
+	@XmlElementList
+	public ObservableList<ExcludeXElement> excludeRegions = FXCollections.observableArrayList();
 
 	public PowderPatternElement() {
 		this.nameProperty.set(DEFAULT_PATTERN_NAME);
@@ -97,6 +98,22 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 		list.addAll(powderPatternCrystals);
 
 		return list;
+	}
+
+	public void replaceExcludeRegions(List<ExcludeXElement> newRegions) {
+		Collections.sort(newRegions, ExcludeXElement.EXCLUDE_REGIONS_TABLE_COMPARATOR);
+
+		excludeRegions.clear();
+		for (ExcludeXElement el : newRegions) {
+
+			ExcludeXElement newEl = new ExcludeXElement();
+			excludeRegions.add(newEl);
+			// the add binds the newEl with newly created XML element which would overwrite
+			// the value
+			newEl.fromProperty.set(el.fromProperty.get());
+			newEl.toProperty.set(el.toProperty.get());
+		}
+
 	}
 
 	@Override

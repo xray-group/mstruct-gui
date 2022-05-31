@@ -105,6 +105,7 @@ var Comp0Src = [${dat_Comp0}];
 //var Weight = [${Xdat_Weight];
 
 var excludeRegions = [${exclude_regions}];
+//var excludeRegionsEdited = [${Xexclude_regions_edited}];
 
 //For scatter type of traces see here:
 //  https://plotly.com/javascript/reference/scatter/
@@ -236,27 +237,38 @@ var calculateTraces = function(doSqrt) {
 datasetSqrtOn = this.calculateTraces(true);
 datasetSqrtOff = this.calculateTraces(false);
 
-var shapes = [];
 
-for (var i = 0; i < excludeRegions.length; i++) {
-	shapes.push({
+var createExcludedRegionShape = function(x0, x1, edited) {
+	return {
 		type: 'rect',
 		xref: 'x',
 		yref: 'paper',
-		x0: excludeRegions[i][0],
+		x0: x0,
 		y0: 0,
-		x1: excludeRegions[i][1],
+		x1: x1,
 		y1: 1,
-		fillcolor: '#e3e3e3',
-		opacity: 0.5,
+		fillcolor: edited ? '#a3f3a3' : '#f0f0a3',
+		opacity: 0.35,
 		line: {
 			width: 0
 		}
-	});
+	}
+};
+	
+var shapes = [];
+
+var addExcludedRegions = function(excludeRegions, edited) {
+	for (var i = 0; i < excludeRegions.length; i++) {
+		shapes.push(createExcludedRegionShape(excludeRegions[i][0], excludeRegions[i][1], edited));
+	}
 }
 
-var layout = {
-	margin: { t: 35},
+addExcludedRegions(excludeRegions, false);
+//addExcludedRegions(excludeRegionsEdited, true);
+
+
+ var layout = {
+	margin: { t: 25},
 	autosize: true,
 	font: {
 		family: "tahoma,arial,verdana,sans-serif",

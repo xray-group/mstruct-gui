@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.PlotlyChartModel;
 import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
@@ -42,15 +43,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableDoubleValue;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 
 public abstract class OptimizationJob extends Job implements TextBuffer {
 	private static final Logger LOG = LoggerFactory.getLogger(OptimizationJob.class);
@@ -93,6 +92,8 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private ObjectProperty<TableOfDoubles> hklTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty = new SimpleObjectProperty<>();
 	private List<ExcludeXElement> excludeRegions;
+	// set only if exclude regions were edited
+	private boolean excludeRegionsEdited;
 
 	private Set<String> refinedParams;
 
@@ -299,13 +300,13 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	}
 
 	public void updateTabs(MStructGuiController mainController, OptimizationController optimizationController) {
+		this.optimizationController = optimizationController;
+
 		updateOutputTab(optimizationController);
 		updateFittedParamsTableTab(mainController, optimizationController.fittedParamsTab);
 		updateDataTableTab(optimizationController);
 		updateHklTableTab(optimizationController.outputHklTableView);
-		updateChartTab(optimizationController.chartTabTitledPane);
-
-		this.optimizationController = optimizationController;
+		updateChartTab(optimizationController);
 	}
 
 	private void updateOutputTab(OptimizationController optimizationController) {
@@ -338,10 +339,14 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		optimizationController.datRowsCountLabel.setText("N/A");
 
 		initTableView(optimizationController.outputDataTableView, DATA_TABLE_COLUMNS);
+		optimizationController.exportOutputCsvButton.setDisable(true);
+		optimizationController.exportOutputDatButton.setDisable(true);
 
 		doWhenPropertySet(t -> {
 			optimizationController.datRowsCountLabel.setText(Integer.toString(t.getRows().size()));
 			optimizationController.outputDataTableView.getItems().addAll(t.getRowIndexes());
+			optimizationController.exportOutputCsvButton.setDisable(false);
+			optimizationController.exportOutputDatButton.setDisable(false);
 		}, datTableProperty);
 	}
 
@@ -352,37 +357,39 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		doWhenPropertySet(t -> dataTableView.getItems().addAll(t.getRowIndexes()), hklTableProperty);
 	}
 
-	private void updateChartTab(BorderPane pane) {
-		pane.setCenter(new Text("no data"));
+	private void updateChartTab(OptimizationController optimizationController) {
+		BorderPane chartTabTitledPane = optimizationController.chartTabTitledPane;
+		chartTabTitledPane.setCenter(new Text("no data"));
+		optimizationController.exportHtmlButton.setDisable(true);
+		optimizationController.editExcludedRegionsButton.setDisable(true);
 
 		doWhenPropertySet(t -> {
-			PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getContext());
-			chartGenerator.forJob(this);
-			chartGenerator.useGuiTemplate();
-
-			String errMessage = chartGenerator.nothingToExportMessage();
-			if (errMessage == null) {
-
-				WebView webView = new WebView();
-				WebEngine webEngine = webView.getEngine();
-				webEngine.loadContent(chartGenerator.exportedData());
-				webView.setMaxHeight(Double.POSITIVE_INFINITY);
-
-				pane.setCenter(webView);
-
-				if (LOG.isTraceEnabled()) {
-					ChangeListener<Number> sizeChangeListener = (observable, oldValue, newValue) -> {
-						LOG.trace("WebView height: {}, width: {}", webView.getHeight(), webView.getWidth());
-					};
-
-					webView.widthProperty().addListener(sizeChangeListener);
-					webView.heightProperty().addListener(sizeChangeListener);
-				}
-			} else {
-				pane.setCenter(new Text(errMessage));
-			}
+			chartTabTitledPane.setCenter(createChartNode(optimizationController.getCurrentExcludeRegions()));
+			optimizationController.exportHtmlButton.setDisable(false);
+			optimizationController.editExcludedRegionsButton.setDisable(false);
 
 		}, datTableProperty);
+	}
+
+	public Node createChartNode(List<ExcludeXElement> currentExcludeRegions) {
+		PlotlyChartGenerator chartGenerator = createChartGenerator(currentExcludeRegions);
+		PlotlyChartModel optimizationEditRegionsModel = new PlotlyChartModel(this, getContext());
+
+		return optimizationEditRegionsModel.createChartNode(chartGenerator);
+	}
+
+	private PlotlyChartGenerator createChartGenerator(List<ExcludeXElement> currentExcludeRegions) {
+		PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getContext());
+		chartGenerator.forJob(this);
+		chartGenerator.useGuiTemplate();
+		if (excludeRegionsEdited) {
+			chartGenerator.setExcludeRegionsEdited(currentExcludeRegions);
+		}
+		return chartGenerator;
+	}
+
+	public void setExcludeRegionsEdited(boolean excludeRegionsEdited) {
+		this.excludeRegionsEdited = excludeRegionsEdited;
 	}
 
 	public ObjectProperty<TableOfDoubles> getDatTableProperty() {

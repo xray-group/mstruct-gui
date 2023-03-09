@@ -38,7 +38,7 @@ public class PowderPatternBackgroundInvX extends PowderPatternBackgroundXFuncCom
 
 	@Override
 	public List<ParUniqueElement> getParams() {
-		return Collections.emptyList();
+		return List.of(powderPatternComponent.scalePar);
 	}
 
 	@Override

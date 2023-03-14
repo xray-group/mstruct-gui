@@ -77,6 +77,7 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 
 	@Override
 	public void init() {
+		LOG.debug("Initializing parameters tab");
 		ParametersModel model = getModelInstance();
 
 		ObjCrystModel rootModel = model.getRootModel();
@@ -230,6 +231,8 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 	}
 
 	private FilterableTreeItem<RefinableParameter> createParamsTree() {
+		LOG.debug("Refreshing parameters tab tree");
+
 		ObjCrystModel rootModel = getModelInstance().getRootModel();
 
 		rootModel.refinedParameters.set(0);

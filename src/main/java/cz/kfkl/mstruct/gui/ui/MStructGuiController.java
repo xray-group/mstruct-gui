@@ -150,6 +150,8 @@ public class MStructGuiController implements HasAppContext {
 	@FXML
 	private Tab tabParameters;
 
+	TabParametersSelectedPropertyListener tabParametersSelectedListener = new TabParametersSelectedPropertyListener();
+
 	@FXML
 	private Tab tabInputData;
 	@FXML
@@ -338,11 +340,11 @@ public class MStructGuiController implements HasAppContext {
 		ParametersController controller = loadViewAndInitController(this, getAppContext(), parametersModel,
 				(view) -> tabParameters.setContent(view));
 
-		tabParameters.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				controller.createAndSetParamTree();
-			}
-		});
+		// no way to find out if the listener has been added before, remove and add is
+		// the safe way to avoid it to be registered twice
+		tabParameters.selectedProperty().removeListener(tabParametersSelectedListener);
+		tabParametersSelectedListener.setController(controller);
+		tabParameters.selectedProperty().addListener(tabParametersSelectedListener);
 
 		return controller;
 	}

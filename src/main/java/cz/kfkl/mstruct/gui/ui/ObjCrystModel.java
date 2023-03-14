@@ -17,6 +17,7 @@ import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -29,10 +30,23 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	public ObservableList<InstrumentalModel> instruments = FXCollections.observableArrayList();
 
 	public IntegerProperty parametersCount = new SimpleIntegerProperty(0);
-	public IntegerProperty refinedParameters = new SimpleIntegerProperty();
-	// public List<ParUniqueElement> refinedParameters;
+	public IntegerProperty refinedParameters = new SimpleIntegerProperty(0);
+
+	private ChangeListener<? super Boolean> refinedParamsListener;
 
 	public ObjCrystModel() {
+		refinedParamsListener = (ov, o, n) -> {
+			int inc = 0;
+			if (o && !n) {
+				inc = -1;
+			} else if (!o && n) {
+				inc = 1;
+			}
+
+			if (inc != 0) {
+				this.refinedParameters.set(this.refinedParameters.get() + inc);
+			}
+		};
 	}
 
 	@Override
@@ -73,27 +87,10 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 		if (parUniqueElement.refinedProperty.getValue()) {
 			this.refinedParameters.set(refinedParameters.get() + 1);
 		}
-		parUniqueElement.refinedProperty.addListener((ov, o, n) -> {
-			int inc = 0;
-			if (o && !n) {
-				inc = -1;
-			} else if (!o && n) {
-				inc = 1;
-			}
-
-			if (inc != 0) {
-				this.refinedParameters.set(refinedParameters.get() + inc);
-			}
-
-		});
-	}
-
-	public void unregisterParameter(ParUniqueElement parUniqueElement) {
-		this.parametersCount.set(parametersCount.get() - 1);
-		if (parUniqueElement.refinedProperty.get()) {
-			this.refinedParameters.set(refinedParameters.get() - 1);
-		}
-
+		// no way to find out if the refinedParamsListener has been added before, remove
+		// and add prevents it to be registered multiple time
+		parUniqueElement.refinedProperty.removeListener(refinedParamsListener);
+		parUniqueElement.refinedProperty.addListener(refinedParamsListener);
 	}
 
 	public void addCrystal(CrystalModel cm) {

@@ -135,4 +135,8 @@ public class RefinableParameter {
 		return isMocked;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " [ key : " + key + " ]";
+	}
 }

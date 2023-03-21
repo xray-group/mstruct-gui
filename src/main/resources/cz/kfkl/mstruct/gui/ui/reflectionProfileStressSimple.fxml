@@ -54,7 +54,7 @@
 
 		<HBox alignment="TOP_LEFT" prefHeight="30.0" spacing="8.0" VBox.vgrow="ALWAYS">
 			<children>
-				<TableView fx:id="stiffnessConstantsTableView" minHeight="176" prefHeight="250.0" prefWidth="215.0" VBox.vgrow="ALWAYS">
+				<TableView fx:id="stiffnessConstantsTableView" minHeight="80" prefHeight="250.0" prefWidth="215.0" VBox.vgrow="ALWAYS">
 					<columns>
 						<TableColumn fx:id="stiffnessConstantNameTableColumn" prefWidth="80.0" text="Name" sortable="false" />
 						<TableColumn fx:id="stiffnessConstantValueTableColumn" prefWidth="120.0" text="Stiffness Constant"

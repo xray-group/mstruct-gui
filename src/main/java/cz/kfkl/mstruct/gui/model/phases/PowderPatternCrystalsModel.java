@@ -52,6 +52,9 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	@XmlUniqueElement
 	public AbsorptionCorrElement absorptionCorrElement = new AbsorptionCorrElement();
 
+	@XmlUniqueElement
+	public ArbitraryTextureElement arbitraryTextureElement = new ArbitraryTextureElement();
+
 	public PowderPatternCrystalsModel() {
 		// needed for the powderPatternComponent sibling component when creating new
 		// from UI
@@ -99,7 +102,7 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 
 	@Override
 	public List<? extends ParamContainer> getInnerContainers() {
-		return List.of(reflectionProfile);
+		return List.of(reflectionProfile, arbitraryTextureElement);
 	}
 
 	@Override
@@ -119,6 +122,13 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 
 	public void setName(String name) {
 		nameProperty.setValue(name);
+	}
+
+	public void updateIhklParams(PowderPatternCrystalsModel fittedPpc) {
+		ArbitraryTextureElement fittedArbitraryTextrure = fittedPpc.arbitraryTextureElement;
+		if (arbitraryTextureElement.canUpdateIhklParas() && fittedArbitraryTextrure.canUpdateIhklParas()) {
+			arbitraryTextureElement.updateIhklParams(fittedArbitraryTextrure);
+		}
 	}
 
 }

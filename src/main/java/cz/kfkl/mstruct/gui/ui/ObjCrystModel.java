@@ -126,4 +126,8 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 		getFirstPowderPattern().replaceExcludeRegions(newRegions);
 	}
 
+	public void updateIhklParams(ObjCrystModel fittedRootModel) {
+		getFirstPowderPattern().updateIhklParams(fittedRootModel.getFirstPowderPattern());
+	}
+
 }

@@ -55,17 +55,17 @@ public class XmlLinkedObservableListListener<T extends XmlLinkedModelElement> im
 						XmlUtils.removeWithIndent(parent, sibling);
 					}
 				}
-				for (T addedItem : c.getAddedSubList()) {
-					// additem.add(Outer.this);
-					XmlLinkedModelElement addAfterModelEl = null;
-					int fromIndex = c.getFrom();
-					if (fromIndex > 0) {
-						addAfterModelEl = c.getList().get(fromIndex - 1);
-					} else {
-						addAfterModelEl = previousModelElement;
-					}
 
+				XmlLinkedModelElement addAfterModelEl = null;
+				int fromIndex = c.getFrom();
+				if (fromIndex > 0) {
+					addAfterModelEl = c.getList().get(fromIndex - 1);
+				} else {
+					addAfterModelEl = previousModelElement;
+				}
+				for (T addedItem : c.getAddedSubList()) {
 					parrentModelElement.bindAndAddAfter(addedItem, addAfterModelEl);
+					addAfterModelEl = addedItem;
 				}
 			}
 

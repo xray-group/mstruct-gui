@@ -3,18 +3,19 @@ package cz.kfkl.mstruct.gui.ui.optimization;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
+import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 
 public class PingTestJob extends OptimizationJob {
 	private int triesCount = 10;
 	private boolean fails = false;
 
-	public PingTestJob(AppContext context, int triesCount) {
-		super(context);
+	public PingTestJob(AppContext context, ObjCrystModel rootModel, int triesCount) {
+		super(context, rootModel);
 		this.triesCount = triesCount;
 	}
 
-	public PingTestJob(AppContext context, int triesCount, boolean fails) {
-		this(context, triesCount);
+	public PingTestJob(AppContext context, ObjCrystModel rootModel, int triesCount, boolean fails) {
+		this(context, rootModel, triesCount);
 		this.fails = fails;
 	}
 

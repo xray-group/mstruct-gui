@@ -8,6 +8,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Tooltip?>
@@ -74,25 +76,25 @@
 						<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 							<children>
 								<Label text="Name:" />
-								<TextField fx:id="absoptionCorrectionNameTextField" />
+								<TextField fx:id="absorptionCorrectionNameTextField" />
 							</children>
 						</HBox>
 						<HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0" prefHeight="30.0" spacing="4.0">
 							<children>
-								<Label text="Depth: " />
-								<TextField fx:id="absoptionDepthTextField" />
+								<Label text="Depth:" />
+								<TextField fx:id="absorptionDepthTextField" />
 								<Label text="Thickness:">
 									<padding>
 										<Insets left="8.0" />
 									</padding>
 								</Label>
-								<TextField fx:id="absoptionThicknessTextField" />
+								<TextField fx:id="absorptionThicknessTextField" />
 							</children>
 						</HBox>
 						<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0">
 							<children>
 								<Label text="Absorption Factor:" />
-								<TextField fx:id="absoptionFactorTextField" />
+								<TextField fx:id="absorptionFactorTextField" />
 							</children>
 						</HBox>
 					</children>
@@ -102,7 +104,7 @@
 				<Font name="System Bold" size="12.0" />
 			</font>
 		</TitledPane>
-		<TitledPane animated="false" text="Reflection Profile (Broadening Effects, Components?)" minHeight="316" maxHeight="Infinity" VBox.vgrow="ALWAYS">
+		<TitledPane animated="false" text="Reflection Profile (Broadening Effects, Components ?)" minHeight="325" maxHeight="Infinity" VBox.vgrow="ALWAYS">
 			<content>
 				<BorderPane>
 					<padding>
@@ -164,6 +166,73 @@
 			<VBox.margin>
 				<Insets top="12.0" />
 			</VBox.margin>
+		</TitledPane>
+		<TitledPane animated="false" text="Arbitrary Texture">
+			<content>
+				<VBox>
+					<children>
+						<HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0" prefHeight="30.0" spacing="4.0">
+							<children>
+								<Label text="Name:" />
+								<TextField fx:id="arbitraryTextureNameTextField" />
+								<Label text="Tag:">
+									<padding>
+										<Insets left="8.0" />
+									</padding>
+								</Label>
+								<TextField fx:id="arbitraryTextureTagTextField" />
+							</children>
+						</HBox>
+						
+						<HBox fx:id="arbitraryTextureChoiceOptionContainer" alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" />
+						
+						<HBox spacing="8.0" VBox.vgrow="ALWAYS" >
+							<children>
+								<TableView fx:id="arbitraryTextureIhklParamsTableView" minHeight="101" prefHeight="242" minWidth="540.0" VBox.vgrow="ALWAYS" editable="true">
+									<columns>
+										<TableColumn fx:id="arbitraryTextureIhklParamsHTableColumn" prefWidth="30.0" text="H" sortable="false" editable="true"/>
+										<TableColumn fx:id="arbitraryTextureIhklParamsKTableColumn" prefWidth="30.0" text="K" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParamsLTableColumn" prefWidth="30.0" text="L" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParams2ThetaTableColumn" prefWidth="65" text="2Theta" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParamsSFactSqMultTableColumn" prefWidth="65" text="|Fhkl|^2" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParamsValueTableColumn" prefWidth="75.0" text="Intensity" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParamsRefinedTableColumn" prefWidth="55" text="Refined" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParamsLimitedTableColumn" prefWidth="55" text="Limited" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParamsMinTableColumn" prefWidth="50" text="Min" sortable="false" editable="true" />
+										<TableColumn fx:id="arbitraryTextureIhklParamsMaxTableColumn" prefWidth="70" text="Max" sortable="false" editable="true" />
+									</columns>
+								</TableView>
+								<VBox alignment="CENTER_LEFT" spacing="8">
+									<children>
+										<Button fx:id="arbitraryTextureIhklParamAddButton" onAction="#addArbitraryTextureIhklParam" mnemonicParsing="false"
+											text="Add">
+											<graphic>
+												<ImageView>
+													<image>
+														<Image url="@images/add.png" />
+													</image>
+												</ImageView>
+											</graphic>
+										</Button>
+										<Button fx:id="arbitraryTextureIhklParamRemoveButton" onAction="#removeArbitraryTextureIhklParam" mnemonicParsing="false" text="Remove">
+											<graphic>
+												<ImageView>
+													<image>
+														<Image url="@images/delete.png" />
+													</image>
+												</ImageView>
+											</graphic>
+										</Button>
+									</children>
+								</VBox>
+							</children>
+						</HBox>
+					</children>
+				</VBox>
+			</content>
+			<font>
+				<Font name="System Bold" size="12.0" />
+			</font>
 		</TitledPane>
 	</children>
 </VBox>

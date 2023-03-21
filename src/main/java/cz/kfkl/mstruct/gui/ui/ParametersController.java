@@ -62,7 +62,7 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 	@FXML
 	private CheckBox paramFilterLimitedCheckBox;
 	@FXML
-	private CheckBox paramFilterBackgroundCheckBox;
+	private CheckBox paramFilterIhklBox;
 	@FXML
 	private CheckBox paramFilterFittedCheckBox;
 
@@ -166,11 +166,12 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 
 	public void createAndSetParamTree() {
 		this.treeRoot = createParamsTree();
-
+		
 		treeRoot.predicateProperty()
 				.bind(Bindings.createObjectBinding(() -> createFilterPredicate(), paramFilterNameTextField.textProperty(),
 						paramFilterRefinedCheckBox.selectedProperty(), paramFilterRefinedCheckBox.indeterminateProperty(),
 						paramFilterLimitedCheckBox.selectedProperty(), paramFilterLimitedCheckBox.indeterminateProperty(),
+						paramFilterIhklBox.selectedProperty(), paramFilterIhklBox.indeterminateProperty(),
 						paramFilterFittedCheckBox.selectedProperty(), paramFilterFittedCheckBox.indeterminateProperty()));
 		parametersTreeTableView.setRoot(treeRoot);
 
@@ -180,6 +181,7 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 		paramFilterNameTextField.textProperty().set(null);
 		paramFilterRefinedCheckBox.indeterminateProperty().set(true);
 		paramFilterLimitedCheckBox.indeterminateProperty().set(true);
+		paramFilterIhklBox.indeterminateProperty().set(true);
 	}
 
 	/**
@@ -361,6 +363,11 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 
 		if (!paramFilterLimitedCheckBox.isIndeterminate() && par.limitedProperty != null) {
 			if (par.limitedProperty.get() != paramFilterLimitedCheckBox.selectedProperty().get()) {
+				return false;
+			}
+		}
+		if (!paramFilterIhklBox.isIndeterminate()) {
+			if (par.isIhklParameter != paramFilterIhklBox.selectedProperty().get()) {
 				return false;
 			}
 		}

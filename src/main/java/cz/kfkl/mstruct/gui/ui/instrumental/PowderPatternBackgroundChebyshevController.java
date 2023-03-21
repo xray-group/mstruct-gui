@@ -2,6 +2,7 @@ package cz.kfkl.mstruct.gui.ui.instrumental;
 
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildRadioButtonsOption;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindBooleanTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
@@ -17,7 +18,6 @@ import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
@@ -75,15 +75,10 @@ public class PowderPatternBackgroundChebyshevController
 		autoHeight(coefficientsTableView);
 
 		coefficientIndexTableColumn.setCellValueFactory(new PropertyValueFactory<>("index"));
-		// coefficientIndexTableColumn.setEditable(fa);
 
 		bindDoubleTableColumn(coefficientValueTableColumn, v -> v.valueProperty);
-		// When variable is renamed, re-evaluate formula
-		// coefficientValueTableColumn.setOnEditCommit(event -> parseFormula());
 
-		coefficientRefinedTableColumn.setCellValueFactory(cdf -> cdf.getValue().refinedProperty);
-		coefficientRefinedTableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(coefficientRefinedTableColumn));
-		coefficientRefinedTableColumn.setEditable(true);
+		bindBooleanTableColumn(coefficientRefinedTableColumn, v -> v.refinedProperty);
 	}
 
 	public static StringConverter<String> converter = new StringConverter<String>() {

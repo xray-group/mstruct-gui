@@ -6,6 +6,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.kfkl.mstruct.gui.model.OptionChoice;
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
@@ -25,6 +28,8 @@ import javafx.collections.ObservableList;
 
 @XmlElementName("PowderPattern")
 public class PowderPatternElement extends InstrumentalModel<PowderPatternController> {
+	private static final Logger LOG = LoggerFactory.getLogger(PowderPatternElement.class);
+
 	private static final String FXML_FILE_NAME = "powderPattern.fxml";
 
 	private static final String DEFAULT_PATTERN_NAME = "pattern0";
@@ -119,6 +124,30 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@Override
 	public String getFxmlFileName() {
 		return FXML_FILE_NAME;
+	}
+
+	public void updateIhklParams(PowderPatternElement firstPowderPattern) {
+		for (PowderPatternCrystalsModel ppc : powderPatternCrystals) {
+
+			String name = ppc.getName();
+			PowderPatternCrystalsModel fittedPpc = firstPowderPattern.findPowderPatternCrytal(name);
+			if (fittedPpc != null) {
+				ppc.updateIhklParams(fittedPpc);
+			} else {
+				LOG.info("No Phase (PowderPatternModel) found for name [{}]", name);
+			}
+
+		}
+
+	}
+
+	private PowderPatternCrystalsModel findPowderPatternCrytal(String name) {
+		for (PowderPatternCrystalsModel ppc : powderPatternCrystals) {
+			if (ppc.getName().equals(name)) {
+				return ppc;
+			}
+		}
+		return null;
 	}
 
 }

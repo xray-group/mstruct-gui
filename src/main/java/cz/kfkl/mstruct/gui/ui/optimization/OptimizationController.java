@@ -1,5 +1,7 @@
 package cz.kfkl.mstruct.gui.ui.optimization;
 
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindBooleanTableColumn;
+import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.loadViewAndInitController;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.validateIsNull;
@@ -24,12 +26,14 @@ import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.PlotlyChartModel;
 import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
+import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.CsvOutputDataExporter;
 import cz.kfkl.mstruct.gui.ui.DatOutputDataExporter;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.ui.ParametersController;
+import cz.kfkl.mstruct.gui.ui.TabParametersSelectedPropertyListener;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.chart.JobOutputExporter;
 import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
@@ -57,10 +61,12 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -156,10 +162,46 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	TableView<TableOfDoubles.RowIndex> outputHklTableView;
 
 	@FXML
+	private Tab outputIhklParamsTab;
+	@FXML
+	TableView<IhklParElement> outputIhklParamsTableView;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsPhaseTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsHTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsKTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsLTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParams2ThetaTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsSFactSqMultTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsValueTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, Boolean> outputIhklParamsRefinedTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, Boolean> outputIhklParamsLimitedTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsMinTableColumn;
+	@FXML
+	private TableColumn<IhklParElement, String> outputIhklParamsMaxTableColumn;
+
+	@FXML
+	public Button copyAllIhklParamsButton;
+	@FXML
+	public Button copyRefinedIhklParamsButton;
+	@FXML
+	public Button exportIhklParamsCsvButton;
+
+	@FXML
 	Tab chartTab;
 
 	@FXML
 	BorderPane chartTabTitledPane;
+
+	TabParametersSelectedPropertyListener tabParametersSelectedListener = new TabParametersSelectedPropertyListener();;
 
 	private List<JobType> jobTypes;
 
@@ -214,6 +256,21 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 
 		mainController = getAppContext().getMainController();
 		openedFileProperty = mainController.getOpenedFileProperty();
+
+		outputIhklParamsPhaseTableColumn.setCellValueFactory(new PropertyValueFactory<>("phaseName"));
+		bindDoubleTableColumn(outputIhklParamsHTableColumn, v -> v.h);
+		bindDoubleTableColumn(outputIhklParamsKTableColumn, v -> v.k);
+		bindDoubleTableColumn(outputIhklParamsLTableColumn, v -> v.l);
+
+		bindDoubleTableColumn(outputIhklParams2ThetaTableColumn, v -> v.twoTheta);
+		bindDoubleTableColumn(outputIhklParamsSFactSqMultTableColumn, v -> v.sFactSqMult);
+		bindDoubleTableColumn(outputIhklParamsValueTableColumn, v -> v.valueProperty);
+
+		bindBooleanTableColumn(outputIhklParamsRefinedTableColumn, v -> v.refinedProperty);
+		bindBooleanTableColumn(outputIhklParamsLimitedTableColumn, v -> v.limitedProperty);
+
+		bindDoubleTableColumn(outputIhklParamsMinTableColumn, v -> v.minProperty);
+		bindDoubleTableColumn(outputIhklParamsMaxTableColumn, v -> v.maxProperty);
 	}
 
 	public void setRootModel(ObjCrystModel rootModel) {
@@ -262,7 +319,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 
 		String outputFolderName = formatName(nameWithoutExtension, startTime);
 
-		OptimizationJob job = jobType.createJob(getAppContext());
+		OptimizationJob job = jobType.createJob(getAppContext(), getModelInstance().getRootModel());
 
 		job.setIterations(iterationsSpinner.getValue());
 
@@ -326,6 +383,53 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 				showHtmlInNewWindow(htmlChartGenerator.exportedData(), selectedFile.getName());
 			}
 		}
+	}
+
+	// TODO JV finish copy
+	@FXML
+	public void copyAndUseAllIhkParams() {
+//		PlotlyChartGenerator htmlChartGenerator = new PlotlyChartGenerator(getAppContext());
+//		htmlChartGenerator.useExportTemplate();
+//
+//		File selectedFile = exportJobOutput(htmlChartGenerator);
+//
+//		if (selectedFile != null) {
+//			if (getAppContext().showExportedChart()) {
+//				showHtmlInNewWindow(htmlChartGenerator.exportedData(), selectedFile.getName());
+//			}
+//		}
+//
+//		List<IhklParElement> ihklParams = new ArrayList<>();
+//		for (PowderPatternCrystalsModel fittedPpc : fittedRootModel.getFirstPowderPattern().powderPatternCrystals) {
+//			fittedPpc.getName();
+//			ihklParams.addAll(fittedPpc.arbitraryTextureElement.ihklParams);
+//		}
+//
+//		if (activeJob != null) {
+//
+//			ObjCrystModel rootModel = getModelInstance().getRootModel();
+//			rootModel.updateIhklParams(rootModel);
+//
+//			PlotlyChartModel optimizationEditRegionsModel = new PlotlyChartModel(activeJob, getAppContext());
+//
+//			Dialog editRegionsDialog = new Dialog();
+//			DialogPane dialogPane = editRegionsDialog.getDialogPane();
+//			editRegionsDialog.setTitle("Edit Excluded Regions");
+//
+//			loadViewAndInitController(this, getAppContext(), optimizationEditRegionsModel, (view) -> dialogPane.setContent(view));
+//
+//			dialogPane.getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+//			editRegionsDialog.showAndWait();
+//
+//			if (ButtonType.APPLY == editRegionsDialog.getResult()) {
+//				List<ExcludeXElement> updateRegions = optimizationEditRegionsModel.retrieveExcludedRegions();
+//				ObjCrystModel rootModel = getModelInstance().getRootModel();
+//				rootModel.replaceExcludeRegions(updateRegions);
+//				activeJob.setExcludeRegionsEdited(true);
+//
+//				updateChartTab();
+//			}
+//		}
 	}
 
 	@FXML

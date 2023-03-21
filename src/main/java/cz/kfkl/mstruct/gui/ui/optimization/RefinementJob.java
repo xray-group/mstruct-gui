@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
+import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 
 public class RefinementJob extends OptimizationJob {
 
-	public RefinementJob(AppContext context) {
-		super(context);
+	public RefinementJob(AppContext context, ObjCrystModel rootModel) {
+		super(context, rootModel);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.google.common.escape.Escaper;
 import com.google.common.escape.Escapers;
 
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,6 +23,7 @@ public class RefinableParameter {
 	private String name;
 	private String key;
 
+	public boolean isIhklParameter;
 	public BooleanProperty refinedProperty;
 	public BooleanProperty limitedProperty;
 	public StringProperty minProperty;
@@ -45,6 +47,7 @@ public class RefinableParameter {
 			ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty, Set<String> refinedParams) {
 		this.name = par.getName();
 
+		this.isIhklParameter = par instanceof IhklParElement;
 		this.refinedProperty = par.refinedProperty;
 		this.limitedProperty = par.limitedProperty;
 		this.minProperty = par.minProperty;

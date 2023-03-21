@@ -10,6 +10,7 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -26,17 +27,13 @@
 
 <BorderPane fx:id="topBorderPanel" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.optimization.OptimizationController">
 	<top>
-		<HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="4.0" BorderPane.alignment="CENTER">
+		<HBox alignment="CENTER_LEFT" prefHeight="36.0" spacing="4.0" BorderPane.alignment="CENTER">
 			<children>
 				<!-- TODO left for testing, remove at some stage 
 				<Label text="Job:" />
 				<ChoiceBox fx:id="jobTypeChoiceBox" maxWidth="130.0" minWidth="80" prefWidth="-Infinity" HBox.hgrow="ALWAYS" />
 				 -->
-				<Label text="Iterations:">
-					<HBox.margin>
-						<Insets left="4.0" />
-					</HBox.margin>
-				</Label>
+				<Label text="Iterations:"/>
 				<Spinner fx:id="iterationsSpinner" editable="true" prefHeight="25.0" prefWidth="63.0" />
 				<Label text="Output Folder:">
 					<HBox.margin>
@@ -59,7 +56,7 @@
 				</HBox>
 			</children>
 			<BorderPane.margin>
-				<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+				<Insets left="8.0" right="8.0" />
 			</BorderPane.margin>
 		</HBox>
 	</top>
@@ -112,13 +109,9 @@
 					<content>
 						<VBox>
 							<children>
-								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
+								<HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0" spacing="8.0">
 									<children>
-										<Label layoutX="10.0" layoutY="10.0" text="Iterations:">
-											<HBox.margin>
-												<Insets />
-											</HBox.margin>
-										</Label>
+										<Label layoutX="10.0" layoutY="10.0" text="Iterations:"/>
 										<StackPane prefHeight="68.0" prefWidth="80.0">
 											<children>
 												<ProgressBar fx:id="jobProgressBar" prefWidth="100.0" prefHeight="22" progress="0.0" />
@@ -173,7 +166,7 @@
 										</HBox>
 									</children>
 									<padding>
-										<Insets bottom="4" left="4.0" right="4.0" top="4" />
+										<Insets left="8.0" right="8.0"/>
 									</padding>
 								</HBox>
 								<TitledPane collapsible="false" maxHeight="Infinity" minHeight="30" text="MStruct Console" VBox.vgrow="ALWAYS" styleClass="no-padding-content">
@@ -197,17 +190,8 @@
 							<children>
 								<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="8.0">
 									<children>
-										<Button fx:id="exportOutputCsvButton" mnemonicParsing="false" onAction="#exportOutputDataAsCsv" text="Export CSV" disable="true">
-											<HBox.margin>
-												<Insets left="4.0" />
-											</HBox.margin>
-										</Button>
-
-										<Button fx:id="exportOutputDatButton" mnemonicParsing="false" onAction="#exportOutputDataAsDat" text="Export DAT" disable="true">
-											<HBox.margin>
-												<Insets left="4.0" />
-											</HBox.margin>
-										</Button>
+										<Button fx:id="exportOutputCsvButton" mnemonicParsing="false" onAction="#exportOutputDataAsCsv" text="Export CSV" disable="true"/>
+										<Button fx:id="exportOutputDatButton" mnemonicParsing="false" onAction="#exportOutputDataAsDat" text="Export DAT" disable="true"/>
 
 										<HBox alignment="CENTER_RIGHT" prefHeight="30.0" spacing="4.0" HBox.hgrow="ALWAYS">
 											<children>
@@ -228,12 +212,48 @@
 										</HBox>
 									</children>
 									<padding>
-										<Insets bottom="4" left="4.0" right="4.0" top="4" />
+										<Insets bottom="4" left="8" right="8" top="4" />
 									</padding>
 								</HBox>
 								<TableView fx:id="outputDataTableView" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" />
 							</children>
 						</VBox>
+					</content>
+				</Tab>
+				<Tab fx:id="outputIhklParamsTab" text="IHKL Parameters">
+					<content>
+						<BorderPane>
+							<top>
+								<HBox alignment="CENTER_LEFT" prefHeight="32.0" spacing="8.0" BorderPane.alignment="CENTER">
+									<children>
+										<Button fx:id="copyAllIhklParamsButton" onAction="#copyAndUseAllIhkParams" text="Copy And Use All ?" mnemonicParsing="false" />
+										<Button fx:id="copyAllIhklParamsButton" mnemonicParsing="false" text="Copy All ?" disable="true"/>
+										<Button fx:id="copyRefinedIhklParamsButton" mnemonicParsing="false" text="Copy Refined ?" disable="true"/>
+										<Button fx:id="exportIhklParamsCsvButton" mnemonicParsing="false" text="Export CSV ?" disable="true"/>
+									</children>
+									<BorderPane.margin>
+										<Insets left="8.0" right="8.0" />
+									</BorderPane.margin>
+								</HBox>
+							</top>
+							<center>
+								<TableView fx:id="outputIhklParamsTableView" minHeight="101" prefHeight="242" minWidth="620.0" BorderPane.alignment="CENTER">
+									<columns>
+										<TableColumn fx:id="outputIhklParamsPhaseTableColumn" prefWidth="90.0" text="Phase" sortable="false" editable="true"/>
+										<TableColumn fx:id="outputIhklParamsHTableColumn" prefWidth="30.0" text="H" sortable="false" editable="true"/>
+										<TableColumn fx:id="outputIhklParamsKTableColumn" prefWidth="30.0" text="K" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParamsLTableColumn" prefWidth="30.0" text="L" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParams2ThetaTableColumn" prefWidth="65" text="2Theta" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParamsSFactSqMultTableColumn" prefWidth="65" text="|Fhkl|^2" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParamsValueTableColumn" prefWidth="75.0" text="Intensity" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParamsRefinedTableColumn" prefWidth="55" text="Refined" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParamsLimitedTableColumn" prefWidth="55" text="Limited" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParamsMinTableColumn" prefWidth="50" text="Min" sortable="false" editable="true" />
+										<TableColumn fx:id="outputIhklParamsMaxTableColumn" prefWidth="70" text="Max" sortable="false" editable="true" />
+									</columns>
+								</TableView>
+							</center>
+						</BorderPane>
 					</content>
 				</Tab>
 				<Tab fx:id="outputHklTab" text="Output HKL">

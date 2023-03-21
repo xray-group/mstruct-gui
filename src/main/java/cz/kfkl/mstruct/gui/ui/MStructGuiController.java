@@ -303,7 +303,8 @@ public class MStructGuiController implements HasAppContext {
 			instrumentalComboBox.setItems(rootModel.instruments);
 			instrumentalListView.getSelectionModel().selectFirst();
 
-			initParametersTab(this.tabParameters);
+			initParametersTab(this.tabParameters, new SimpleObjectProperty<>(), new LinkedHashSet<>(),
+					this.tabParametersSelectedListener);
 
 			optimizationController.setRootModel(rootModel);
 
@@ -328,12 +329,9 @@ public class MStructGuiController implements HasAppContext {
 
 	}
 
-	public ParametersController initParametersTab(Tab tabParameters) {
-		return initParametersTab(tabParameters, new SimpleObjectProperty<>(), new LinkedHashSet<>());
-	}
-
 	public ParametersController initParametersTab(Tab tabParameters,
-			ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty, Set<String> refinedParams) {
+			ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty, Set<String> refinedParams,
+			TabParametersSelectedPropertyListener tabParametersSelectedListener) {
 		ParametersModel parametersModel = new ParametersModel(rootModel);
 		parametersModel.fittedParamsProperty = fittedParamsProperty;
 		parametersModel.refinedParams = refinedParams;

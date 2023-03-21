@@ -152,7 +152,7 @@ public class XmlLinkedModelElement {
 
 					List list = getFieldValueAsList(field);
 					XmlLinkedModelElement elementBeforList = previousModelElement;
-					
+
 					for (Element child : xmlElement.getChildren()) {
 						String elementName = child.getName();
 						Class mappedClass = mappedClasses.get(elementName);
@@ -510,15 +510,15 @@ public class XmlLinkedModelElement {
 		Element addAfterElement = addAfterModelEl == null ? null : addAfterModelEl.getLastOwnedXmlElement();
 		XmlIndentingStyle indentStyle = addedItem.getXmlIndentingStyle();
 
-		if (addedItem.getXmlElement() == null) {
+		// the "content" is set for elements imported from another file and will contain
+		// the xml element and the "Preceding Ballast"
+		List<Content> content = addedItem.getImportedXmlContent();
+		if (content == null) {
 			newElement = new Element(XmlLinkedModelElement.decideElementName(addedItem.getClass()));
-
 			addAfter(xmlElement, newElement, addAfterElement, indentStyle);
 		} else {
 			// if the addedItem is imported from another XML the getXmlElement will be set
 			newElement = addedItem.getXmlElement();
-			List<Content> content = addedItem.getImportedXmlContent();
-
 			XmlUtils.addContentAfter(xmlElement, content, addAfterElement, xmlLevel + 1, indentStyle);
 		}
 

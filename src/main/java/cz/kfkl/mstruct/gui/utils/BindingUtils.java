@@ -24,6 +24,7 @@ import cz.kfkl.mstruct.gui.ui.SingleModelInstanceController;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -49,11 +50,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 public final class BindingUtils {
+
+	private static final int TABLE_ROW_HEIGHT = 25;
 
 	private static final Logger LOG = LoggerFactory.getLogger(BindingUtils.class);
 
@@ -85,9 +89,9 @@ public final class BindingUtils {
 		});
 	}
 
-	public static void bindToggleGroupToPropertyByText(ToggleGroup toggleGroup, OptionUniqueElement constrainLatticeOption) {
+	public static void bindToggleGroupToPropertyByText(ToggleGroup toggleGroup, OptionUniqueElement optionElement) {
 		// Select initial toggle for current property state
-		String selectedDisplayText = constrainLatticeOption.getSelectedChoice().getDisplayText();
+		String selectedDisplayText = optionElement.getSelectedChoice().getDisplayText();
 		if (selectedDisplayText != null) {
 			for (Toggle toggle : toggleGroup.getToggles()) {
 				if (toggle instanceof ToggleButton) {
@@ -103,7 +107,7 @@ public final class BindingUtils {
 		toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue instanceof ToggleButton) {
 				ToggleButton newValueToggleButton = (ToggleButton) newValue;
-				constrainLatticeOption.selectOptionByDisplayText(newValueToggleButton.getText());
+				optionElement.selectOptionByDisplayText(newValueToggleButton.getText());
 			}
 		});
 	}
@@ -250,14 +254,23 @@ public final class BindingUtils {
 		setHBoxMarginLeft(maxLabel);
 	}
 
-	public static void bindAndBuildRadioButtonsOption(HBox container, OptionUniqueElement optionEl) {
+	public static ToggleGroup bindAndBuildRadioButtonsOption(HBox container, OptionUniqueElement optionEl) {
+
+		return bindAndBuildRadioButtonsOption(container, optionEl.getName(), optionEl, null);
+	}
+
+	public static ToggleGroup bindAndBuildRadioButtonsOption(HBox container, String labelText, OptionUniqueElement optionEl,
+			ChangeListener<? super Toggle> listener) {
 		// The idea is that with this spacing adjustment the ComboBoxOption and
 		// ChoiceBoxOption containers can both have the same spacing (typically 4)
 		// defined in fxml
 		container.setSpacing(container.getSpacing() + 4);
-		Label label = new Label(optionEl.getName() + ":");
 
-		container.getChildren().add(label);
+		if (JvStringUtils.isNotBlank(labelText)) {
+			Label label = new Label(labelText + ":");
+			container.getChildren().add(label);
+		}
+
 		ToggleGroup toggleGroup = new ToggleGroup();
 		for (OptionChoice oc : optionEl.getOptionChoices()) {
 			RadioButton rb = new RadioButton(oc.getDisplayText());
@@ -266,7 +279,13 @@ public final class BindingUtils {
 			container.getChildren().add(rb);
 		}
 
+		if (listener != null) {
+			toggleGroup.selectedToggleProperty().addListener(listener);
+		}
+
 		bindToggleGroupToPropertyByText(toggleGroup, optionEl);
+
+		return toggleGroup;
 	}
 
 	public static void bindAndBuildChoiceBoxOption(HBox container, OptionUniqueElement optionEl) {
@@ -418,13 +437,24 @@ public final class BindingUtils {
 	}
 
 	public static <T> void autoHeight(TableView<T> table) {
-		autoHeight(table, 25);
+		autoHeight(null, table, TABLE_ROW_HEIGHT);
 	}
 
 	public static <T> void autoHeight(TableView<T> table, double fixedCellSize) {
+		autoHeight(null, table, fixedCellSize);
+	}
+
+	public static <T> void autoHeight(Integer maxRows, TableView<T> table) {
+		autoHeight(maxRows, table, TABLE_ROW_HEIGHT);
+	}
+
+	public static <T> void autoHeight(Integer maxRows, TableView<T> table, double fixedCellSize) {
 		table.setFixedCellSize(fixedCellSize);
-		table.prefHeightProperty()
-				.bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(fixedCellSize + 1));
+		NumberBinding itemsCount = Bindings.size(table.getItems());
+		if (maxRows != null) {
+			itemsCount = Bindings.min(itemsCount, maxRows);
+		}
+		table.prefHeightProperty().bind(itemsCount.multiply(table.getFixedCellSize()).add(fixedCellSize + 1));
 	}
 
 	public static void initTableView(TableView<RowIndex> tableView, String[] columnNames) {
@@ -491,6 +521,13 @@ public final class BindingUtils {
 			Function<E, StringProperty> stringPropertyFunction) {
 		tableColumn.setCellValueFactory(c -> stringPropertyFunction.apply(c.getValue()));
 		tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		tableColumn.setEditable(true);
+	}
+
+	public static <E> void bindBooleanTableColumn(TableColumn<E, Boolean> tableColumn,
+			Function<E, BooleanProperty> booleanPropertyFunction) {
+		tableColumn.setCellValueFactory(c -> booleanPropertyFunction.apply(c.getValue()));
+		tableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(tableColumn));
 		tableColumn.setEditable(true);
 	}
 

@@ -3,7 +3,13 @@ package cz.kfkl.mstruct.gui.ui.optimization;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenPropertySet;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.initTableView;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +18,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -23,10 +30,13 @@ import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.PlotlyChartModel;
 import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
+import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.ui.ParametersController;
 import cz.kfkl.mstruct.gui.ui.PoupupErrorExceptionHandler;
+import cz.kfkl.mstruct.gui.ui.TabParametersSelectedPropertyListener;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.ui.TabularDataParser;
@@ -90,6 +100,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 	private ObjectProperty<TableOfDoubles> datTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<TableOfDoubles> hklTableProperty = new SimpleObjectProperty<>();
+	private ObjectProperty<List<IhklParElement>> ihklTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty = new SimpleObjectProperty<>();
 	private List<ExcludeXElement> excludeRegions;
 	// set only if exclude regions were edited
@@ -117,9 +128,12 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 	private JobRunner jobRunner;
 
-	public OptimizationJob(AppContext context) {
+	private ObjCrystModel rootModel;
+
+	public OptimizationJob(AppContext context, ObjCrystModel rootModel) {
 		super(context);
 		this.consoleStringBuilder = new StringBuilder();
+		this.rootModel = rootModel;
 	}
 
 	@Override
@@ -263,24 +277,35 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		LOG.debug("Processing XML output file [{}]", outXmlFile);
 		if (outXmlFile.exists()) {
 			try {
+				// TODO JV: Hack the file so it can be processed:
+				String outXmlContent = readString(outXmlFile);
+				String outXmlContentFixed = outXmlContent.replaceAll("2Theta=", "twoTheta=");
 
 				SAXBuilder builder = new SAXBuilder();
-				Document openedDocument = builder.build(outXmlFile);
+				Document openedDocument = builder.build(new ByteArrayInputStream(outXmlContentFixed.getBytes()));
 				Element root = openedDocument.getRootElement();
 				Validator.validateEquals(MStructGuiController.OBJ_CRYST, root.getName(),
 						"Expected XML file with root element [%s], got [%s]", MStructGuiController.OBJ_CRYST, root.getName());
 
-				ObjCrystModel rootModel = new ObjCrystModel();
-				rootModel.bindToElement(null, root);
+				ObjCrystModel fittedRootModel = new ObjCrystModel();
+				fittedRootModel.bindToElement(null, root);
 
-				Map<String, ParUniqueElement> map = ParametersController.createParamsLookup(rootModel);
+				Map<String, ParUniqueElement> map = ParametersController.createParamsLookup(fittedRootModel);
 				LOG.debug("XML output params loaded [{}]", map.size());
-				List<ExcludeXElement> excludeRegions = rootModel.getExcludeRegions();
+				List<ExcludeXElement> excludeRegions = fittedRootModel.getExcludeRegions();
+
+				List<IhklParElement> ihklParams = new ArrayList<>();
+				for (PowderPatternCrystalsModel fittedPpc : fittedRootModel.getFirstPowderPattern().powderPatternCrystals) {
+					fittedPpc.getName();
+					ihklParams.addAll(fittedPpc.arbitraryTextureElement.ihklParams);
+				}
 
 				Platform.runLater(() -> {
+					this.rootModel.updateIhklParams(fittedRootModel);
+
 					this.fittedParamsProperty.set(map);
 					this.excludeRegions = excludeRegions;
-
+					this.ihklTableProperty.set(ihklParams);
 				});
 			} catch (Exception e) {
 				reportOutputFileParsingException(outXmlFile, "xml", e);
@@ -289,6 +314,17 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		} else {
 			this.failedLater("The output xml file [%s] doesn't exist, full path: %s", outXmlFile.getName(), outXmlFile);
 		}
+	}
+
+	private String readString(File outXmlFile) throws IOException {
+
+		Path filePath = outXmlFile.toPath();
+		StringBuilder contentBuilder = new StringBuilder();
+
+		try (Stream<String> stream = Files.lines(filePath, StandardCharsets.UTF_8)) {
+			stream.forEach(s -> contentBuilder.append(s).append("\n"));
+		}
+		return contentBuilder.toString();
 	}
 
 	private void reportOutputFileParsingException(File outXmlFile, String fileType, Exception e) {
@@ -303,8 +339,10 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		this.optimizationController = optimizationController;
 
 		updateOutputTab(optimizationController);
-		updateFittedParamsTableTab(mainController, optimizationController.fittedParamsTab);
+		updateFittedParamsTableTab(mainController, optimizationController.fittedParamsTab,
+				optimizationController.tabParametersSelectedListener);
 		updateDataTableTab(optimizationController);
+		updateIHklParamsTab(optimizationController);
 		updateHklTableTab(optimizationController.outputHklTableView);
 		updateChartTab(optimizationController);
 	}
@@ -327,10 +365,11 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		optimizationController.jobsLogsTextArea.setText(this.getJobLogsText());
 	}
 
-	private void updateFittedParamsTableTab(MStructGuiController mainController, Tab fittedParamsTab) {
+	private void updateFittedParamsTableTab(MStructGuiController mainController, Tab fittedParamsTab,
+			TabParametersSelectedPropertyListener tabParametersSelectedListener) {
 
 		ParametersController parametersTabController = mainController.initParametersTab(fittedParamsTab, fittedParamsProperty,
-				refinedParams);
+				refinedParams, tabParametersSelectedListener);
 		parametersTabController.showFittedOptions();
 		doWhenPropertySet(t -> parametersTabController.refreshTable(), fittedParamsProperty);
 	}
@@ -350,11 +389,17 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		}, datTableProperty);
 	}
 
-	private void updateHklTableTab(TableView<RowIndex> dataTableView) {
+	private void updateHklTableTab(TableView<RowIndex> hklTableView) {
 
-		initTableView(dataTableView, HKL_TABLE_COLUMNS);
+		initTableView(hklTableView, HKL_TABLE_COLUMNS);
 
-		doWhenPropertySet(t -> dataTableView.getItems().addAll(t.getRowIndexes()), hklTableProperty);
+		doWhenPropertySet(t -> hklTableView.getItems().addAll(t.getRowIndexes()), hklTableProperty);
+	}
+
+	private void updateIHklParamsTab(OptimizationController optimizationController) {
+		TableView<IhklParElement> ihklParamsTableView = optimizationController.outputIhklParamsTableView;
+		ihklParamsTableView.getItems().clear();
+		doWhenPropertySet(t -> ihklParamsTableView.getItems().addAll(t), ihklTableProperty);
 	}
 
 	private void updateChartTab(OptimizationController optimizationController) {

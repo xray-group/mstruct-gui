@@ -32,8 +32,8 @@
 									mnemonicParsing="false" text="Refined" />
 								<CheckBox fx:id="paramFilterLimitedCheckBox" allowIndeterminate="true" indeterminate="true" layoutX="20.0"
 									layoutY="20.0" mnemonicParsing="false" text="Limited" />
-								<CheckBox fx:id="paramFilterBackgroundCheckBox" allowIndeterminate="true" indeterminate="true" layoutX="20.0"
-									layoutY="95.0" mnemonicParsing="false" text="backgrounds... TODO" />
+								<CheckBox fx:id="paramFilterIhklBox" allowIndeterminate="true" indeterminate="true" layoutX="20.0"
+									layoutY="95.0" mnemonicParsing="false" text="IHKL" />
 								<CheckBox fx:id="paramFilterFittedCheckBox" allowIndeterminate="true" indeterminate="true" layoutX="20.0"
 									layoutY="20.0" mnemonicParsing="false" text="Fitted" visible="false" />
 								<Button mnemonicParsing="false" onAction="#clearFilters" text="Clear Filters">

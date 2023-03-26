@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jdom2.Document;
@@ -308,7 +309,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 				}
 
 				Platform.runLater(() -> {
-					this.rootModel.updateIhklParams(fittedRootModel);
+					updateIhklParams(fittedRootModel);
 
 					this.fittedParamsProperty.set(map);
 					this.excludeRegions = excludeRegions;
@@ -320,6 +321,28 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 		} else {
 			this.failedLater("The output xml file [%s] doesn't exist, full path: %s", outXmlFile.getName(), outXmlFile);
+		}
+	}
+
+	private void updateIhklParams(ObjCrystModel fittedRootModel) {
+		this.rootModel.updateIhklParams(fittedRootModel);
+
+		Map<String, ParUniqueElement> ihklUpdated = ParametersController.createParamsLookup(this.rootModel,
+				par -> par.isIhklParameter());
+		refinedParams.putAll(ihklUpdated);
+
+		List<ParUniqueElement> ihklParamsNotRefined = ihklUpdated.values().stream().filter(par -> !par.getRefinedProperty().get())
+				.collect(Collectors.toList());
+		fittedParams.removeAll(ihklParamsNotRefined);
+		for (ParUniqueElement par : ihklParamsNotRefined) {
+			par.getFittedProperty().set(false);
+		}
+
+		List<ParUniqueElement> ihklParamsRefined = ihklUpdated.values().stream().filter(par -> par.getRefinedProperty().get())
+				.collect(Collectors.toList());
+		fittedParams.addAll(ihklParamsRefined);
+		for (ParUniqueElement par : ihklParamsRefined) {
+			par.getFittedProperty().set(true);
 		}
 	}
 

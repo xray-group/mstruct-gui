@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,6 +209,11 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 	 * Similar to the {@link #initParamsTree()}
 	 */
 	public static Map<String, ParUniqueElement> createParamsLookup(ObjCrystModel rootModel) {
+		return createParamsLookup(rootModel, null);
+	}
+
+	public static Map<String, ParUniqueElement> createParamsLookup(ObjCrystModel rootModel,
+			Predicate<ParUniqueElement> filterPredicate) {
 
 		Map<String, ParUniqueElement> map = new LinkedHashMap<>();
 
@@ -234,8 +240,10 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 						if (node instanceof ParUniqueElement) {
 							ParUniqueElement par = (ParUniqueElement) node;
 							String paramKey = formatKey(parentKey, par.getName());
-							map.put(paramKey, par);
-							LOG.trace("Adding paramKey [{}], param [{}]", paramKey, par);
+							if (filterPredicate == null || filterPredicate.test(par)) {
+								map.put(paramKey, par);
+								LOG.trace("Adding paramKey [{}], param [{}]", paramKey, par);
+							}
 						} else {
 							LOG.warn("The node [{}] should be of type ParUniqueElement", node);
 						}

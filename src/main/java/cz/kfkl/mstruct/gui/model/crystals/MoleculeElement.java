@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.ui.crystals.ScattererMoleculeController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
@@ -66,19 +65,8 @@ public class MoleculeElement extends ScattererModel<ScattererMoleculeController>
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		List<ParUniqueElement> list = new ArrayList<>(super.getParams());
-		return list;
-	}
-
-	@Override
 	public String getType() {
 		return "Molecule";
-	}
-
-	@Override
-	public String formatParamContainerName() {
-		return "Molecule: " + getName();
 	}
 
 }

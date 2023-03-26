@@ -1,10 +1,7 @@
 package cz.kfkl.mstruct.gui.model.crystals;
 
-import java.util.Collections;
-import java.util.List;
-
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.ui.crystals.ScatteringPowerAtomController;
 import cz.kfkl.mstruct.gui.ui.images.Images;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
@@ -12,6 +9,8 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
 @XmlElementName("ScatteringPowerAtom")
@@ -30,19 +29,17 @@ public class ScatteringPowerAtomElement extends ScatteringPowerModel<ScatteringP
 	@XmlUniqueElement
 	public ParUniqueElement formalChargePar = new ParUniqueElement("Formal Charge");
 
+	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(bisoPar, mlErrorPar, mlNbGhostPar,
+			formalChargePar);
+
 	@Override
 	public String getFxmlFileName() {
 		return FXML_FILE_NAME;
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(bisoPar, mlErrorPar, mlNbGhostPar, formalChargePar);
-	}
-
-	@Override
-	public List<ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 	public String getSymbol() {

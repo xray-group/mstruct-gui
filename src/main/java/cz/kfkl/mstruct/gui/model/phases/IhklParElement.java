@@ -55,6 +55,11 @@ public class IhklParElement extends ParUniqueElement {
 		nameProperty.bind(Bindings.format(IHKL_PAR_NAME_PATTERN, phaseName, h, k, l));
 	}
 
+	@Override
+	public StringProperty getParamContainerNameProperty() {
+		return nameProperty;
+	}
+
 	// The getName() is called from the Parameters tree
 	@Override
 	public String getName() {
@@ -105,6 +110,11 @@ public class IhklParElement extends ParUniqueElement {
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName() + "[" + nameProperty.get() + "]";
+	}
+
+	@Override
+	public boolean isIhklParameter() {
+		return true;
 	}
 
 }

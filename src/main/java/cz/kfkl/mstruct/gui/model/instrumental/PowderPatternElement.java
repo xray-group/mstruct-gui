@@ -1,26 +1,29 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jdom2.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.model.OptionChoice;
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
+import cz.kfkl.mstruct.gui.utils.SimpleCombinedObservableList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -33,6 +36,8 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	private static final String FXML_FILE_NAME = "powderPattern.fxml";
 
 	private static final String DEFAULT_PATTERN_NAME = "pattern0";
+
+	public StringProperty paramContainerName = new SimpleStringProperty();
 
 	@XmlAttributeProperty("SpaceGroup")
 	public StringProperty spaceGroupProperty = new SimpleStringProperty();
@@ -69,8 +74,19 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@XmlElementList
 	public ObservableList<ExcludeXElement> excludeRegions = FXCollections.observableArrayList();
 
+	private SimpleCombinedObservableList<ParamTreeNode> children = new SimpleCombinedObservableList<ParamTreeNode>(
+			List.of(zeroPar, thetaDisplacementPar, thetaTransparencyPar), List.of(radiationElement), powderPatternComponents,
+			powderPatternCrystals);
+
 	public PowderPatternElement() {
 		this.nameProperty.set(DEFAULT_PATTERN_NAME);
+		this.paramContainerName.bind(Bindings.concat("Powder Pattern: ", this.nameProperty));
+	}
+
+	@Override
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override
@@ -86,23 +102,13 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(zeroPar, thetaDisplacementPar, thetaTransparencyPar);
+	public StringProperty getParamContainerNameProperty() {
+		return paramContainerName;
 	}
 
 	@Override
-	public String formatParamContainerName() {
-		return "Powder Pattern: " + nameProperty.get();
-	}
-
-	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		List<ParamContainer> list = new ArrayList<>();
-		list.add(radiationElement);
-		list.addAll(powderPatternComponents);
-		list.addAll(powderPatternCrystals);
-
-		return list;
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 	public void replaceExcludeRegions(List<ExcludeXElement> newRegions) {

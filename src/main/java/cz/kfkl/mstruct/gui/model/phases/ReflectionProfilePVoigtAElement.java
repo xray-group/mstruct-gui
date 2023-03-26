@@ -1,11 +1,12 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import java.util.List;
-
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.ui.phases.ReflectionProfilePVoigtAController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("pVoigtA")
 public class ReflectionProfilePVoigtAElement extends ReflectionProfileModel<ReflectionProfilePVoigtAController> {
@@ -31,6 +32,9 @@ public class ReflectionProfilePVoigtAElement extends ReflectionProfileModel<Refl
 	@XmlUniqueElement
 	public ParUniqueElement asym2Par = new ParUniqueElement("Asym2");
 
+	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(wPar, vPar, uPar, eta0Par, eta1Par,
+			asym0Par, asym1Par, asym2Par);
+
 	@Override
 	public String getFxmlFileName() {
 		return FXML_FILE_NAME;
@@ -42,8 +46,8 @@ public class ReflectionProfilePVoigtAElement extends ReflectionProfileModel<Refl
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(wPar, vPar, uPar, eta0Par, eta1Par, asym0Par, asym1Par, asym2Par);
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 }

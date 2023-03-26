@@ -20,6 +20,11 @@ public class CoefficientParElement extends ParUniqueElement {
 		super(null);
 	}
 
+	@Override
+	public StringProperty getParamContainerNameProperty() {
+		return nameProperty;
+	}
+
 	// The getName() is called from the Parameters tree
 	@Override
 	public String getName() {

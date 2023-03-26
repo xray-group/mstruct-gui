@@ -1,13 +1,11 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
@@ -79,7 +77,6 @@ public class PowderPatternBackgroundInterpolated
 		}
 
 		xIntensityList.addListener((ListChangeListener<? super XIntensityListItem>) c -> serializeItems());
-
 	}
 
 	private void serializeItems() {
@@ -92,7 +89,7 @@ public class PowderPatternBackgroundInterpolated
 		if (!list.isEmpty()) {
 
 			for (XIntensityListItem ri : list) {
-				sb.append("\n");
+				sb.append(NEW_LINE);
 				indent(sb, this.xmlLevel + 1);
 				sb.append(JvStringUtils.toStringNoDotZero(ri.x.getValue()));
 				sb.append(' ');
@@ -101,7 +98,7 @@ public class PowderPatternBackgroundInterpolated
 				sb.append(BooleanZeroOneStringFormatter.formatString(ri.refinedProperty.get()));
 			}
 
-			sb.append("\n");
+			sb.append(NEW_LINE);
 			indent(sb, this.xmlLevel);
 		}
 
@@ -130,13 +127,8 @@ public class PowderPatternBackgroundInterpolated
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return FXCollections.emptyObservableList();
 	}
 
 }

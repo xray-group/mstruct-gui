@@ -70,25 +70,6 @@
 								<Button layoutX="20.0" layoutY="193.0" mnemonicParsing="false" onAction="#uncheckLimited" text="Uncheck Limited" />
 								<Button fx:id="copyFittedValuesButton" mnemonicParsing="false" onAction="#copyFittedValues"
 									text="Copy Fitted Values" visible="false" />
-								<VBox spacing="8.0" VBox.vgrow="ALWAYS" alignment="BOTTOM_CENTER">
-									<HBox alignment="CENTER_RIGHT" prefHeight="26.0" spacing="4" HBox.hgrow="ALWAYS">
-										<children>
-											<Label text="Parameters (refined):" textAlignment="RIGHT">
-												<font>
-													<Font name="System Italic" size="12.0" />
-												</font>
-											</Label>
-											<Label fx:id="parametersCounts" text="0 (0)">
-												<font>
-													<Font name="System Bold Italic" size="12.0" />
-												</font>
-											</Label>
-										</children>
-										<HBox.margin>
-											<Insets right="4.0" />
-										</HBox.margin>
-									</HBox>
-								</VBox>
 							</children>
 							<padding>
 								<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

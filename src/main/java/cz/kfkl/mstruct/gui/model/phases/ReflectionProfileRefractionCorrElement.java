@@ -1,12 +1,13 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import java.util.List;
-
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.ui.phases.ReflectionProfileRefractionCorrController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("RefractionCorr")
 public class ReflectionProfileRefractionCorrElement extends ReflectionProfileModel<ReflectionProfileRefractionCorrController> {
@@ -17,6 +18,8 @@ public class ReflectionProfileRefractionCorrElement extends ReflectionProfileMod
 	public OptionUniqueElement chi0SourceOption = new OptionUniqueElement("chi0.source", 1, "value", "crystal", "formula");
 	@XmlUniqueElement
 	public ParUniqueElement relDensityPar = new ParUniqueElement("relDensity");
+
+	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(relDensityPar);
 
 	@Override
 	public String getFxmlFileName() {
@@ -29,8 +32,7 @@ public class ReflectionProfileRefractionCorrElement extends ReflectionProfileMod
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(relDensityPar);
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
-
 }

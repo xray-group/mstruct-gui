@@ -1,18 +1,21 @@
 package cz.kfkl.mstruct.gui.model.crystals;
 
-import java.util.Collections;
-import java.util.List;
+import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlMappedSubclasses;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlMappedSubclasses({ AtomElement.class, MoleculeElement.class })
 public abstract class ScattererModel<C extends BaseController<?, ?>> extends XmlLinkedModelElement
@@ -20,6 +23,8 @@ public abstract class ScattererModel<C extends BaseController<?, ?>> extends Xml
 
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty();
+
+	public StringProperty paramContainerName = new SimpleStringProperty();
 
 	@XmlUniqueElement
 	public ParUniqueElement xPar = new ParUniqueElement("x");
@@ -33,6 +38,15 @@ public abstract class ScattererModel<C extends BaseController<?, ?>> extends Xml
 	@XmlUniqueElement
 	public ParUniqueElement occupPar = new ParUniqueElement("Occup");
 
+	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(xPar, yPar, zPar, occupPar);
+
+	@Override
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		paramContainerName.bind(Bindings.format("%s: %s", getType(), nameProperty));
+		rootModel.registerChildren(this.getChildren());
+	}
+
 	public abstract String getType();
 
 	public String getName() {
@@ -44,13 +58,13 @@ public abstract class ScattererModel<C extends BaseController<?, ?>> extends Xml
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(xPar, yPar, zPar, occupPar);
+	public StringProperty getParamContainerNameProperty() {
+		return paramContainerName;
 	}
 
 	@Override
-	public List<ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 	public String getX() {

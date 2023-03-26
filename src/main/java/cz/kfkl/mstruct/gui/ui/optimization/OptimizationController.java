@@ -13,11 +13,8 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.common.io.MoreFiles;
 
@@ -33,7 +30,6 @@ import cz.kfkl.mstruct.gui.ui.DatOutputDataExporter;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.ui.ParametersController;
-import cz.kfkl.mstruct.gui.ui.TabParametersSelectedPropertyListener;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.chart.JobOutputExporter;
 import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
@@ -201,13 +197,12 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	@FXML
 	BorderPane chartTabTitledPane;
 
-	TabParametersSelectedPropertyListener tabParametersSelectedListener = new TabParametersSelectedPropertyListener();;
-
 	private List<JobType> jobTypes;
 
 	MStructGuiController mainController;
 	ObjectProperty<File> openedFileProperty;
 	private OptimizationJob activeJob;
+	ParametersController parametersTabController;
 
 	public static final StringConverter<String> IDENTITY_STRING_CONVERTER = new StringConverter<String>() {
 		@Override
@@ -246,11 +241,12 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		jobsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldJob, newJob) -> {
 
 			if (newJob != null && newJob != oldJob) {
-				if (oldJob != null) {
-					oldJob.setActiveJob(null);
+				if (activeJob != null) {
+					activeJob.jobUnselected();
 				}
-				newJob.updateTabs(mainController, this);
+
 				activeJob = newJob;
+				newJob.updateTabs(this);
 			}
 		});
 
@@ -277,18 +273,21 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		getModelInstance().setRootModel(rootModel);
 
 		boolean disabled = rootModel == null;
-		// TODO left for testing, remove at some stage
+		// TODO TEST: left for testing, remove at some stage
 //		jobTypeChoiceBox.setDisable(disabled);
 		iterationsSpinner.setDisable(disabled);
 		outputFolderNameTextField.setDisable(disabled);
 
-		// TODO left for testing, remove at some stage
+		// TODO TEST: left for testing, remove at some stage
 //		runButton.setDisable(disabled);
 		refineButton.setDisable(disabled);
 		simulateButton.setDisable(disabled);
+
+		parametersTabController = mainController.initParametersTab(fittedParamsTab);
+		parametersTabController.bindToRootModel(rootModel);
 	}
 
-	// TODO left for testing, remove at some stage
+	// TODO TEST: for testing, remove at some stage
 	@FXML
 	public void run() {
 
@@ -326,7 +325,11 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		job.setName(outputFolderName);
 		job.setShowConsole(showConsoleOutputCheckBox.selectedProperty().get());
 		job.setKeepOutput(keepOutputFilesCheckBox.selectedProperty().get());
-		job.setRefinedParams(findCurrentlyRefinedParameters());
+
+		// Stores the map of all params as a lookup map
+		job.setRefinedParams(mapAllRefineableParameters());
+		// Those which are currently refined are marked as fitted
+		job.markFittedParams();
 
 		File resultDir = new File(getAppContext().getLastSelectedFileDirectoryOrDefault(), outputFolderName);
 		job.setResultDir(resultDir);
@@ -347,18 +350,9 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		job.startJob();
 	}
 
-	private Set<String> findCurrentlyRefinedParameters() {
+	private Map<String, ParUniqueElement> mapAllRefineableParameters() {
 		ObjCrystModel rootModel = getModelInstance().getRootModel();
-		Map<String, ParUniqueElement> map = ParametersController.createParamsLookup(rootModel);
-
-		Set<String> refinedParamKey = new LinkedHashSet<>();
-		for (Entry<String, ParUniqueElement> entry : map.entrySet()) {
-			if (entry.getValue().refinedProperty.get()) {
-				refinedParamKey.add(entry.getKey());
-			}
-		}
-
-		return refinedParamKey;
+		return ParametersController.createParamsLookup(rootModel);
 	}
 
 	@FXML

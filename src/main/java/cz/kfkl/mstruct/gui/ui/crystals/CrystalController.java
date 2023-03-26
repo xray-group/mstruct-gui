@@ -124,7 +124,7 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		bindAndBuildParFieldsNoName(betaParContainer, model.betaPar);
 		bindAndBuildParFieldsNoName(gammaParContainer, model.gammaPar);
 
-		scatPowersTableView.getItems().addAll(model.scatterintPowers);
+		scatPowersTableView.getItems().addAll(model.scatteringPowers);
 		scatPowersTableView.setEditable(true);
 		setupSelectionToChildrenListener(this, scatPowersTableView.getSelectionModel().selectedItemProperty(),
 				scatPowersDetailsStackPane.getChildren(), getAppContext());
@@ -147,7 +147,7 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 
 //		scatPowersTableBisoValueColumn.setCellValueFactory(new PropertyValueFactory<>("biso"));
 
-		List<String> scatPowNames = model.scatterintPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
+		List<String> scatPowNames = model.scatteringPowers.stream().filter(i -> i instanceof ScatteringPowerAtomElement)
 				.map((i) -> i.getName()).collect(Collectors.toList());
 
 		bindDoubleTextField(antiBumpScaleTextField, model.antiBumpScale.valueProperty);

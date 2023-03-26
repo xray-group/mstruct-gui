@@ -3,6 +3,8 @@ package cz.kfkl.mstruct.gui.model.crystals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jdom2.Element;
+
 import com.google.common.base.Strings;
 
 import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
@@ -10,13 +12,16 @@ import cz.kfkl.mstruct.gui.model.OptionChoice;
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.crystals.CrystalController;
+import cz.kfkl.mstruct.gui.utils.SimpleCombinedObservableList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -29,6 +34,8 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty("test");
+
+	public StringProperty paramContainerName = new SimpleStringProperty();
 
 	@XmlAttributeProperty("SpaceGroup")
 	public StringProperty spaceGroupProperty = new SimpleStringProperty();
@@ -59,7 +66,7 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	public OptionUniqueElement displayEnantiomerOption = new OptionUniqueElement("Display Enantiomer", 0, "No", "Yes");
 
 	@XmlElementList
-	public List<ScatteringPowerModel> scatterintPowers = new ArrayList<>();
+	public List<ScatteringPowerModel> scatteringPowers = new ArrayList<>();
 
 	@XmlElementList
 	public List<ScattererModel> scatterers = new ArrayList<>();
@@ -74,25 +81,27 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	@XmlUniqueElement("BondValenceCostScale")
 	public SingleValueUniqueElement bondValenceCostScale = new SingleValueUniqueElement("1");
 
+	SimpleCombinedObservableList<ParamTreeNode> children = new SimpleCombinedObservableList<ParamTreeNode>(
+			List.of(aPar, bPar, cPar, alphaPar, betaPar, gammaPar), scatteringPowers, scatterers);
+
 	public CrystalModel() {
+		paramContainerName.bind(Bindings.concat("Crystal: ", nameProperty));
 	}
 
 	@Override
-	public String formatParamContainerName() {
-		return "Crystal: " + getName();
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(aPar, bPar, cPar, alphaPar, betaPar, gammaPar);
+	public StringProperty getParamContainerNameProperty() {
+		return paramContainerName;
 	}
 
 	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		List<ParamContainer> list = new ArrayList<>();
-		list.addAll(scatterintPowers);
-		list.addAll(scatterers);
-		return list;
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 	public String getName() {

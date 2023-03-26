@@ -1,13 +1,8 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.jdom2.Element;
 
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundChebyshevController;
@@ -18,6 +13,7 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("PowderPatternBackgroundChebyshev")
 public class PowderPatternBackgroundChebyshev
@@ -34,7 +30,7 @@ public class PowderPatternBackgroundChebyshev
 	public IntegerProperty polynomialDegreeProperty = new SimpleIntegerProperty(2);
 
 	@XmlElementList
-	public List<CoefficientParElement> coefficients = FXCollections.observableArrayList();
+	public ObservableList<CoefficientParElement> coefficients = FXCollections.observableArrayList();
 
 	@Override
 	public String getFxmlFileName() {
@@ -60,6 +56,8 @@ public class PowderPatternBackgroundChebyshev
 		}
 		addMissingCoeficients();
 //		}
+
+		rootModel.registerChildren(this.getChildren());
 	}
 
 	public void setNewDegreeeAndAdjustCoeficients(int newDegree) {
@@ -74,15 +72,8 @@ public class PowderPatternBackgroundChebyshev
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		List<ParUniqueElement> list = new ArrayList<>();
-		list.addAll(coefficients);
-		return list;
-	}
-
-	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return coefficients;
 	}
 
 	private void removeExtraCoeficients() {

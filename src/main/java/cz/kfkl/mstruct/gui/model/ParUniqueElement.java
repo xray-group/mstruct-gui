@@ -8,9 +8,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("Par")
-public class ParUniqueElement extends UniqueElement {
+public class ParUniqueElement extends UniqueElement implements ParamTreeNode {
 
 	@XmlAttributeProperty(value = "Refined", converter = BooleanZeroOneStringFormatter.class)
 	public BooleanProperty refinedProperty = new SimpleBooleanProperty(false);
@@ -26,6 +28,9 @@ public class ParUniqueElement extends UniqueElement {
 
 	@XmlElementValueProperty
 	public StringProperty valueProperty = new SimpleStringProperty("0");
+
+	public BooleanProperty fittedProperty = new SimpleBooleanProperty(false);
+	public StringProperty fittedValueProperty = new SimpleStringProperty("");
 
 	public ParUniqueElement(String name) {
 		super(name);
@@ -55,8 +60,58 @@ public class ParUniqueElement extends UniqueElement {
 		this.maxProperty.set(max);
 	}
 
-	public boolean isMocked() {
-		return getXmlElement() == null;
+	@Override
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return FXCollections.emptyObservableList();
 	}
 
+	@Override
+	public boolean isParameter() {
+		return true;
+	}
+
+	@Override
+	public StringProperty getParamContainerNameProperty() {
+		return new SimpleStringProperty(name);
+	}
+
+	@Override
+	public BooleanProperty getRefinedProperty() {
+		return refinedProperty;
+	}
+
+	@Override
+	public BooleanProperty getLimitedProperty() {
+		return limitedProperty;
+	}
+
+	@Override
+	public StringProperty getMinProperty() {
+		return minProperty;
+	}
+
+	@Override
+	public StringProperty getMaxProperty() {
+		return maxProperty;
+	}
+
+	@Override
+	public StringProperty getValueProperty() {
+		return valueProperty;
+	}
+
+	@Override
+	public boolean isIhklParameter() {
+		return false;
+	}
+
+	@Override
+	public BooleanProperty getFittedProperty() {
+		return fittedProperty;
+	}
+
+	@Override
+	public StringProperty getFittedValueProperty() {
+		return fittedValueProperty;
+	}
 }

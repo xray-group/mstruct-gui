@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,7 +37,6 @@ import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.ui.ParametersController;
 import cz.kfkl.mstruct.gui.ui.PoupupErrorExceptionHandler;
-import cz.kfkl.mstruct.gui.ui.TabParametersSelectedPropertyListener;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles.RowIndex;
 import cz.kfkl.mstruct.gui.ui.TabularDataParser;
@@ -55,7 +55,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -106,7 +105,11 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	// set only if exclude regions were edited
 	private boolean excludeRegionsEdited;
 
-	private Set<String> refinedParams;
+	// map of params which were existing at the time the job has started, links to
+	// the runtime model so the states are not preserved
+	private Map<String, ParUniqueElement> refinedParams;
+	// params which were refined at the time of starting the job
+	private Set<ParUniqueElement> fittedParams;
 
 	private Integer iterations;
 
@@ -178,8 +181,12 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		}
 	}
 
-	public void setActiveJob(OptimizationController optimizationController) {
-		this.optimizationController = optimizationController;
+	public void jobUnselected() {
+		this.optimizationController = null;
+		for (ParUniqueElement par : refinedParams.values()) {
+			par.getFittedProperty().set(false);
+			par.getFittedValueProperty().set("");
+		}
 	}
 
 	public File getResultDir() {
@@ -335,12 +342,11 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		this.failed(shortMsg + " [%s]: %s", outXmlFile, stacktraceMessages);
 	}
 
-	public void updateTabs(MStructGuiController mainController, OptimizationController optimizationController) {
+	public void updateTabs(OptimizationController optimizationController) {
 		this.optimizationController = optimizationController;
 
 		updateOutputTab(optimizationController);
-		updateFittedParamsTableTab(mainController, optimizationController.fittedParamsTab,
-				optimizationController.tabParametersSelectedListener);
+		updateFittedParamsTableTab(optimizationController);
 		updateDataTableTab(optimizationController);
 		updateIHklParamsTab(optimizationController);
 		updateHklTableTab(optimizationController.outputHklTableView);
@@ -365,13 +371,29 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		optimizationController.jobsLogsTextArea.setText(this.getJobLogsText());
 	}
 
-	private void updateFittedParamsTableTab(MStructGuiController mainController, Tab fittedParamsTab,
-			TabParametersSelectedPropertyListener tabParametersSelectedListener) {
+	private void updateFittedParamsTableTab(OptimizationController optimizationController) {
 
-		ParametersController parametersTabController = mainController.initParametersTab(fittedParamsTab, fittedParamsProperty,
-				refinedParams, tabParametersSelectedListener);
-		parametersTabController.showFittedOptions();
-		doWhenPropertySet(t -> parametersTabController.refreshTable(), fittedParamsProperty);
+		ParametersController parametersTabController = optimizationController.parametersTabController;
+		if (parametersTabController != null) {
+			parametersTabController.showFittedOptions(fittedParams);
+
+			doWhenPropertySet(t -> {
+				if (optimizationController != null) {
+					LOG.debug("Job [{}] initializing param tab", this);
+
+					Map<String, ParUniqueElement> map = fittedParamsProperty.get();
+					for (Entry<String, ParUniqueElement> fittedPar : map.entrySet()) {
+						ParUniqueElement par = refinedParams.get(fittedPar.getKey());
+						if (par != null) {
+							par.getFittedValueProperty().set(fittedPar.getValue().getValueProperty().get());
+						} else {
+							LOG.debug("Fitted parameter [{}] is not among refined map", fittedPar);
+						}
+					}
+					parametersTabController.bindToParametersTree();
+				}
+			}, fittedParamsProperty);
+		}
 	}
 
 	private void updateDataTableTab(OptimizationController optimizationController) {
@@ -484,8 +506,18 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		jobRunner.terminate();
 	}
 
-	public void setRefinedParams(Set<String> refinedParams) {
-		this.refinedParams = refinedParams;
+	public void setRefinedParams(Map<String, ParUniqueElement> map) {
+		this.refinedParams = map;
+	}
+
+	public void markFittedParams() {
+		Set<ParUniqueElement> refinedParamKey = new LinkedHashSet<>();
+		for (Entry<String, ParUniqueElement> entry : refinedParams.entrySet()) {
+			if (entry.getValue().refinedProperty.get()) {
+				refinedParamKey.add(entry.getValue());
+			}
+		}
+		this.fittedParams = refinedParamKey;
 	}
 
 	public int getRefinedParamsCount() {

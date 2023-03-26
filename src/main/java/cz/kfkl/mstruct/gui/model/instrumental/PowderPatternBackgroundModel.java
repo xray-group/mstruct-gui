@@ -10,6 +10,7 @@ import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlMappedSubclasses;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -23,9 +24,13 @@ abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty(DEFAULT_BACKGROUND_PREFIX);
 
+	public StringProperty paramContainerName = new SimpleStringProperty();
+
 	public PowderPatternBackgroundModel() {
 		super();
 		nameProperty.set(DEFAULT_BACKGROUND_PREFIX + getType().getTypeName());
+
+		paramContainerName.bind(Bindings.concat("Background: ", nameProperty));
 	}
 
 	public abstract PowderPatternBackgroundType getType();
@@ -36,8 +41,8 @@ abstract public class PowderPatternBackgroundModel<C extends BaseController<?, ?
 	}
 
 	@Override
-	public String formatParamContainerName() {
-		return "Background: " + getName();
+	public StringProperty getParamContainerNameProperty() {
+		return paramContainerName;
 	}
 
 	@Override

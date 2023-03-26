@@ -100,6 +100,33 @@
 						<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
 					</HBox.margin>
 				</Label>
+				<HBox alignment="CENTER_RIGHT" prefHeight="26.0" spacing="4" HBox.hgrow="ALWAYS">
+					<children>
+						<Label text="Parameters:" textAlignment="RIGHT">
+							<font>
+								<Font name="System Italic" size="12.0" />
+							</font>
+						</Label>
+						<Label fx:id="parametersCount" text="0">
+							<font>
+								<Font name="System Bold Italic" size="12.0" />
+							</font>
+						</Label>
+						<Label text="Refined:" textAlignment="RIGHT">
+							<font>
+								<Font name="System Italic" size="12.0" />
+							</font>
+						</Label>
+						<Label fx:id="refinedParametersCount" text="0">
+							<font>
+								<Font name="System Bold Italic" size="12.0" />
+							</font>
+						</Label>
+					</children>
+					<HBox.margin>
+						<Insets right="4.0" />
+					</HBox.margin>
+				</HBox>
 			</children>
 		</HBox>
 	</bottom>

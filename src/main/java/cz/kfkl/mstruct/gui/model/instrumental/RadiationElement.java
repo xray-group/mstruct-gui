@@ -1,17 +1,20 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("Radiation")
 public class RadiationElement extends XmlLinkedModelElement implements ParamContainer {
@@ -49,24 +52,28 @@ public class RadiationElement extends XmlLinkedModelElement implements ParamCont
 	@XmlUniqueElement
 	public ParUniqueElement xRayTubeAlpha2Alpha1RatioPar = new ParUniqueElement("XRayTubeAlpha2Alpha1Ratio");
 
+	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(wavelengthPar, xRayTubeDeltaLambdaPar,
+			xRayTubeAlpha2Alpha1RatioPar);
+
+	@Override
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		rootModel.registerChildren(this.getChildren());
+	}
+
 	@Override
 	public XmlIndentingStyle getXmlIndentingStyle() {
 		return XmlIndentingStyle.MULTILINE_WITH_GAP;
 	}
 
 	@Override
-	public String formatParamContainerName() {
-		return "Radiation";
+	public StringProperty getParamContainerNameProperty() {
+		return new SimpleStringProperty("Radiation");
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(wavelengthPar, xRayTubeDeltaLambdaPar, xRayTubeAlpha2Alpha1RatioPar);
-	}
-
-	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 }

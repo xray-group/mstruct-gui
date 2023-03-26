@@ -1,10 +1,9 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import java.util.Collections;
-import java.util.List;
+import org.jdom2.Element;
 
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
@@ -24,17 +23,18 @@ public class ReflectionProfileElement extends XmlLinkedModelElement implements P
 	public ObservableList<ReflectionProfileModel> reflectionProfilesList = FXCollections.observableArrayList();
 
 	@Override
-	public String formatParamContainerName() {
-		return "Reflection Profiles";
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return Collections.emptyList();
+	public StringProperty getParamContainerNameProperty() {
+		return new SimpleStringProperty("Reflection Profiles");
 	}
 
 	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
+	public ObservableList<? extends ParamTreeNode> getChildren() {
 		return reflectionProfilesList;
 	}
 

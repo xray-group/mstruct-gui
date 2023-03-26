@@ -1,11 +1,12 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import java.util.List;
-
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.ui.phases.ReflectionProfileStressSimpleController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("StressSimple")
 public class ReflectionProfileStressSimpleElement extends ReflectionProfileModel<ReflectionProfileStressSimpleController> {
@@ -18,6 +19,8 @@ public class ReflectionProfileStressSimpleElement extends ReflectionProfileModel
 	@XmlUniqueElement
 	public XECsReussVoigtElement xECsReussVoigt = new XECsReussVoigtElement();
 
+	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(stressPar, xECsReussVoigt.rvWeightPar);
+
 	@Override
 	public String getFxmlFileName() {
 		return FXML_FILE_NAME;
@@ -29,8 +32,7 @@ public class ReflectionProfileStressSimpleElement extends ReflectionProfileModel
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(stressPar, xECsReussVoigt.rvWeightPar);
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
-
 }

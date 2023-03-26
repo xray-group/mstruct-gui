@@ -30,10 +30,10 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
  *            {@link TreeItem}.
  */
 public class FilterableTreeItem<T> extends CheckBoxTreeItem<T> {
-	private final ObservableList<TreeItem<T>> internalChildren = FXCollections.observableArrayList();
-	private final FilteredList<TreeItem<T>> filteredChildren = new FilteredList<>(this.internalChildren);
+	private ObservableList<TreeItem<T>> internalChildren;
+	private FilteredList<TreeItem<T>> filteredChildren;
 
-	private final ObjectProperty<TreeItemPredicate<T>> predicate = new SimpleObjectProperty<>();
+	private ObjectProperty<TreeItemPredicate<T>> predicate = new SimpleObjectProperty<>();
 
 	/**
 	 * Creates a new {@link TreeItem} with sorted children. To enable sorting it is
@@ -44,7 +44,17 @@ public class FilterableTreeItem<T> extends CheckBoxTreeItem<T> {
 	 * @param value the value of the {@link TreeItem}
 	 */
 	public FilterableTreeItem(T value) {
+		this(value, FXCollections.observableArrayList());
+	}
+
+	public FilterableTreeItem(T value, ObservableList<TreeItem<T>> children) {
 		super(value);
+		this.internalChildren = children;
+		this.filteredChildren = new FilteredList<>(this.internalChildren);
+		bind();
+	}
+
+	public void bind() {
 		this.filteredChildren.predicateProperty().bind(Bindings.createObjectBinding(() -> {
 			Predicate<TreeItem<T>> p = child -> {
 				// Set the predicate of child items to force filtering
@@ -70,7 +80,7 @@ public class FilterableTreeItem<T> extends CheckBoxTreeItem<T> {
 	/**
 	 * @return the backing list
 	 */
-	protected ObservableList<TreeItem<T>> getFilteredChildren() {
+	protected ObservableList<? extends TreeItem<T>> getFilteredChildren() {
 		return this.filteredChildren;
 	}
 
@@ -81,6 +91,10 @@ public class FilterableTreeItem<T> extends CheckBoxTreeItem<T> {
 	 */
 	public ObservableList<TreeItem<T>> getInternalChildren() {
 		return this.internalChildren;
+	}
+
+	public void addInternalChild(TreeItem<T> item) {
+		this.internalChildren.add(item);
 	}
 
 	/**
@@ -105,4 +119,5 @@ public class FilterableTreeItem<T> extends CheckBoxTreeItem<T> {
 	public final void setPredicate(TreeItemPredicate<T> predicate) {
 		this.predicate.set(predicate);
 	}
+
 }

@@ -17,7 +17,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,7 +35,6 @@ import com.google.common.io.MoreFiles;
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.core.HasAppContext;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParametersModel;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
@@ -150,8 +148,6 @@ public class MStructGuiController implements HasAppContext {
 	@FXML
 	private Tab tabParameters;
 
-	TabParametersSelectedPropertyListener tabParametersSelectedListener = new TabParametersSelectedPropertyListener();
-
 	@FXML
 	private Tab tabInputData;
 	@FXML
@@ -159,6 +155,11 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	private Tab tabOptimization;
+
+	@FXML
+	private Label parametersCount;
+	@FXML
+	private Label refinedParametersCount;
 
 	private AppContext appContext;
 
@@ -303,8 +304,11 @@ public class MStructGuiController implements HasAppContext {
 			instrumentalComboBox.setItems(rootModel.instruments);
 			instrumentalListView.getSelectionModel().selectFirst();
 
-			initParametersTab(this.tabParameters, new SimpleObjectProperty<>(), new LinkedHashSet<>(),
-					this.tabParametersSelectedListener);
+			ParametersController parametersController = initParametersTab(this.tabParameters);
+			parametersController.bindToRootModel(rootModel);
+
+			parametersCount.textProperty().bind(rootModel.parametersCount.asString());
+			refinedParametersCount.textProperty().bind(rootModel.refinedParametersCount.asString());
 
 			optimizationController.setRootModel(rootModel);
 
@@ -329,20 +333,11 @@ public class MStructGuiController implements HasAppContext {
 
 	}
 
-	public ParametersController initParametersTab(Tab tabParameters,
-			ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty, Set<String> refinedParams,
-			TabParametersSelectedPropertyListener tabParametersSelectedListener) {
-		ParametersModel parametersModel = new ParametersModel(rootModel);
-		parametersModel.fittedParamsProperty = fittedParamsProperty;
-		parametersModel.refinedParams = refinedParams;
+	public ParametersController initParametersTab(Tab tabParameters) {
+		ParametersModel parametersModel = new ParametersModel();
+
 		ParametersController controller = loadViewAndInitController(this, getAppContext(), parametersModel,
 				(view) -> tabParameters.setContent(view));
-
-		// no way to find out if the listener has been added before, remove and add is
-		// the safe way to avoid it to be registered twice
-		tabParameters.selectedProperty().removeListener(tabParametersSelectedListener);
-		tabParametersSelectedListener.setController(controller);
-		tabParameters.selectedProperty().addListener(tabParametersSelectedListener);
 
 		return controller;
 	}

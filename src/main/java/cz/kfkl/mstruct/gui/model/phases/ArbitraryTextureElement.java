@@ -1,8 +1,6 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,8 +9,8 @@ import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.OptionChoice;
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
@@ -63,23 +61,18 @@ public class ArbitraryTextureElement extends XmlLinkedModelElement implements Pa
 		for (IhklParElement ihklPar : ihklParams) {
 			ihklPar.setPhaseName(phaseName);
 		}
+
+		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override
-	public String formatParamContainerName() {
-		return "Arbitrary Texture";
+	public StringProperty getParamContainerNameProperty() {
+		return new SimpleStringProperty("Arbitrary Texture");
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		List<ParUniqueElement> list = new ArrayList<>();
-		list.addAll(ihklParams);
-		return list;
-	}
-
-	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return ihklParams;
 	}
 
 	/**

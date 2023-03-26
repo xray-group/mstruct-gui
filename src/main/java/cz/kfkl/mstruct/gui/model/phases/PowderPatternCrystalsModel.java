@@ -1,13 +1,12 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import java.util.List;
-
 import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
 import cz.kfkl.mstruct.gui.model.HasUniqueName;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
@@ -20,6 +19,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("PowderPatternCrystal")
 public class PowderPatternCrystalsModel extends XmlLinkedModelElement
@@ -30,6 +31,8 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty();
+
+	public StringProperty paramContainerName = new SimpleStringProperty();
 
 	public StringProperty userNameProperty = new SimpleStringProperty();
 
@@ -55,6 +58,9 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	@XmlUniqueElement
 	public ArbitraryTextureElement arbitraryTextureElement = new ArbitraryTextureElement();
 
+	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(globalBisoPar,
+			powderPatternComponent.scalePar, reflectionProfile, arbitraryTextureElement);
+
 	public PowderPatternCrystalsModel() {
 		// needed for the powderPatternComponent sibling component when creating new
 		// from UI
@@ -79,6 +85,9 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 		nameProperty.bind(Bindings.concat(DIFF_DATA_PREFIX,
 				Bindings.when(userNameProperty.isEmpty()).then(crystalProperty).otherwise(userNameProperty)));
 
+		paramContainerName.bind(Bindings.concat("Crystal: ", nameProperty));
+
+		rootModel.registerChildren(this.getChildren());
 	}
 
 	public String getNameSuffix() {
@@ -91,18 +100,13 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(globalBisoPar, powderPatternComponent.scalePar);
+	public StringProperty getParamContainerNameProperty() {
+		return paramContainerName;
 	}
 
 	@Override
-	public String formatParamContainerName() {
-		return "Crystal: " + nameProperty.get();
-	}
-
-	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		return List.of(reflectionProfile, arbitraryTextureElement);
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 	@Override

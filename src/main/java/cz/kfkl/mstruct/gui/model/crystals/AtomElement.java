@@ -24,11 +24,6 @@ public class AtomElement extends ScattererModel<ScattererAtomController> {
 		return "Atom";
 	}
 
-	@Override
-	public String formatParamContainerName() {
-		return "Atom: " + getName();
-	}
-
 	public String getScattPow() {
 		return scattPowProperty.get();
 	}

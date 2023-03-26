@@ -1,17 +1,56 @@
 package cz.kfkl.mstruct.gui.model;
 
-import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
-public interface ParamContainer {
+public interface ParamContainer extends ParamTreeNode {
+	static final SimpleStringProperty EMPTY_STRING_PROPERTY = new SimpleStringProperty("");
+	static final SimpleBooleanProperty BOOLEAN_FALSE_PROPERTY = new SimpleBooleanProperty(false);
 
-	String formatParamContainerName();
-
-	static boolean hasAnyChildren(ParamContainer parent) {
-		return !parent.getParams().isEmpty() || !parent.getInnerContainers().isEmpty();
+	@Override
+	default public boolean isParameter() {
+		return false;
 	}
 
-	List<ParUniqueElement> getParams();
+	@Override
+	default public BooleanProperty getRefinedProperty() {
+		return null;
+	}
 
-	List<? extends ParamContainer> getInnerContainers();
+	@Override
+	default public BooleanProperty getLimitedProperty() {
+		return null;
+	}
 
+	@Override
+	default public StringProperty getMinProperty() {
+		return EMPTY_STRING_PROPERTY;
+	}
+
+	@Override
+	default public StringProperty getMaxProperty() {
+		return EMPTY_STRING_PROPERTY;
+	}
+
+	@Override
+	default public StringProperty getValueProperty() {
+		return EMPTY_STRING_PROPERTY;
+	}
+
+	@Override
+	default public boolean isIhklParameter() {
+		return false;
+	}
+
+	@Override
+	default public BooleanProperty getFittedProperty() {
+		return null;
+	}
+
+	@Override
+	default public StringProperty getFittedValueProperty() {
+		return EMPTY_STRING_PROPERTY;
+	}
 }

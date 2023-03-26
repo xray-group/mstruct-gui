@@ -1,16 +1,15 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.jdom2.Element;
 
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParamContainer;
+import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentWithScaleParElement;
+import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInvXController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 @XmlElementName("PowderPatternBackgroundInvX")
 public class PowderPatternBackgroundInvX extends PowderPatternBackgroundXFuncCommon<PowderPatternBackgroundInvXController> {
@@ -20,6 +19,14 @@ public class PowderPatternBackgroundInvX extends PowderPatternBackgroundXFuncCom
 	@XmlUniqueElement(isSibling = true)
 	public PowderPatternComponentWithScaleParElement powderPatternComponent = new PowderPatternComponentWithScaleParElement(
 			nameProperty);
+
+	private ObservableList<? extends ParamTreeNode> children = FXCollections.observableArrayList(powderPatternComponent.scalePar);
+
+	@Override
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		rootModel.registerChildren(this.getChildren());
+	}
 
 	@Override
 	public String getFxmlFileName() {
@@ -37,13 +44,8 @@ public class PowderPatternBackgroundInvX extends PowderPatternBackgroundXFuncCom
 	}
 
 	@Override
-	public List<ParUniqueElement> getParams() {
-		return List.of(powderPatternComponent.scalePar);
-	}
-
-	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public ObservableList<? extends ParamTreeNode> getChildren() {
+		return children;
 	}
 
 }

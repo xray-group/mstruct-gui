@@ -1,7 +1,6 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import java.util.Collections;
-import java.util.List;
+import org.jdom2.Element;
 
 import com.google.common.base.Strings;
 
@@ -13,6 +12,7 @@ import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlMappedSubclasses;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -24,16 +24,20 @@ abstract public class ReflectionProfileModel<C extends BaseController<?, ?>> ext
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty();
 
+	public StringProperty paramContainerName = new SimpleStringProperty();
+
 	public abstract ReflectionProfileType getType();
 
 	@Override
-	public String formatParamContainerName() {
-		return nameProperty.getValue() + " (" + getType().toString() + ")";
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		paramContainerName.bind(Bindings.format("%s (%s)", nameProperty, getType()));
+		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override
-	public List<? extends ParamContainer> getInnerContainers() {
-		return Collections.emptyList();
+	public StringProperty getParamContainerNameProperty() {
+		return paramContainerName;
 	}
 
 	@Override

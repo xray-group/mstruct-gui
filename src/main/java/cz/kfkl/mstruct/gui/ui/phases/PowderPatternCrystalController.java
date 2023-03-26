@@ -293,6 +293,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 	@FXML
 	public void addArbitraryTextureIhklParam() {
 		IhklParElement newItem = new IhklParElement();
+		newItem.setPhaseName(getModelInstance().nameProperty.get());
 		arbitraryTextureIhklParamsTableView.getItems().add(newItem);
 		arbitraryTextureIhklParamsTableView.getSelectionModel().select(newItem);
 	}

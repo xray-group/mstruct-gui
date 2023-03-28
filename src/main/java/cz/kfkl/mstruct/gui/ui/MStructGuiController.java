@@ -157,9 +157,9 @@ public class MStructGuiController implements HasAppContext {
 	private Tab tabOptimization;
 
 	@FXML
-	private Label parametersCount;
+	private Label parametersCountLabel;
 	@FXML
-	private Label refinedParametersCount;
+	private Label refinedParametersCountLabel;
 
 	private AppContext appContext;
 
@@ -307,8 +307,8 @@ public class MStructGuiController implements HasAppContext {
 			ParametersController parametersController = initParametersTab(this.tabParameters);
 			parametersController.bindToRootModel(rootModel);
 
-			parametersCount.textProperty().bind(rootModel.parametersCount.asString());
-			refinedParametersCount.textProperty().bind(rootModel.refinedParametersCount.asString());
+			parametersCountLabel.textProperty().bind(rootModel.parametersCount.asString());
+			refinedParametersCountLabel.textProperty().bind(rootModel.refinedParametersCount.asString());
 
 			optimizationController.setRootModel(rootModel);
 

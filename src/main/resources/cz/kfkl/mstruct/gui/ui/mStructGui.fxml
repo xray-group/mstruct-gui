@@ -107,7 +107,7 @@
 								<Font name="System Italic" size="12.0" />
 							</font>
 						</Label>
-						<Label fx:id="parametersCount" text="0">
+						<Label fx:id="parametersCountLabel" text="0">
 							<font>
 								<Font name="System Bold Italic" size="12.0" />
 							</font>
@@ -117,7 +117,7 @@
 								<Font name="System Italic" size="12.0" />
 							</font>
 						</Label>
-						<Label fx:id="refinedParametersCount" text="0">
+						<Label fx:id="refinedParametersCountLabel" text="0">
 							<font>
 								<Font name="System Bold Italic" size="12.0" />
 							</font>

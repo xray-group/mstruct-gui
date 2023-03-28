@@ -5,13 +5,13 @@ import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
 import com.google.common.escape.Escaper;
 import com.google.common.escape.Escapers;
 
@@ -27,12 +27,14 @@ import cz.kfkl.mstruct.gui.utils.tree.FlexibleTableResizingPolicy;
 import cz.kfkl.mstruct.gui.utils.tree.SelectableTreeItemFilter;
 import cz.kfkl.mstruct.gui.utils.tree.TreeItemPredicate;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -76,6 +78,9 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 	private CheckBox paramFilterFittedCheckBox;
 
 	@FXML
+	private Label selectedParametersCountLabel;
+
+	@FXML
 	private Button copyFittedValuesButton;
 
 	TreeItemPredicate<ParamTreeNode> treeFilterPredicate;
@@ -89,18 +94,24 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 
 		configParamsTable();
 
-		if (LOG.isTraceEnabled()) {
-			parametersTreeTableView.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<>() {
-				@Override
-				public void onChanged(Change<? extends Integer> c) {
-					LOG.trace("  selection changed ({}): {}", c.getList().size(), Joiner.on(", ").join(c.getList()));
-				}
-			});
-		}
+		parametersTreeTableView.getSelectionModel().getSelectedIndices()
+				.addListener((ListChangeListener.Change<? extends Integer> c) -> updateSelectedCount());
 
-		if (LOG.isTraceEnabled()) {
-			LOG.trace("Selected: {}", Joiner.on(", ").join(parametersTreeTableView.getSelectionModel().getSelectedIndices()));
-		}
+		// this doesn't work, see the updateSelectedCount for places where the update
+		// need to be done
+//		parametersTreeTableView.expandedItemCountProperty().addListener((obs, oldVal, newVal) -> updateSelectedCount());
+
+		selectedParametersCountLabel.textProperty().bind(model.selectedParametersCount.asString());
+	}
+
+	private void updateSelectedCount() {
+		ParametersModel model = getModelInstance();
+		AtomicInteger count = new AtomicInteger(0);
+		applyToAllViableAndSelectedParameters((par) -> count.incrementAndGet());
+
+		IntegerProperty selectedParametersCount = model.selectedParametersCount;
+		LOG.trace("Updating selected params count old value [{}] new count [{}]", selectedParametersCount, count);
+		selectedParametersCount.set(count.get());
 	}
 
 	private void configParamsTable() {
@@ -166,6 +177,7 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 					(ParamTreeNode pn) -> createFilterableTreeItem(pn), paramNode.getChildren());
 			filterableTreeItem = new FilterableTreeItem<ParamTreeNode>(paramNode, list);
 			filterableTreeItem.setExpanded(true);
+			filterableTreeItem.expandedProperty().addListener((obs, oldVal, newVal) -> updateSelectedCount());
 		}
 
 		return filterableTreeItem;
@@ -179,6 +191,7 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 						paramFilterLimitedCheckBox.selectedProperty(), paramFilterLimitedCheckBox.indeterminateProperty(),
 						paramFilterIhklBox.selectedProperty(), paramFilterIhklBox.indeterminateProperty(),
 						paramFilterFittedCheckBox.selectedProperty(), paramFilterFittedCheckBox.indeterminateProperty()));
+		treeRoot.predicateProperty().addListener((obs, oldVal, newVal) -> updateSelectedCount());
 		parametersTreeTableView.setRoot(treeRoot);
 		parametersTreeTableView.refresh();
 	}

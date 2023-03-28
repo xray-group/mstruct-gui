@@ -56,18 +56,29 @@
 								<Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#unselectFiltered"
 									text="Unselect All Filtered" />
 								<Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#unselectAll" text="Unselect All" />
-								<Label text="On Selected (and Visible):">
+								
+								<HBox alignment="CENTER_LEFT" spacing="4.0">
+									<children>
+										<Label text="0" fx:id="selectedParametersCountLabel" >
+											<font>
+												<Font name="System Bold" size="12.0" />
+											</font>
+										</Label>
+										<Label text="Filtered and Selected:">
+											<font>
+												<Font name="System Bold" size="12.0" />
+											</font>
+										</Label>
+									</children>
 									<VBox.margin>
 										<Insets top="8.0" />
 									</VBox.margin>
-									<font>
-										<Font name="System Bold" size="12.0" />
-									</font>
-								</Label>
-								<Button layoutX="20.0" layoutY="53.0" mnemonicParsing="false" onAction="#checkRefined" text="Check Refined" />
-								<Button layoutX="20.0" layoutY="127.0" mnemonicParsing="false" onAction="#uncheckRefined" text="Uncheck Refined" />
-								<Button layoutX="20.0" layoutY="160.0" mnemonicParsing="false" onAction="#checkLimited" text="Check Limited" />
-								<Button layoutX="20.0" layoutY="193.0" mnemonicParsing="false" onAction="#uncheckLimited" text="Uncheck Limited" />
+								</HBox>
+								
+								<Button mnemonicParsing="false" onAction="#checkRefined" text="Check Refined" />
+								<Button mnemonicParsing="false" onAction="#uncheckRefined" text="Uncheck Refined" />
+								<Button mnemonicParsing="false" onAction="#checkLimited" text="Check Limited" />
+								<Button mnemonicParsing="false" onAction="#uncheckLimited" text="Uncheck Limited" />
 								<Button fx:id="copyFittedValuesButton" mnemonicParsing="false" onAction="#copyFittedValues"
 									text="Copy Fitted Values" visible="false" />
 							</children>

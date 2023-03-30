@@ -284,7 +284,9 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		simulateButton.setDisable(disabled);
 
 		parametersTabController = mainController.initParametersTab(fittedParamsTab);
-		parametersTabController.bindToRootModel(rootModel);
+		if (rootModel != null) {
+			parametersTabController.bindToRootModel(rootModel);
+		}
 	}
 
 	// TODO TEST: for testing, remove at some stage

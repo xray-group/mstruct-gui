@@ -7,6 +7,7 @@ import cz.kfkl.mstruct.gui.model.HasUniqueName;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
+import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
@@ -84,6 +85,16 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 
 		nameProperty.bind(Bindings.concat(DIFF_DATA_PREFIX,
 				Bindings.when(userNameProperty.isEmpty()).then(crystalProperty).otherwise(userNameProperty)));
+
+		CrystalModel linkedCrystal = rootModel.getCrystal(crystalProperty.get());
+		if (linkedCrystal != null) {
+			crystalProperty.bind(linkedCrystal.nameProperty);
+		} else {
+			// TODO validate: there is no crystal with the given name...
+		}
+		crystalProperty.addListener((obs, o, n) -> {
+			rootModel.updateUsedCrystalsPredicate();
+		});
 
 		paramContainerName.bind(Bindings.concat("Crystal: ", nameProperty));
 

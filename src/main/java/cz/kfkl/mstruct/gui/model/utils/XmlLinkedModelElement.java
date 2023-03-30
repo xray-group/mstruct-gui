@@ -64,7 +64,7 @@ public class XmlLinkedModelElement {
 
 	protected int xmlLevel = 0;
 
-	protected ObjCrystModel rootModel;
+	public ObjCrystModel rootModel;
 
 	private Collection<Element> ownedSiblings = new ArrayList<>();
 

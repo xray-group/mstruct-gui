@@ -4,7 +4,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
+import org.jdom2.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,12 +29,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 public class ObjCrystModel extends XmlLinkedModelElement implements ParamContainer {
 	private static final Logger LOG = LoggerFactory.getLogger(ObjCrystModel.class);
 
 	@XmlElementList
 	public ObservableList<CrystalModel> crystals = FXCollections.observableArrayList();
+
+	public FilteredList<CrystalModel> usedCrystals = new FilteredList<>(crystals);
 
 	@XmlElementList
 	public ObservableList<InstrumentalModel> instruments = FXCollections.observableArrayList();
@@ -44,7 +49,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	private ChangeListener<? super Boolean> refinedParamsListener;
 	private ListChangeListener<ParamTreeNode> addRemoveParamTreeNodeListener;
 
-	private SimpleCombinedObservableList<ParamTreeNode> children = new SimpleCombinedObservableList<ParamTreeNode>(crystals,
+	private SimpleCombinedObservableList<ParamTreeNode> children = new SimpleCombinedObservableList<ParamTreeNode>(usedCrystals,
 			instruments);
 
 	public ObjCrystModel() {
@@ -52,7 +57,30 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 		refinedParamsListener = createRefinedParamsListener();
 		addRemoveParamTreeNodeListener = new AddRemoveParamTreeNodeListener();
 
+	}
+
+	@Override
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		super.bindToElement(parentModelElement, wrappedElement);
+		updateUsedCrystalsPredicate();
 		registerChildren(this.getChildren());
+	}
+
+	public void updateUsedCrystalsPredicate() {
+		usedCrystals.setPredicate(createUsedCrystalsPredicate());
+	}
+
+	private Predicate<? super CrystalModel> createUsedCrystalsPredicate() {
+		Set<String> usedCrystalNames = findUsedCrystals();
+
+		Predicate<? super CrystalModel> usedCrystalsPredicate = new Predicate<>() {
+
+			@Override
+			public boolean test(CrystalModel t) {
+				return usedCrystalNames.contains(t.nameProperty.get());
+			}
+		};
+		return usedCrystalsPredicate;
 	}
 
 	@Override
@@ -83,9 +111,11 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	}
 
 	public CrystalModel getCrystal(String name) {
-		for (CrystalModel cm : crystals) {
-			if (name.equals(cm.getName())) {
-				return cm;
+		if (name != null) {
+			for (CrystalModel cm : crystals) {
+				if (name.equals(cm.getName())) {
+					return cm;
+				}
 			}
 		}
 		return null;

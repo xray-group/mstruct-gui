@@ -108,7 +108,7 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	public void init() {
 		CrystalModel model = getModelInstance();
 
-		crystalName.textProperty().bindBidirectional(model.getNameProperty());
+		crystalName.textProperty().bindBidirectional(model.nameProperty);
 		doWhenFocuseLost(crystalName, () -> getAppContext().getMainController().getCrystalsListView().refresh());
 		spaceGroup.textProperty().bindBidirectional(model.getSpaceGroupProperty());
 

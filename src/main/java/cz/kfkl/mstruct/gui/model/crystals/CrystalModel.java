@@ -33,7 +33,7 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	private static final String FXML_FILE_NAME = "crystal.fxml";
 
 	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty("test");
+	public StringProperty nameProperty = new SimpleStringProperty("N/A");
 
 	public StringProperty paramContainerName = new SimpleStringProperty();
 
@@ -111,10 +111,6 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	public void setName(String name) {
 		this.nameProperty.set(name);
 
-	}
-
-	public StringProperty getNameProperty() {
-		return nameProperty;
 	}
 
 	public StringProperty getSpaceGroupProperty() {

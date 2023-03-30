@@ -22,7 +22,6 @@ import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileModel;
 import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileType;
-import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
@@ -142,22 +141,21 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 
 		doWhenFocuseLost(powderPatternCrystalUserNameTextField, () -> getAppContext().getMainController().phaseNameUpdated());
 
-		XmlLinkedModelElement parentModelElement = model.getParentModelElement().getParentModelElement();
-		if (parentModelElement instanceof ObjCrystModel) {
-			ObjCrystModel ocm = (ObjCrystModel) parentModelElement;
-			powderPatternCrystalNameComboBox.setItems(ocm.crystals);
-			String crystalName = model.crystalProperty.get();
-			if (JvStringUtils.isNotBlank(crystalName)) {
-				powderPatternCrystalNameComboBox.getSelectionModel().select(ocm.getCrystal(crystalName));
-			}
-			powderPatternCrystalNameComboBox.getSelectionModel().selectedItemProperty()
-					.addListener((observable, oldValue, newValue) -> {
-						if (newValue != null) {
-							model.crystalProperty.set(newValue.getName());
-							getAppContext().getMainController().phaseNameUpdated();
-						}
-					});
+		ObjCrystModel ocm = model.rootModel;
+
+		powderPatternCrystalNameComboBox.setItems(ocm.crystals);
+		String crystalName = model.crystalProperty.get();
+		if (JvStringUtils.isNotBlank(crystalName)) {
+			powderPatternCrystalNameComboBox.getSelectionModel().select(ocm.getCrystal(crystalName));
 		}
+		powderPatternCrystalNameComboBox.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> {
+					if (newValue != null) {
+						model.crystalProperty.bind(newValue.nameProperty);
+						getAppContext().getMainController().phaseNameUpdated();
+					}
+				});
+
 		bindlBooleanPropertyToInteger(ignoreImagScattFactCheckBox.selectedProperty(), model.ignoreImagScattFactProperty);
 //		bindAndBuildParFieldsFullLarge(globalBisoParContainer, model.globalBisoPar);
 		bindAndBuildParFieldsNoName(globalBisoParContainer, model.globalBisoPar);

@@ -25,6 +25,7 @@
 
 <!-- 
 <Logger name="cz.kfkl.mstruct.gui.ui.OptimizationJob" level="TRACE"/>
+<Logger name="cz.kfkl.mstruct.gui.ui.ParametersController" level="TRACE"/>
 -->
 
 	</Loggers>

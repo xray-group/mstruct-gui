@@ -17,10 +17,12 @@ import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.model.instrumental.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
+import cz.kfkl.mstruct.gui.utils.ObservableListWrapper;
 import cz.kfkl.mstruct.gui.utils.SimpleCombinedObservableList;
 import cz.kfkl.mstruct.gui.utils.tree.FilterableTreeItem;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
+import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -36,6 +38,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 
 	@XmlElementList
 	public ObservableList<CrystalModel> crystals = FXCollections.observableArrayList();
+	public ObservableList<CrystalModel> crystalsObserved;
 
 	public FilteredList<CrystalModel> usedCrystals = new FilteredList<>(crystals);
 
@@ -64,6 +67,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 		super.bindToElement(parentModelElement, wrappedElement);
 		updateUsedCrystalsPredicate();
 		registerChildren(this.getChildren());
+		crystalsObserved = new ObservableListWrapper<CrystalModel>(crystals, item -> new Observable[] { item.nameProperty });
 	}
 
 	public void updateUsedCrystalsPredicate() {
@@ -104,10 +108,6 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 			usedCrystalNames.addAll(inst.findUsedCrystals());
 		}
 		return usedCrystalNames;
-	}
-
-	public void addCrystal(CrystalModel cm) {
-		crystals.add(cm);
 	}
 
 	public CrystalModel getCrystal(String name) {

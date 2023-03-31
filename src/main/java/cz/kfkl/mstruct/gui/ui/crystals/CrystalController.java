@@ -4,7 +4,6 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.autoHeight;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindAndBuildParFieldsNoName;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTextField;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindToggleGroupToPropertyByText;
-import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenListener;
 
 import java.util.List;
@@ -109,7 +108,6 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 		CrystalModel model = getModelInstance();
 
 		crystalName.textProperty().bindBidirectional(model.nameProperty);
-		doWhenFocuseLost(crystalName, () -> getAppContext().getMainController().getCrystalsListView().refresh());
 		spaceGroup.textProperty().bindBidirectional(model.getSpaceGroupProperty());
 
 		bindToggleGroupToPropertyByText(constrainLatticeToggleGroup, model.constrainLatticeOption);

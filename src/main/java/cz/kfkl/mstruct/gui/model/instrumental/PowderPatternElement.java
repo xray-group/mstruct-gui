@@ -18,11 +18,13 @@ import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
+import cz.kfkl.mstruct.gui.utils.ObservableListWrapper;
 import cz.kfkl.mstruct.gui.utils.SimpleCombinedObservableList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -67,6 +69,7 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 
 	@XmlElementList
 	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
+	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystalsObserved = null;
 
 	@XmlUniqueElement("XIobsSigmaWeightList")
 	public SingleValueUniqueElement xIobsSigmaWeightListElement = new SingleValueUniqueElement("");
@@ -87,6 +90,11 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
 		rootModel.registerChildren(this.getChildren());
+		// must be done after the binding so the wrapped list is already populated from
+		// XML, items added to the wrapped list only are shown but their observable
+		// properties are not bound
+		powderPatternCrystalsObserved = new ObservableListWrapper<PowderPatternCrystalsModel>(powderPatternCrystals,
+				item -> new Observable[] { item.nameProperty, item.crystalProperty });
 	}
 
 	@Override

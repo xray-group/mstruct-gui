@@ -178,20 +178,24 @@ public class SimpleCombinedObservableList<E> extends ObservableListBase<E> {
 			int to = c.getTo();
 			int start = getTargetStart();
 
-			for (int i = c.getRemovedSize() - 1; i >= 0; i--) {
-				E removed = target.remove(start + from + i);
-				nextRemove(start + from + i, removed);
+			if (c.wasRemoved()) {
+				for (int i = c.getRemovedSize() - 1; i >= 0; i--) {
+					E removed = target.remove(start + from + i);
+					nextRemove(start + from + i, removed);
+				}
 			}
 
-			if (from < to) {
-				ArrayList<E> added = new ArrayList<>();
-				for (int i = from; i < to; i++) {
-					E addedEl = c.getList().get(i);
-					added.add(addedEl);
-				}
+			if (c.wasAdded()) {
+				if (from < to) {
+					ArrayList<E> added = new ArrayList<>();
+					for (int i = from; i < to; i++) {
+						E addedEl = c.getList().get(i);
+						added.add(addedEl);
+					}
 
-				target.addAll(start + from, added);
-				nextAdd(start + from, start + to);
+					target.addAll(start + from, added);
+					nextAdd(start + from, start + to);
+				}
 			}
 
 			updateSize(c.getList().size());

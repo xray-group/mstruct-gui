@@ -45,27 +45,32 @@ public class XmlLinkedObservableListListener<T extends XmlLinkedModelElement> im
 			} else if (c.wasUpdated()) {
 				// TODO ? update item
 			} else {
-				for (T removedItem : c.getRemoved()) {
-					Element parent = parrentModelElement.getXmlElement();
-					Element elementToRemove = removedItem.getXmlElement();
+				if (c.wasRemoved()) {
+					for (T removedItem : c.getRemoved()) {
+						Element parent = parrentModelElement.getXmlElement();
+						Element elementToRemove = removedItem.getXmlElement();
 
-					Collection<Element> ownedSiblings = removedItem.getOwnedSiblings();
-					XmlUtils.removeWithIndent(parent, elementToRemove);
-					for (Element sibling : ownedSiblings) {
-						XmlUtils.removeWithIndent(parent, sibling);
+						Collection<Element> ownedSiblings = removedItem.getOwnedSiblings();
+						XmlUtils.removeWithIndent(parent, elementToRemove);
+						for (Element sibling : ownedSiblings) {
+							XmlUtils.removeWithIndent(parent, sibling);
+						}
 					}
 				}
 
-				XmlLinkedModelElement addAfterModelEl = null;
-				int fromIndex = c.getFrom();
-				if (fromIndex > 0) {
-					addAfterModelEl = c.getList().get(fromIndex - 1);
-				} else {
-					addAfterModelEl = previousModelElement;
-				}
-				for (T addedItem : c.getAddedSubList()) {
-					parrentModelElement.bindAndAddAfter(addedItem, addAfterModelEl);
-					addAfterModelEl = addedItem;
+				if (c.wasAdded()) {
+					XmlLinkedModelElement addAfterModelEl = null;
+					int fromIndex = c.getFrom();
+					if (fromIndex > 0) {
+						addAfterModelEl = c.getList().get(fromIndex - 1);
+					} else {
+						addAfterModelEl = previousModelElement;
+					}
+
+					for (T addedItem : c.getAddedSubList()) {
+						parrentModelElement.bindAndAddAfter(addedItem, addAfterModelEl);
+						addAfterModelEl = addedItem;
+					}
 				}
 			}
 

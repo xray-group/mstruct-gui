@@ -7,7 +7,6 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindBooleanTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindlBooleanPropertyToInteger;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.createUniqueName;
-import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doubleTextField;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenListener;
 
@@ -139,11 +138,9 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		powderPatternCrystalInternalNameTextField.textProperty().bind(model.nameProperty);
 		powderPatternCrystalUserNameTextField.textProperty().bindBidirectional(model.userNameProperty);
 
-		doWhenFocuseLost(powderPatternCrystalUserNameTextField, () -> getAppContext().getMainController().phaseNameUpdated());
-
 		ObjCrystModel ocm = model.rootModel;
 
-		powderPatternCrystalNameComboBox.setItems(ocm.crystals);
+		powderPatternCrystalNameComboBox.setItems(ocm.crystalsObserved);
 		String crystalName = model.crystalProperty.get();
 		if (JvStringUtils.isNotBlank(crystalName)) {
 			powderPatternCrystalNameComboBox.getSelectionModel().select(ocm.getCrystal(crystalName));
@@ -152,12 +149,10 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 				.addListener((observable, oldValue, newValue) -> {
 					if (newValue != null) {
 						model.crystalProperty.bind(newValue.nameProperty);
-						getAppContext().getMainController().phaseNameUpdated();
 					}
 				});
 
 		bindlBooleanPropertyToInteger(ignoreImagScattFactCheckBox.selectedProperty(), model.ignoreImagScattFactProperty);
-//		bindAndBuildParFieldsFullLarge(globalBisoParContainer, model.globalBisoPar);
 		bindAndBuildParFieldsNoName(globalBisoParContainer, model.globalBisoPar);
 		bindAndBuildParFieldsNoName(powderPatternComponentScaleParContainer, model.powderPatternComponent.scalePar);
 

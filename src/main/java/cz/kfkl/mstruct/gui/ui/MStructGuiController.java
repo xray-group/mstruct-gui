@@ -192,7 +192,7 @@ public class MStructGuiController implements HasAppContext {
 			if (newValue != null) {
 				if (newValue instanceof PowderPatternElement) {
 					PowderPatternElement ppElement = (PowderPatternElement) newValue;
-					phasesListView.setItems(ppElement.powderPatternCrystals);
+					phasesListView.setItems(ppElement.powderPatternCrystalsObserved);
 					phasesListView.getSelectionModel().selectFirst();
 				}
 			}
@@ -208,8 +208,6 @@ public class MStructGuiController implements HasAppContext {
 		removeCrystalButton.disableProperty().bind(crystalsListView.getSelectionModel().selectedItemProperty().isNull());
 
 		removePhaseButton.disableProperty().bind(phasesListView.getSelectionModel().selectedItemProperty().isNull());
-
-		crystalsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		configOptimizationTab();
 	}
@@ -297,7 +295,7 @@ public class MStructGuiController implements HasAppContext {
 			rootModel = new ObjCrystModel();
 			rootModel.bindToElement(null, root);
 
-			crystalsListView.setItems(rootModel.crystals);
+			crystalsListView.setItems(rootModel.crystalsObserved);
 			crystalsListView.getSelectionModel().selectFirst();
 
 			instrumentalListView.setItems(rootModel.instruments);
@@ -522,7 +520,7 @@ public class MStructGuiController implements HasAppContext {
 
 					switch (importedCrystalsModel.getIfExistsAction()) {
 					case REPLACE:
-						rootModel.crystals.remove(existingCrystal);
+						rootModel.crystalsObserved.remove(existingCrystal);
 						break;
 					case RENAME_NEW:
 
@@ -536,16 +534,14 @@ public class MStructGuiController implements HasAppContext {
 				}
 
 				if (existingCrystalIndexOf >= 0 && existingCrystalIndexOf < rootModel.crystals.size()) {
-					rootModel.crystals.add(existingCrystalIndexOf, cm);
+					rootModel.crystalsObserved.add(existingCrystalIndexOf, cm);
 				} else {
-					rootModel.crystals.add(cm);
+					rootModel.crystalsObserved.add(cm);
 				}
 
 				if (newCrystalName != null) {
 					cm.setName(newCrystalName);
 				}
-
-				getCrystalsListView().refresh();
 
 				importedCrystalsCount++;
 			}
@@ -753,10 +749,6 @@ public class MStructGuiController implements HasAppContext {
 		instrumentalComboBox.setItems(FXCollections.observableArrayList());
 		instrumentalComboBox.setItems(rootModel.instruments);
 		instrumentalComboBox.getSelectionModel().select(instrumentalListView.getSelectionModel().getSelectedItem());
-	}
-
-	public void phaseNameUpdated() {
-		phasesListView.refresh();
 	}
 
 	public void settabInstrumental(Tab tabInstrumental) {

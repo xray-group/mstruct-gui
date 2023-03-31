@@ -32,7 +32,6 @@ abstract public class ReflectionProfileModel<C extends BaseController<?, ?>> ext
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
 		paramContainerName.bind(Bindings.format("%s (%s)", nameProperty, getType()));
-		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override

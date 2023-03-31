@@ -1,9 +1,6 @@
 package cz.kfkl.mstruct.gui.model.crystals;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.jdom2.Element;
 
 import com.google.common.base.Strings;
 
@@ -66,10 +63,10 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	public OptionUniqueElement displayEnantiomerOption = new OptionUniqueElement("Display Enantiomer", 0, "No", "Yes");
 
 	@XmlElementList
-	public List<ScatteringPowerModel> scatteringPowers = new ArrayList<>();
+	public List<ScatteringPowerModel> scatteringPowers = FXCollections.observableArrayList();
 
 	@XmlElementList
-	public List<ScattererModel> scatterers = new ArrayList<>();
+	public List<ScattererModel> scatterers = FXCollections.observableArrayList();
 
 	@XmlElementList
 	public ObservableList<AntiBumpDistanceElement> antiBumpDistances = FXCollections.observableArrayList();
@@ -86,12 +83,6 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 
 	public CrystalModel() {
 		paramContainerName.bind(Bindings.concat("Crystal: ", nameProperty));
-	}
-
-	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
-		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override

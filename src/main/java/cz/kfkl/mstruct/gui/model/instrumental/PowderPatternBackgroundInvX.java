@@ -4,7 +4,6 @@ import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentWithScaleParElement;
-import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInvXController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
@@ -21,12 +20,6 @@ public class PowderPatternBackgroundInvX extends PowderPatternBackgroundXFuncCom
 			nameProperty);
 
 	private ObservableList<? extends ParamTreeNode> children = FXCollections.observableArrayList(powderPatternComponent.scalePar);
-
-	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
-		rootModel.registerChildren(this.getChildren());
-	}
 
 	@Override
 	public String getFxmlFileName() {

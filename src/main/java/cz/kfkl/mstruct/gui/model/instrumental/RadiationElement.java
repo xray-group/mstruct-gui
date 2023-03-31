@@ -1,7 +1,5 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
-import org.jdom2.Element;
-
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
@@ -54,12 +52,6 @@ public class RadiationElement extends XmlLinkedModelElement implements ParamCont
 
 	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(wavelengthPar, xRayTubeDeltaLambdaPar,
 			xRayTubeAlpha2Alpha1RatioPar);
-
-	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
-		rootModel.registerChildren(this.getChildren());
-	}
 
 	@Override
 	public XmlIndentingStyle getXmlIndentingStyle() {

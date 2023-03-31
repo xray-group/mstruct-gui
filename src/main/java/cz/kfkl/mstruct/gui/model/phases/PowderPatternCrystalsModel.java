@@ -97,8 +97,6 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 		});
 
 		paramContainerName.bind(Bindings.concat("Crystal: ", nameProperty));
-
-		rootModel.registerChildren(this.getChildren());
 	}
 
 	public String getNameSuffix() {

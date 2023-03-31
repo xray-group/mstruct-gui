@@ -89,7 +89,7 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@Override
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
-		rootModel.registerChildren(this.getChildren());
+		
 		// must be done after the binding so the wrapped list is already populated from
 		// XML, items added to the wrapped list only are shown but their observable
 		// properties are not bound

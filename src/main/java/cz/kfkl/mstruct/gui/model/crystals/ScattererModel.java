@@ -44,7 +44,6 @@ public abstract class ScattererModel<C extends BaseController<?, ?>> extends Xml
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
 		paramContainerName.bind(Bindings.format("%s: %s", getType(), nameProperty));
-		rootModel.registerChildren(this.getChildren());
 	}
 
 	public abstract String getType();

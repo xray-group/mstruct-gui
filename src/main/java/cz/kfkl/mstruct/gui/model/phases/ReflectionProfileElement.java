@@ -1,7 +1,5 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import org.jdom2.Element;
-
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
@@ -21,12 +19,6 @@ public class ReflectionProfileElement extends XmlLinkedModelElement implements P
 
 	@XmlElementList
 	public ObservableList<ReflectionProfileModel> reflectionProfilesList = FXCollections.observableArrayList();
-
-	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
-		rootModel.registerChildren(this.getChildren());
-	}
 
 	@Override
 	public StringProperty getParamContainerNameProperty() {

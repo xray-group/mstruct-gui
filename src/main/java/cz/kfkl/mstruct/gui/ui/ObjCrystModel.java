@@ -58,15 +58,16 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	public ObjCrystModel() {
 
 		refinedParamsListener = createRefinedParamsListener();
+		// adding the listener before the children lists are populated so it can add
+		// corresponding listeners on nodes added to them
 		addRemoveParamTreeNodeListener = new AddRemoveParamTreeNodeListener();
-
+		children.addListener(addRemoveParamTreeNodeListener);
 	}
 
 	@Override
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
 		updateUsedCrystalsPredicate();
-		registerChildren(this.getChildren());
 		crystalsObserved = new ObservableListWrapper<CrystalModel>(crystals, item -> new Observable[] { item.nameProperty });
 	}
 
@@ -145,17 +146,6 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 		getFirstPowderPattern().updateIhklParams(fittedRootModel.getFirstPowderPattern());
 	}
 
-	public void registerChildren(ObservableList<? extends ParamTreeNode> children) {
-		for (ParamTreeNode ch : children) {
-			if (ch.isParameter()) {
-				increaseCounts(ch, 1);
-				registerRefinedPropertyListener(ch);
-
-			}
-		}
-		children.addListener(addRemoveParamTreeNodeListener);
-	}
-
 	private void registerRefinedPropertyListener(ParamTreeNode ch) {
 		unregisterRefinedPropertyListener(ch);
 		ch.getRefinedProperty().addListener(refinedParamsListener);
@@ -189,26 +179,26 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 
 	private class AddRemoveParamTreeNodeListener implements ListChangeListener<ParamTreeNode> {
 		private Consumer<ParamTreeNode> removedPar = (node) -> {
-			if (node.isParameter()) {
-				increaseCounts(node, -1);
-				unregisterRefinedPropertyListener(node);
-			}
+			increaseCounts(node, -1);
+			unregisterRefinedPropertyListener(node);
+		};
+
+		private Consumer<ParamTreeNode> addedPar = (node) -> {
+			increaseCounts(node, 1);
+			registerRefinedPropertyListener(node);
 		};
 
 		@Override
 		public void onChanged(Change<? extends ParamTreeNode> c) {
 			while (c.next()) {
 				if (c.wasRemoved()) {
-					ParamTreeNode.applyRecursively(c.getRemoved(), removedPar);
+					ParamTreeNode.applyRecursively(c.getRemoved(), removedPar,
+							list -> list.removeListener(addRemoveParamTreeNodeListener));
 				}
 
 				if (c.wasAdded()) {
-					c.getAddedSubList().forEach(node -> {
-						if (node.isParameter()) {
-							increaseCounts(node, 1);
-							registerRefinedPropertyListener(node);
-						}
-					});
+					ParamTreeNode.applyRecursively(c.getAddedSubList(), addedPar,
+							list -> list.addListener(addRemoveParamTreeNodeListener));
 				}
 			}
 		}

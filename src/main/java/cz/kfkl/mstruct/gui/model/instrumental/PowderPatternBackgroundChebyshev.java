@@ -56,8 +56,6 @@ public class PowderPatternBackgroundChebyshev
 		}
 		addMissingCoeficients();
 //		}
-
-		rootModel.registerChildren(this.getChildren());
 	}
 
 	public void setNewDegreeeAndAdjustCoeficients(int newDegree) {

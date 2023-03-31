@@ -61,8 +61,6 @@ public class ArbitraryTextureElement extends XmlLinkedModelElement implements Pa
 		for (IhklParElement ihklPar : ihklParams) {
 			ihklPar.setPhaseName(phaseName);
 		}
-
-		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override

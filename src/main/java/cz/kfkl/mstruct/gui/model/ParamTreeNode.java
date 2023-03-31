@@ -31,16 +31,19 @@ public interface ParamTreeNode {
 
 	public StringProperty getFittedValueProperty();
 
-	default public void applyRecursively(Consumer<ParamTreeNode> consumer) {
-		applyRecursively(getChildren(), consumer);
+	default public void applyRecursively(Consumer<ParamTreeNode> consumer,
+			Consumer<ObservableList<? extends ParamTreeNode>> childrenConsumer) {
+		applyRecursively(getChildren(), consumer, childrenConsumer);
 	}
 
-	static void applyRecursively(List<? extends ParamTreeNode> children, Consumer<ParamTreeNode> consumer) {
+	static void applyRecursively(List<? extends ParamTreeNode> children, Consumer<ParamTreeNode> parConsumer,
+			Consumer<ObservableList<? extends ParamTreeNode>> childrenConsumer) {
 		for (ParamTreeNode childNode : children) {
 			if (childNode.isParameter()) {
-				consumer.accept(childNode);
+				parConsumer.accept(childNode);
 			} else {
-				childNode.applyRecursively(consumer);
+				childNode.applyRecursively(parConsumer, childrenConsumer);
+				childrenConsumer.accept(childNode.getChildren());
 			}
 		}
 	}

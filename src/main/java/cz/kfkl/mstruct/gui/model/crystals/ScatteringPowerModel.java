@@ -50,8 +50,6 @@ public abstract class ScatteringPowerModel<C extends BaseController<?, ?>> exten
 		colorProperty = new SimpleObjectProperty<>(colorFromColourStr());
 		colorProperty.addListener(newChanged(v -> this.colorToColourStr(v)));
 		paramContainerName.bind(Bindings.format("Scattering Power %s: %s", getType(), nameProperty));
-
-		rootModel.registerChildren(this.getChildren());
 	}
 
 	@Override

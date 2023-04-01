@@ -31,14 +31,14 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	private static final String FXML_FILE_NAME = "powderPatternCrystal.fxml";
 
 	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty();
+	public StringProperty nameProperty = new SimpleStringProperty(DIFF_DATA_PREFIX);
 
 	public StringProperty paramContainerName = new SimpleStringProperty();
 
 	public StringProperty userNameProperty = new SimpleStringProperty();
 
 	@XmlAttributeProperty("Crystal")
-	public StringProperty crystalProperty = new SimpleStringProperty();
+	public StringProperty crystalProperty = new SimpleStringProperty("");
 
 	@XmlAttributeProperty("IgnoreImagScattFact")
 	public IntegerProperty ignoreImagScattFactProperty = new SimpleIntegerProperty();
@@ -100,7 +100,19 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	}
 
 	public String getNameSuffix() {
-		return JvStringUtils.isEmpty(userNameProperty.get()) ? crystalProperty.get() : userNameProperty.get();
+		String nameSuffix = "";
+
+		String userName = userNameProperty.get();
+		if (JvStringUtils.isBlank(userName)) {
+			String crystalName = crystalProperty.get();
+			if (JvStringUtils.isNotBlank(crystalName)) {
+				nameSuffix = crystalName;
+			}
+		} else {
+			nameSuffix = userName;
+		}
+
+		return nameSuffix;
 	}
 
 	@Override

@@ -8,15 +8,12 @@ import static cz.kfkl.mstruct.gui.utils.validation.Validator.validateIsNull;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.io.MoreFiles;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
@@ -35,10 +32,10 @@ import cz.kfkl.mstruct.gui.ui.chart.JobOutputExporter;
 import cz.kfkl.mstruct.gui.ui.chart.PlotlyChartGenerator;
 import cz.kfkl.mstruct.gui.ui.job.Job;
 import cz.kfkl.mstruct.gui.ui.job.JobType;
+import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.ListCellWithIcon;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -199,7 +196,6 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	private List<JobType> jobTypes;
 
 	MStructGuiController mainController;
-	ObjectProperty<File> openedFileProperty;
 	private OptimizationJob activeJob;
 	ParametersController parametersTabController;
 
@@ -250,7 +246,6 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		});
 
 		mainController = getAppContext().getMainController();
-		openedFileProperty = mainController.getOpenedFileProperty();
 
 		outputIhklParamsPhaseTableColumn.setCellValueFactory(new PropertyValueFactory<>("phaseName"));
 		bindDoubleTableColumn(outputIhklParamsHTableColumn, v -> v.h);
@@ -311,11 +306,10 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	private void runChoosenJob(JobType jobType) {
 		Instant startTime = Instant.now();
 
-		File openedFile = openedFileProperty.get();
-		Validator.assertNotNull(openedFile, "There is no file openned.");
+		String openedFileName = mainController.fileNameProperty.get();
+		Validator.assertNotNull(openedFileName, "There is no file openned.");
 
-		Path selectedFilePath = openedFile.toPath();
-		String nameWithoutExtension = MoreFiles.getNameWithoutExtension(selectedFilePath);
+		String nameWithoutExtension = JvStringUtils.getNameWithoutExtension(openedFileName);
 
 		String outputFolderName = formatName(nameWithoutExtension, startTime);
 
@@ -344,7 +338,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		jobsListView.getSelectionModel().clearSelection();
 		jobsListView.getSelectionModel().select(job);
 
-		File inputFile = new File(resultDir, openedFile.getName());
+		File inputFile = new File(resultDir, openedFileName);
 		mainController.saveXmlDocument(inputFile);
 		job.setInputFile(inputFile);
 

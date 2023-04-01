@@ -43,6 +43,7 @@ import cz.kfkl.mstruct.gui.model.crystals.ImportedCrystalsModel;
 import cz.kfkl.mstruct.gui.model.instrumental.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.crystals.CrystalCifImportJob;
 import cz.kfkl.mstruct.gui.ui.crystals.ImportedCrystalsController;
 import cz.kfkl.mstruct.gui.ui.job.JobStatus;
@@ -57,6 +58,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,6 +85,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class MStructGuiController implements HasAppContext {
 
+	private static final String NEW_FILE_NAME_XML = "new_01.xml";
+
 	private static final int EXPECTED_DAT_FILE_ROWS = 4;
 
 	private static final Logger LOG = LoggerFactory.getLogger(MStructGuiController.class);
@@ -96,17 +100,17 @@ public class MStructGuiController implements HasAppContext {
 	private static final String[] DATA_TABLE_COLUMNS = new String[] { "2Theta/TOF", "Iobs", "Sigma", "Weight" };
 
 	public static final String OBJ_CRYST = "ObjCryst";
-	public static final String INPUT_DATA_ELEMENT_NAME = "/ObjCryst/PowderPattern/XIobsSigmaWeightList";
+	public static final String INPUT_DATA_ELEMENT_NAME = "/" + OBJ_CRYST + "/PowderPattern/XIobsSigmaWeightList";
 
 	@FXML
 	private BorderPane topBorderPanel;
 
 	@FXML
+	private MenuItem newMenuItem;
+	@FXML
 	private MenuItem saveMenuItem;
 	@FXML
 	private MenuItem saveAsMenuItem;
-	@FXML
-	private MenuItem closeMenuItem;
 
 	@FXML
 	private Label bottomLabel;
@@ -171,16 +175,19 @@ public class MStructGuiController implements HasAppContext {
 	private Document openedDocument;
 
 	private StringProperty titleProperty;
+	public StringProperty fileNameProperty = new SimpleStringProperty();
 
 	public void init() {
 
 		LOG.debug("TITLE: {}", titleProperty.get());
-		titleProperty.bind(Bindings.createStringBinding(() -> MStructGuiMain.M_STRUCT_UI_TITLE + formatOpenedFileName(),
-				openedFileProperty));
+		fileNameProperty.bind(Bindings.createStringBinding(() -> {
+			File file = openedFileProperty.get();
+			return file == null ? NEW_FILE_NAME_XML : file.getName();
+		}, openedFileProperty));
+
+		titleProperty.bind(Bindings.concat(MStructGuiMain.M_STRUCT_UI_TITLE, " - ", fileNameProperty));
 
 		saveMenuItem.disableProperty().bind(openedFileProperty.isNull());
-		saveAsMenuItem.disableProperty().bind(openedFileProperty.isNull());
-		closeMenuItem.disableProperty().bind(openedFileProperty.isNull());
 
 		instrumentalListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null) {
@@ -212,31 +219,36 @@ public class MStructGuiController implements HasAppContext {
 		configOptimizationTab();
 	}
 
-	private String formatOpenedFileName() {
-		return openedFileProperty.get() == null ? "" : " - " + openedFileProperty.get().getName();
+	@FXML
+	void newFile(ActionEvent event) {
+		// TODO dialog
+		try {
+			loadFile(createNewXmlDocument());
+
+			setBottomLabelText("New file created");
+			this.openedFileProperty.set(null);
+		} catch (Exception e) {
+			throw new PopupErrorException(e, "An unexpected error when creating a new file.");
+		}
+
 	}
 
-	@FXML
-	void closeFile(ActionEvent event) {
-		// TODO dialog
-		this.crystalsListView.setItems(FXCollections.observableArrayList());
-		this.instrumentalListView.setItems(FXCollections.observableArrayList());
-		this.instrumentalComboBox.setItems(FXCollections.observableArrayList());
-		this.phasesListView.setItems(FXCollections.observableArrayList());
-		this.tabParameters.setContent(null);
-		optimizationController.setRootModel(null);
+	private Document createNewXmlDocument() {
+		Element newRootXmlElement = new Element(OBJ_CRYST);
 
-		this.rootModel = null;
-		this.openedDocument = null;
+		Element ppXmlElement = new Element(XmlLinkedModelElement.decideElementName(PowderPatternElement.class));
+		ppXmlElement.addContent(XmlUtils.createIndentText(1));
 
-		setBottomLabelText("File [%s] was closed.", openedFileProperty.get());
-		this.openedFileProperty.set(null);
+		newRootXmlElement.addContent(XmlUtils.createIndentText(1));
+		newRootXmlElement.addContent(ppXmlElement);
+		newRootXmlElement.addContent(XmlUtils.createIndentText(0));
+
+		return new Document(newRootXmlElement);
 	}
 
 	@FXML
 	void openFile(ActionEvent event) throws FileNotFoundException, JDOMException, IOException {
 		// TODO dialog ??
-//		try {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open MStruct ObjCryst XML File");
 		configureExtensionFilter(fileChooser, MSTRUCT_XML_EXTENSION_FILTER);
@@ -246,11 +258,6 @@ public class MStructGuiController implements HasAppContext {
 		if (selectedFile != null) {
 			openSelectedFile(selectedFile);
 		}
-//		} catch (PopupErrorException pee) {
-//			pee.printStackTrace();
-//			Alert alert = new Alert(AlertType.ERROR, pee.getMessage());
-//			alert.showAndWait();
-//		}
 	}
 
 	private void configureExtensionFilter(FileChooser fileChooser, ExtensionFilter specialFilterilter) {
@@ -287,34 +294,38 @@ public class MStructGuiController implements HasAppContext {
 	private void parseMStructXml(File selectedFile) {
 		try {
 			SAXBuilder builder = new SAXBuilder();
-			openedDocument = builder.build(selectedFile);
-			Element root = openedDocument.getRootElement();
-			Validator.assertEquals(OBJ_CRYST, root.getName(), "Expected XML file with root element [%s], got [%s]", OBJ_CRYST,
-					root.getName());
-
-			rootModel = new ObjCrystModel();
-			rootModel.bindToElement(null, root);
-
-			crystalsListView.setItems(rootModel.crystalsObserved);
-			crystalsListView.getSelectionModel().selectFirst();
-
-			instrumentalListView.setItems(rootModel.instruments);
-			instrumentalComboBox.setItems(rootModel.instruments);
-			instrumentalListView.getSelectionModel().selectFirst();
-
-			ParametersController parametersController = initParametersTab(this.tabParameters);
-			parametersController.bindToRootModel(rootModel);
-
-			parametersCountLabel.textProperty().bind(rootModel.parametersCount.asString());
-			refinedParametersCountLabel.textProperty().bind(rootModel.refinedParametersCount.asString());
-
-			optimizationController.setRootModel(rootModel);
-
-			configInputDataTable(findSingleXIobsSigmaWeightListElement().valueProperty.get());
-
+			loadFile(builder.build(selectedFile));
 		} catch (Exception e) {
 			throw new PopupErrorException(e, "Failed to parse the xml file [%s]", selectedFile);
 		}
+	}
+
+	private void loadFile(Document xmlDocument) {
+		openedDocument = xmlDocument;
+
+		Element rootXmlEl = openedDocument.getRootElement();
+		Validator.assertEquals(OBJ_CRYST, rootXmlEl.getName(), "Expected XML file with root element [%s], got [%s]", OBJ_CRYST,
+				rootXmlEl.getName());
+
+		rootModel = new ObjCrystModel();
+		rootModel.bindToElement(null, rootXmlEl);
+
+		crystalsListView.setItems(rootModel.crystalsObserved);
+		crystalsListView.getSelectionModel().selectFirst();
+
+		instrumentalListView.setItems(rootModel.instruments);
+		instrumentalComboBox.setItems(rootModel.instruments);
+		instrumentalListView.getSelectionModel().selectFirst();
+
+		ParametersController parametersController = initParametersTab(this.tabParameters);
+		parametersController.bindToRootModel(rootModel);
+
+		parametersCountLabel.textProperty().bind(rootModel.parametersCount.asString());
+		refinedParametersCountLabel.textProperty().bind(rootModel.refinedParametersCount.asString());
+
+		optimizationController.setRootModel(rootModel);
+
+		configInputDataTable(findSingleXIobsSigmaWeightListElement().valueProperty.get());
 	}
 
 	private SingleValueUniqueElement findSingleXIobsSigmaWeightListElement() {
@@ -376,9 +387,8 @@ public class MStructGuiController implements HasAppContext {
 
 			saveXmlDocument(selectedFile);
 
-			String oldName = this.openedFileProperty.get().getName();
 			this.openedFileProperty.set(selectedFile);
-			setBottomLabelText("File [%s] was saved as [%s].", oldName, selectedFile);
+			setBottomLabelText("File [%s] was saved as [%s].", fileNameProperty.get(), selectedFile);
 		}
 	}
 
@@ -722,10 +732,6 @@ public class MStructGuiController implements HasAppContext {
 		} catch (Exception e) {
 			throw new PopupErrorException(e, "Failed to save the xml file [%s]", outFile);
 		}
-	}
-
-	public ObjectProperty<File> getOpenedFileProperty() {
-		return openedFileProperty;
 	}
 
 	public void setTitleProperty(StringProperty titleProperty) {

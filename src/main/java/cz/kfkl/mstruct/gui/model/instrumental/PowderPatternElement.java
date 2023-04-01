@@ -20,7 +20,6 @@ import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.ObservableListWrapper;
 import cz.kfkl.mstruct.gui.utils.SimpleCombinedObservableList;
-import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
@@ -40,9 +39,6 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	private static final String DEFAULT_PATTERN_NAME = "pattern0";
 
 	public StringProperty paramContainerName = new SimpleStringProperty();
-
-	@XmlAttributeProperty("SpaceGroup")
-	public StringProperty spaceGroupProperty = new SimpleStringProperty();
 
 	@XmlUniqueElement
 	public ParUniqueElement zeroPar = new ParUniqueElement("Zero");

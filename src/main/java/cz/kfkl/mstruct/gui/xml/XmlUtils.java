@@ -50,7 +50,7 @@ public class XmlUtils {
 		}
 	}
 
-	private static Text createIndentText(int level) {
+	public static Text createIndentText(int level) {
 		Text indent = new Text("\n" + indentString(level));
 		return indent;
 	}

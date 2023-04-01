@@ -96,7 +96,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	private ToggleGroup geometryToggleGroup;
 
 	@FXML
-	private ListView<PowderPatternBackgroundModel> powderPatternComponentsListView;
+	private ListView<PowderPatternBackgroundModel<?>> powderPatternComponentsListView;
 
 	private static List<PowderPatternBackgroundType> allowedPowderPatternBackgrounds = Arrays
 			.asList(PowderPatternBackgroundType.values());
@@ -252,7 +252,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 
 	@FXML
 	public void onPowderPatternComponentsRemoveButton() {
-		PowderPatternBackgroundModel selectedItem = powderPatternComponentsListView.getSelectionModel().getSelectedItem();
+		PowderPatternBackgroundModel<?> selectedItem = powderPatternComponentsListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION, null);
 			alert.setHeaderText("Are you sure you want to remove the \"" + selectedItem.toString() + "\" background?");

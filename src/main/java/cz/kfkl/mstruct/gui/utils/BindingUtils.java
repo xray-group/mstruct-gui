@@ -338,7 +338,7 @@ public final class BindingUtils {
 		node.focusedProperty().addListener(list);
 	}
 
-	public static <M extends FxmlFileNameProvider, P> void setupListViewListener(P parentController, ListView<M> listView,
+	public static <M extends FxmlFileNameProvider<?>, P> void setupListViewListener(P parentController, ListView<M> listView,
 			ScrollPane scrollPane, AppContext appContext) {
 		updateContentWhenSelected(parentController, listView.getSelectionModel().selectedItemProperty(),
 				() -> scrollPane.setContent(null), (n) -> {
@@ -370,7 +370,7 @@ public final class BindingUtils {
 		});
 	}
 
-	public static <M extends FxmlFileNameProvider, P> void setupSelectionToChildrenListener(P parentController,
+	public static <M extends FxmlFileNameProvider<?>, P> void setupSelectionToChildrenListener(P parentController,
 			ReadOnlyObjectProperty<M> readOnlyObjectProperty, ObservableList<Node> children, AppContext appContext) {
 		updateContentWhenSelected(parentController, readOnlyObjectProperty, () -> children.clear(), (n) -> children.add(n),
 				appContext);
@@ -392,13 +392,12 @@ public final class BindingUtils {
 						cleanContent.run();
 						setContent.accept(parent);
 					});
-
 				}
 			}
-
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <C extends BaseController<?, ?>, P> C loadViewAndInitController(P parentController, AppContext appContext,
 			FxmlFileNameProvider<C> modelInstance, Consumer<Parent> viewConsumer) {
 		Parent parent = null;
@@ -416,7 +415,7 @@ public final class BindingUtils {
 			}
 
 			if (controller instanceof SingleModelInstanceController) {
-				SingleModelInstanceController<FxmlFileNameProvider> cc = (SingleModelInstanceController<FxmlFileNameProvider>) controller;
+				SingleModelInstanceController<FxmlFileNameProvider<C>> cc = (SingleModelInstanceController<FxmlFileNameProvider<C>>) controller;
 
 				cc.setModelInstance(modelInstance);
 				cc.init();

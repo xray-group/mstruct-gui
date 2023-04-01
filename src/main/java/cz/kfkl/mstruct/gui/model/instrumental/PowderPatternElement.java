@@ -65,7 +65,7 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	public GeometryElement geometryElement = new GeometryElement();
 
 	@XmlElementList
-	public ObservableList<PowderPatternBackgroundModel> powderPatternComponents = FXCollections.observableArrayList();
+	public ObservableList<PowderPatternBackgroundModel<?>> powderPatternComponents = FXCollections.observableArrayList();
 
 	@XmlElementList
 	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
@@ -89,7 +89,7 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	@Override
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
-		
+
 		// must be done after the binding so the wrapped list is already populated from
 		// XML, items added to the wrapped list only are shown but their observable
 		// properties are not bound

@@ -126,7 +126,7 @@ public class MStructGuiController implements HasAppContext {
 	@FXML
 	private Tab tabInstrumental;
 	@FXML
-	private ListView<InstrumentalModel> instrumentalListView;
+	private ListView<InstrumentalModel<?>> instrumentalListView;
 	@FXML
 	private ScrollPane tabInstrumentalCenterPane;
 	@FXML
@@ -135,7 +135,7 @@ public class MStructGuiController implements HasAppContext {
 	@FXML
 	private Tab tabPhases;
 	@FXML
-	private ComboBox<InstrumentalModel> instrumentalComboBox;
+	private ComboBox<InstrumentalModel<?>> instrumentalComboBox;
 	@FXML
 	private ListView<PowderPatternCrystalsModel> phasesListView;
 	@FXML
@@ -199,7 +199,7 @@ public class MStructGuiController implements HasAppContext {
 		});
 
 		// enable the Add instrument button only if instrumentalListView has no item
-		ListProperty<InstrumentalModel> lstProp = new SimpleListProperty<>(instrumentalListView.getItems());
+		ListProperty<InstrumentalModel<?>> lstProp = new SimpleListProperty<>(instrumentalListView.getItems());
 		lstProp.bind(instrumentalListView.itemsProperty());
 		addInstrumentButton.disableProperty().bind(Bindings.not(lstProp.emptyProperty()));
 
@@ -411,7 +411,7 @@ public class MStructGuiController implements HasAppContext {
 				cifJob.setInputFile(selectedFile);
 
 				File resultDir = new File(getAppContext().getLastSelectedFileDirectoryOrDefault(), outputFolderName);
-				boolean created = resultDir.mkdir();
+				resultDir.mkdir();
 				cifJob.setResultDir(resultDir);
 
 				// TODO start some kind of progress indication here...
@@ -484,7 +484,7 @@ public class MStructGuiController implements HasAppContext {
 		markExistingCrystals(importedCrystals);
 		importedCrystalsModel.setImportedCrystals(importedCrystals);
 
-		Dialog crystalSelectionDialog = new Dialog();
+		Dialog<ButtonType> crystalSelectionDialog = new Dialog<>();
 		DialogPane dialogPane = crystalSelectionDialog.getDialogPane();
 		crystalSelectionDialog.setTitle("Crystals Import");
 
@@ -692,14 +692,14 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	public void addInstrument() {
-		InstrumentalModel newInstance = new PowderPatternElement();
+		InstrumentalModel<?> newInstance = new PowderPatternElement();
 		instrumentalListView.getItems().add(newInstance);
 		instrumentalListView.getSelectionModel().select(newInstance);
 	}
 
 	@FXML
 	public void removeInstrument() {
-		// multiple instruments not supported - Remove button is commnted out in the
+		// multiple instruments not supported - Remove button is commented out in the
 		// fxml
 	}
 

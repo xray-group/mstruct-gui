@@ -73,7 +73,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 	private TextField absorptionFactorTextField;
 
 	@FXML
-	private ListView<ReflectionProfileModel> reflectionProfileListView;
+	private ListView<ReflectionProfileModel<?>> reflectionProfileListView;
 
 	private static List<ReflectionProfileType> allowedReflectionProfiles = Arrays.asList(ReflectionProfileType.values());
 
@@ -266,7 +266,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 
 	@FXML
 	public void onReflectionProfileRemoveButton() {
-		ReflectionProfileModel selectedItem = reflectionProfileListView.getSelectionModel().getSelectedItem();
+		ReflectionProfileModel<?> selectedItem = reflectionProfileListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION, null);
 			alert.setHeaderText("Are you sure you want to remove the \"" + selectedItem.toString() + "\" reflection profile?");

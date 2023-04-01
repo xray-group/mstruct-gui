@@ -33,7 +33,6 @@ public class PlotlyChartModel implements FxmlFileNameProvider<OptimizationEditRe
 	private ObjCrystModel rootModel;
 
 	private OptimizationJob activeJob;
-	private AppContext appContext;
 
 	private WebEngine webEngine;
 
@@ -43,7 +42,6 @@ public class PlotlyChartModel implements FxmlFileNameProvider<OptimizationEditRe
 
 	public PlotlyChartModel(OptimizationJob activeJob, AppContext appContext) {
 		this.activeJob = activeJob;
-		this.appContext = appContext;
 
 		this.excludeXFormatter = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		// TODO set from property

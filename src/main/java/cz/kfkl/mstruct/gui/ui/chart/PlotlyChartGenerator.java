@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
@@ -16,8 +13,6 @@ import cz.kfkl.mstruct.gui.ui.optimization.OptimizationJob;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 
 public class PlotlyChartGenerator implements JobOutputExporter {
-
-	private static final Logger LOG = LoggerFactory.getLogger(PlotlyChartGenerator.class);
 
 	private static final String PLOTLY_JS_MIN = "${plotly_js_min}";
 

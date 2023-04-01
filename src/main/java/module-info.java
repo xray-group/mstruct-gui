@@ -1,12 +1,18 @@
 module MStructGUI {
+	exports cz.kfkl.mstruct.gui.core;
+	exports cz.kfkl.mstruct.gui.model;
+	exports cz.kfkl.mstruct.gui.model.crystals;
+	exports cz.kfkl.mstruct.gui.model.instrumental;
+	exports cz.kfkl.mstruct.gui.model.phases;
+	exports cz.kfkl.mstruct.gui.model.utils;
+	exports cz.kfkl.mstruct.gui.xml;
+	exports cz.kfkl.mstruct.gui.xml.annotation;
+	exports cz.kfkl.mstruct.gui.ui;
 	exports cz.kfkl.mstruct.gui.ui.chart;
+	exports cz.kfkl.mstruct.gui.ui.job;
+	exports cz.kfkl.mstruct.gui.ui.optimization;
 	exports cz.kfkl.mstruct.gui.utils.validation;
 	exports cz.kfkl.mstruct.gui.utils;
-	exports cz.kfkl.mstruct.gui.core;
-	exports cz.kfkl.mstruct.gui.ui;
-	exports cz.kfkl.mstruct.gui.xml.annotation;
-	exports cz.kfkl.mstruct.gui.model;
-	exports cz.kfkl.mstruct.gui.model.utils;
 
 	requires java.desktop;
 	requires java.xml;
@@ -14,7 +20,7 @@ module MStructGUI {
 	requires transitive javafx.controls;
 	requires javafx.fxml;
 	requires javafx.graphics;
-	requires jdom2;
+	requires transitive jdom2;
 	requires com.google.common;
 	requires org.slf4j;
 	requires javafx.web;

@@ -78,7 +78,6 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 	private static final String FILE_NAME_PLACEHOLDER = "${fileName}";
 	private static final String DEFAULT_OUTPUT_FOLDER_NAME = FILE_NAME_PLACEHOLDER + "_" + TIME_STAMP_PLACEHOLDER;
 	private static final ExtensionFilter HTML_EXTENSION_FILTER = new FileChooser.ExtensionFilter("HTML", "*.html");
-	private static final String EDIT_MODE_FXML = "optimizationEditRegions.fxml";
 
 	@FXML
 	private BorderPane topBorderPanel;
@@ -339,7 +338,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 			jobsListView.refresh();
 		});
 
-		boolean created = resultDir.mkdir();
+		resultDir.mkdir();
 
 		jobsListView.getItems().add(0, job);
 		jobsListView.getSelectionModel().clearSelection();
@@ -434,7 +433,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		if (activeJob != null) {
 			PlotlyChartModel optimizationEditRegionsModel = new PlotlyChartModel(activeJob, getAppContext());
 
-			Dialog editRegionsDialog = new Dialog();
+			Dialog<ButtonType> editRegionsDialog = new Dialog<>();
 			DialogPane dialogPane = editRegionsDialog.getDialogPane();
 			editRegionsDialog.setTitle("Edit Excluded Regions");
 

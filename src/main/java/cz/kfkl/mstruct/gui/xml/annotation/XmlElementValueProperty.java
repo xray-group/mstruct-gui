@@ -11,6 +11,6 @@ import javafx.util.StringConverter;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XmlElementValueProperty {
 
-	public Class converter() default StringConverter.class;
+	public Class<?> converter() default StringConverter.class;
 
 }

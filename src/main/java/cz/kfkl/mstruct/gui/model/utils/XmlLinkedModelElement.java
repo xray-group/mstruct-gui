@@ -17,7 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -46,7 +45,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.WritableNumberValue;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 import javafx.util.converter.BooleanStringConverter;
@@ -144,23 +142,22 @@ public class XmlLinkedModelElement {
 				XmlElementList elementListAnnotation = field.getAnnotation(XmlElementList.class);
 				if (elementListAnnotation != null) {
 					assertPublicOrProtected(field);
-					Type t = field.getType();
 
 					Class<?> genericTypeClass = assertFieldTypeAndGetSingleTypeArgument(field, List.class);
 
 					Map<String, Class<?>> mappedClasses = findMappedClasses(field, genericTypeClass);
 
-					List list = getFieldValueAsList(field);
+					List<Object> list = getFieldValueAsList(field);
 					XmlLinkedModelElement elementBeforList = previousModelElement;
 
 					for (Element child : xmlElement.getChildren()) {
 						String elementName = child.getName();
-						Class mappedClass = mappedClasses.get(elementName);
+						Class<?> mappedClass = mappedClasses.get(elementName);
 						if (mappedClasses.get(elementName) != null) {
 							lastElement = child;
 							Object newInstance = null;
 							try {
-								Constructor noArgsConstructor = mappedClass.getConstructor();
+								Constructor<?> noArgsConstructor = mappedClass.getConstructor();
 								newInstance = noArgsConstructor.newInstance();
 
 								list.add(newInstance);
@@ -200,15 +197,16 @@ public class XmlLinkedModelElement {
 		return parentModelElement.rootModel;
 	}
 
-	private List getFieldValueAsList(Field field) throws IllegalAccessException {
+	private List<Object> getFieldValueAsList(Field field) throws IllegalAccessException {
 		Object fieldValue = getFieldValueNotNull(field);
 		assertTrue(fieldValue instanceof List, "Field [%s] value [%s] should be an instance of List", field, fieldValue);
-		List list = (List) fieldValue;
+		@SuppressWarnings("unchecked")
+		List<Object> list = (List<Object>) fieldValue;
 		return list;
 	}
 
-	private Class assertFieldTypeAndGetSingleTypeArgument(Field field, Class<List> expectedType) {
-		Class genericTypeClass = null;
+	private Class<?> assertFieldTypeAndGetSingleTypeArgument(Field field, Class<List> expectedType) {
+		Class<?> genericTypeClass = null;
 		AnnotatedType at = field.getAnnotatedType();
 		Type type = at.getType();
 		LOG.trace("Examining type [{}]", type);
@@ -216,21 +214,24 @@ public class XmlLinkedModelElement {
 			ParameterizedType pt = (ParameterizedType) type;
 			if (pt.getRawType() instanceof Class) {
 
-				if (pt.getRawType() instanceof Class && expectedType.isAssignableFrom((Class) pt.getRawType())) {
+				if (pt.getRawType() instanceof Class && expectedType.isAssignableFrom((Class<?>) pt.getRawType())) {
 					Type[] actualTypeArguments = pt.getActualTypeArguments();
 					assertTrue(actualTypeArguments.length == 1,
 							"The field [%s] which is of type List should have one type argument, got [%s]", field,
 							actualTypeArguments.length);
 					Type ta = actualTypeArguments[0];
 					if (ta instanceof Class) {
-						genericTypeClass = (Class) ta;
+						genericTypeClass = (Class<?>) ta;
+					} else if (ta instanceof ParameterizedType) {
+						ParameterizedType pta = (ParameterizedType) ta;
+						genericTypeClass = (Class<?>) pta.getRawType();
 					}
 				}
 			}
 		}
 
-		assertNotNull(genericTypeClass, "The field [%s] should be of type [%s] with single generic type argument defined.", field,
-				expectedType);
+		assertNotNull(genericTypeClass, "The  field [%s] should be of type [%s] with single generic type argument defined.",
+				field, expectedType);
 		return genericTypeClass;
 	}
 
@@ -257,7 +258,7 @@ public class XmlLinkedModelElement {
 		return uniqueEl;
 	}
 
-	private List<Field> getAllFields(Class cls) {
+	private List<Field> getAllFields(Class<?> cls) {
 		List<Field> fields = new ArrayList<>();
 
 		while (!cls.equals(Object.class)) {
@@ -393,21 +394,21 @@ public class XmlLinkedModelElement {
 		Object fieldValue = field.get(this);
 
 		if (fieldValue instanceof StringProperty) {
-			XmlAttributeUpdater updater = new XmlAttributeUpdater(xmlElement, attributeName);
+			XmlAttributeUpdater<String> updater = new XmlAttributeUpdater<>(xmlElement, attributeName);
 			StringProperty fieldValueSp = (StringProperty) fieldValue;
 			fieldValueSp.addListener(updater);
 		}
 	}
 
-	private void bindAttribute(Field field, String attributeName, Class converter) throws IllegalAccessException {
-		bindXmlValue(field, getFieldValueNotNull(field), new XmlAttributeUpdater(xmlElement, attributeName), converter);
+	private void bindAttribute(Field field, String attributeName, Class<?> converter) throws IllegalAccessException {
+		bindXmlValue(field, getFieldValueNotNull(field), new XmlAttributeUpdater<String>(xmlElement, attributeName), converter);
 	}
 
-	private void bindElementContent(Field field, Class converter) throws IllegalAccessException {
-		bindXmlValue(field, getFieldValueNotNull(field), new XmlElementContentUpdater(xmlElement), converter);
+	private void bindElementContent(Field field, Class<?> converter) throws IllegalAccessException {
+		bindXmlValue(field, getFieldValueNotNull(field), new XmlElementContentUpdater<String>(xmlElement), converter);
 	}
 
-	private void bindXmlValue(Field field, Object fieldValue, XmlValueUpdater updater, Class converter) {
+	private void bindXmlValue(Field field, Object fieldValue, XmlValueUpdater<String> updater, Class<?> converter) {
 		StringConverter converterInstance = instantiateConverter(converter);
 
 		if (converterInstance == null) {
@@ -434,30 +435,12 @@ public class XmlLinkedModelElement {
 		} else {
 			throw new UnexpectedException("Field [%s] with type [%s] should be a property.", field, fieldValue.getClass());
 		}
-
-//		if (fieldValue instanceof StringProperty) {
-//			updater.bind((StringProperty) fieldValue, null);
-//		} else if (fieldValue instanceof DoubleProperty) {
-//			// TODO: mayb need special converter ? (Number d) ->
-//			// Double.toString(d.doubleValue())));
-//			updater.bind((DoubleProperty) fieldValue, new NumberStringConverter());
-//		} else if (fieldValue instanceof IntegerProperty) {
-//			// TODO: maybe need special converter? (Number d) ->
-//			// Integer.toString(d.intValue())));
-//			updater.bind((IntegerProperty) fieldValue, new NumberStringConverter());
-//		} else if (fieldValue instanceof BooleanProperty) {
-//			// TODO: maybe need special converter? (Number d) ->
-//			// Integer.toString(d.intValue())));
-//			updater.bind((IntegerProperty) fieldValue, new BooleanStringConverter());
-//		} else {
-//			throw new UnexpectedException("Field [%s] type [%s] is not mappable.", field, fieldValue.getClass());
-//		}
 	}
 
-	private StringConverter instantiateConverter(Class converter) {
-		StringConverter converterInstance = null;
+	private StringConverter<?> instantiateConverter(Class<?> converter) {
+		StringConverter<?> converterInstance = null;
 		if (!StringConverter.class.equals(converter)) {
-			Constructor noArgsConstructor;
+			Constructor<?> noArgsConstructor;
 			try {
 				noArgsConstructor = converter.getConstructor();
 				Object converterInstanceObj = noArgsConstructor.newInstance();
@@ -480,18 +463,6 @@ public class XmlLinkedModelElement {
 		Object fieldValue = field.get(this);
 		assertNotNull(fieldValue, "Field [%s] on class [%s] must be initialized.", field.getName(), field.getDeclaringClass());
 		return fieldValue;
-	}
-
-	private <T extends Number> void setValueIfNotNull(WritableNumberValue ssp, String attValue, Function<String, T> fromString) {
-		if (attValue != null) {
-			ssp.setValue(fromString.apply(attValue));
-		}
-	}
-
-	private <T> void setValueIfNotNull(Property<T> property, String strValue, StringConverter<T> fromString) {
-		if (strValue != null) {
-			property.setValue(fromString.fromString(strValue));
-		}
 	}
 
 	private String decideAttributeName(Field field, String annotationValue) {

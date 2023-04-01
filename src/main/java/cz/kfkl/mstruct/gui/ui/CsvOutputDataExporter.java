@@ -8,12 +8,10 @@ import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 
 public class CsvOutputDataExporter implements JobOutputExporter {
 
-	private AppContext appContext;
 	private Job job;
 	private TableOfDoubles datTable;
 
 	public CsvOutputDataExporter(AppContext appContext) {
-		this.appContext = appContext;
 	}
 
 	@Override

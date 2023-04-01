@@ -17,8 +17,6 @@ public class FlexibleTableResizingPolicy implements Callback<TreeTableView.Resiz
 	private static final int MIN_COL_WIDTH = 5;
 	private static final int MAX_COL_WIDTH = 2000;
 
-	private boolean isFirstRun = true;
-
 	@Override
 	public String toString() {
 		return "limitted-flex-resize";

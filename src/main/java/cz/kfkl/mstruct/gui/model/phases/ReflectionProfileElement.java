@@ -18,7 +18,7 @@ public class ReflectionProfileElement extends XmlLinkedModelElement implements P
 	public StringProperty nameProperty = new SimpleStringProperty();
 
 	@XmlElementList
-	public ObservableList<ReflectionProfileModel> reflectionProfilesList = FXCollections.observableArrayList();
+	public ObservableList<ReflectionProfileModel<?>> reflectionProfilesList = FXCollections.observableArrayList();
 
 	@Override
 	public StringProperty getParamContainerNameProperty() {

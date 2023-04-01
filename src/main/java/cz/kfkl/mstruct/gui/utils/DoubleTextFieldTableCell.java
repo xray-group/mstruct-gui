@@ -83,7 +83,7 @@ public class DoubleTextFieldTableCell<S, T> extends TableCell<S, T> {
 		return createTextField;
 	}
 
-	private StringConverter getCellItemToTextConverter() {
+	private StringConverter<T> getCellItemToTextConverter() {
 		return cellItemToTextConverter;
 	}
 

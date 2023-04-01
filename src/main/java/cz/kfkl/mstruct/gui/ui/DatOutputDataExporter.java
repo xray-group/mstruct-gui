@@ -12,12 +12,10 @@ import cz.kfkl.mstruct.gui.utils.ic.TableReportBuilder;
 
 public class DatOutputDataExporter implements JobOutputExporter {
 
-	private AppContext appContext;
 	private Job job;
 	private TableOfDoubles datTable;
 
 	public DatOutputDataExporter(AppContext appContext) {
-		this.appContext = appContext;
 	}
 
 	@Override

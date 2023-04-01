@@ -59,17 +59,17 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	private HBox gammaParContainer;
 
 	@FXML
-	private TableView<ScatteringPowerModel> scatPowersTableView;
+	private TableView<ScatteringPowerModel<?>> scatPowersTableView;
 	@FXML
-	private TableColumn<ScatteringPowerModel, ImageWithBackgroud> scatPowersTableIconColumn;
+	private TableColumn<ScatteringPowerModel<?>, ImageWithBackgroud> scatPowersTableIconColumn;
 	@FXML
-	private TableColumn<ScatteringPowerModel, String> scatPowersTableNameColumn;
+	private TableColumn<ScatteringPowerModel<?>, String> scatPowersTableNameColumn;
 	@FXML
-	private TableColumn<ScatteringPowerModel, String> scatPowersTableSymbolColumn;
+	private TableColumn<ScatteringPowerModel<?>, String> scatPowersTableSymbolColumn;
 //	@FXML
-//	private TableColumn<ScatteringPowerModel, Color> scatPowersTableColourColumn;
+//	private TableColumn<ScatteringPowerModel<?>, Color> scatPowersTableColourColumn;
 //	@FXML
-//	private TableColumn<ScatteringPowerModel, String> scatPowersTableBisoValueColumn;
+//	private TableColumn<ScatteringPowerModel<?>, String> scatPowersTableBisoValueColumn;
 	@FXML
 	private StackPane scatPowersDetailsStackPane;
 
@@ -84,24 +84,24 @@ public class CrystalController extends BaseController<CrystalModel, MStructGuiCo
 	private TableView<DynamicMatrixRow<BondValenceRoElement>> bondValenceTableView;
 
 	@FXML
-	private TableView<ScattererModel> scatterersTableView;
+	private TableView<ScattererModel<?>> scatterersTableView;
 	@FXML
-	private TableColumn<ScattererModel, String> scatterersTableNameColumn;
+	private TableColumn<ScattererModel<?>, String> scatterersTableNameColumn;
 //	@FXML
 //	private TableColumn<ScattererModel, String> scatterersTableScatteringPowerColumn;
 	@FXML
-	private TableColumn<ScattererModel, String> scatterersTableXColumn;
+	private TableColumn<ScattererModel<?>, String> scatterersTableXColumn;
 	@FXML
-	private TableColumn<ScattererModel, String> scatterersTableYColumn;
+	private TableColumn<ScattererModel<?>, String> scatterersTableYColumn;
 	@FXML
-	private TableColumn<ScattererModel, String> scatterersTableZColumn;
+	private TableColumn<ScattererModel<?>, String> scatterersTableZColumn;
 	@FXML
-	private TableColumn<ScattererModel, String> scatterersTableOccupColumn;
+	private TableColumn<ScattererModel<?>, String> scatterersTableOccupColumn;
 	@FXML
 	private StackPane scatterresDetailsStackPane;
 
 	@FXML
-	private TableView<DynamicMatrixRow> antiBumpDistanceTableView;
+	private TableView<DynamicMatrixRow<?>> antiBumpDistanceTableView;
 
 	@Override
 	public void init() {

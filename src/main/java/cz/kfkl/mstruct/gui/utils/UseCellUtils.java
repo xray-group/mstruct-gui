@@ -312,7 +312,7 @@ public class UseCellUtils {
 	private static <T> boolean listenToComboBoxSkin(final ComboBox<T> comboBox, final Cell<T> cell) {
 		Skin<?> skin = comboBox.getSkin();
 		if (skin != null && skin instanceof ComboBoxListViewSkin) {
-			ComboBoxListViewSkin cbSkin = (ComboBoxListViewSkin) skin;
+			ComboBoxListViewSkin<T> cbSkin = (ComboBoxListViewSkin) skin;
 			Node popupContent = cbSkin.getPopupContent();
 			if (popupContent != null && popupContent instanceof ListView) {
 				popupContent.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> cell.commitEdit(comboBox.getValue()));

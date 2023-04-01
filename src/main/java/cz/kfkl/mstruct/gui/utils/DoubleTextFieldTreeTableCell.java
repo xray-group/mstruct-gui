@@ -6,14 +6,14 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
-public class DoubleTextFieldTreeTableCell<S, T> extends TreeTableCell<S, T> {
+public class DoubleTextFieldTreeTableCell<S> extends TreeTableCell<S, String> {
 
 	/***************************************************************************
 	 * * Static cell factories * *
 	 **************************************************************************/
 
 	public static <S> Callback<TreeTableColumn<S, String>, TreeTableCell<S, String>> forTreeTableColumn() {
-		return list -> new DoubleTextFieldTreeTableCell<S, String>();
+		return list -> new DoubleTextFieldTreeTableCell<S>();
 	}
 
 	private TextField textField;
@@ -60,7 +60,7 @@ public class DoubleTextFieldTreeTableCell<S, T> extends TreeTableCell<S, T> {
 		return createTextField;
 	}
 
-	private StringConverter getConverter() {
+	private StringConverter<String> getConverter() {
 		return DoubleTextFormatter.stringDoubleConverter;
 	}
 
@@ -73,7 +73,7 @@ public class DoubleTextFieldTreeTableCell<S, T> extends TreeTableCell<S, T> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void updateItem(T item, boolean empty) {
+	public void updateItem(String item, boolean empty) {
 		super.updateItem(item, empty);
 		UseCellUtils.updateItem(this, getConverter(), null, null, textField);
 	}

@@ -9,7 +9,7 @@ import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
  * {@link FxmlFileNameProvider} and they have a parent controller (typically a
  * controller which creates the controller and the view)
  */
-public abstract class BaseController<M extends FxmlFileNameProvider, P>
+public abstract class BaseController<M extends FxmlFileNameProvider<?>, P>
 		implements SingleModelInstanceController<M>, HasAppContext, HasParentController<P> {
 
 	private AppContext appContext;

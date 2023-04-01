@@ -63,10 +63,10 @@ public class CrystalModel extends XmlLinkedModelElement implements FxmlFileNameP
 	public OptionUniqueElement displayEnantiomerOption = new OptionUniqueElement("Display Enantiomer", 0, "No", "Yes");
 
 	@XmlElementList
-	public List<ScatteringPowerModel> scatteringPowers = FXCollections.observableArrayList();
+	public List<ScatteringPowerModel<?>> scatteringPowers = FXCollections.observableArrayList();
 
 	@XmlElementList
-	public List<ScattererModel> scatterers = FXCollections.observableArrayList();
+	public List<ScattererModel<?>> scatterers = FXCollections.observableArrayList();
 
 	@XmlElementList
 	public ObservableList<AntiBumpDistanceElement> antiBumpDistances = FXCollections.observableArrayList();

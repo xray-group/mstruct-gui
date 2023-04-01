@@ -123,7 +123,8 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 //		this.nameTreeTableColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
 		this.nameTreeTableColumn.setCellValueFactory(cdf -> cdf.getValue().getValue().getParamContainerNameProperty());
 
-		this.fittedTreeTableColumn.setCellFactory(c -> new cz.kfkl.mstruct.gui.utils.CheckBoxTreeTableCell());
+		this.fittedTreeTableColumn
+				.setCellFactory(c -> new cz.kfkl.mstruct.gui.utils.CheckBoxTreeTableCell<ParamTreeNode, Boolean>());
 		this.fittedTreeTableColumn.setCellValueFactory(cdf -> cdf.getValue().getValue().getFittedProperty());
 //		this.fittedTreeTableColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>("fitted"));
 		this.fittedTreeTableColumn.setStyle("-fx-alignment: CENTER;");
@@ -137,12 +138,14 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 		// if the custom CheckBoxTreeTableCell is not good may try something like this:
 		// https://stackoverflow.com/questions/37136324/checkboxes-only-on-leafs-of-treetableview-in-javafx
 
-		this.refinedTreeTableColumn.setCellFactory(c -> new cz.kfkl.mstruct.gui.utils.CheckBoxTreeTableCell());
+		this.refinedTreeTableColumn
+				.setCellFactory(c -> new cz.kfkl.mstruct.gui.utils.CheckBoxTreeTableCell<ParamTreeNode, Boolean>());
 		this.refinedTreeTableColumn.setCellValueFactory(cdf -> cdf.getValue().getValue().getRefinedProperty());
 		this.refinedTreeTableColumn.setStyle("-fx-alignment: CENTER;");
 
 		this.limitedTreeTableColumn.setCellValueFactory(cdf -> cdf.getValue().getValue().getLimitedProperty());
-		this.limitedTreeTableColumn.setCellFactory(c -> new cz.kfkl.mstruct.gui.utils.CheckBoxTreeTableCell());
+		this.limitedTreeTableColumn
+				.setCellFactory(c -> new cz.kfkl.mstruct.gui.utils.CheckBoxTreeTableCell<ParamTreeNode, Boolean>());
 		this.limitedTreeTableColumn.setStyle("-fx-alignment: CENTER;");
 
 		this.minTreeTableColumn.setCellValueFactory(cdf -> cdf.getValue().getValue().getMinProperty());

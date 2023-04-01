@@ -13,6 +13,6 @@ public @interface XmlAttributeProperty {
 
 	public String value() default "";
 
-	public Class converter() default StringConverter.class;
+	public Class<?> converter() default StringConverter.class;
 
 }

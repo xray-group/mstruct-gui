@@ -43,7 +43,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	public FilteredList<CrystalModel> usedCrystals = new FilteredList<>(crystals);
 
 	@XmlElementList
-	public ObservableList<InstrumentalModel> instruments = FXCollections.observableArrayList();
+	public ObservableList<InstrumentalModel<?>> instruments = FXCollections.observableArrayList();
 
 	public FilterableTreeItem<ParamTreeNode> treeRoot;
 	public IntegerProperty parametersCount = new SimpleIntegerProperty(0);
@@ -125,7 +125,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	// TODO if we support multiple Instruments (not only "pattern0") this would be
 	// done differently
 	public PowderPatternElement getFirstPowderPattern() {
-		for (InstrumentalModel instModel : instruments) {
+		for (InstrumentalModel<?> instModel : instruments) {
 			if (instModel instanceof PowderPatternElement) {
 				return (PowderPatternElement) instModel;
 			}

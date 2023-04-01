@@ -400,11 +400,10 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		if (parametersTabController != null) {
 			parametersTabController.showFittedOptions(fittedParams);
 
-			doWhenPropertySet(t -> {
+			doWhenPropertySet(map -> {
 				if (optimizationController != null) {
 					LOG.debug("Job [{}] initializing param tab", this);
 
-					Map<String, ParUniqueElement> map = fittedParamsProperty.get();
 					for (Entry<String, ParUniqueElement> fittedPar : map.entrySet()) {
 						ParUniqueElement par = refinedParams.get(fittedPar.getKey());
 						if (par != null) {

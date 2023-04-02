@@ -543,7 +543,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	}
 
 	public int getRefinedParamsCount() {
-		return refinedParams.size();
+		return fittedParams.size();
 	}
 
 	public void setIterations(Integer iterations) {

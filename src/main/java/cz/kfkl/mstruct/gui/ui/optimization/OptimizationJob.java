@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParElement;
 import cz.kfkl.mstruct.gui.model.PlotlyChartModel;
 import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
@@ -101,16 +101,16 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private ObjectProperty<TableOfDoubles> datTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<TableOfDoubles> hklTableProperty = new SimpleObjectProperty<>();
 	private ObjectProperty<List<IhklParElement>> ihklTableProperty = new SimpleObjectProperty<>();
-	private ObjectProperty<Map<String, ParUniqueElement>> fittedParamsProperty = new SimpleObjectProperty<>();
+	private ObjectProperty<Map<String, ParElement>> fittedParamsProperty = new SimpleObjectProperty<>();
 	private List<ExcludeXElement> excludeRegions;
 	// set only if exclude regions were edited
 	private boolean excludeRegionsEdited;
 
 	// map of params which were existing at the time the job has started, links to
 	// the runtime model so the states are not preserved
-	private Map<String, ParUniqueElement> refinedParams;
+	private Map<String, ParElement> refinedParams;
 	// params which were refined at the time of starting the job
-	private Set<ParUniqueElement> fittedParams;
+	private Set<ParElement> fittedParams;
 
 	private Integer iterations;
 
@@ -184,7 +184,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 	public void jobUnselected() {
 		this.optimizationController = null;
-		for (ParUniqueElement par : refinedParams.values()) {
+		for (ParElement par : refinedParams.values()) {
 			par.getFittedProperty().set(false);
 			par.getFittedValueProperty().set("");
 		}
@@ -298,7 +298,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 				ObjCrystModel fittedRootModel = new ObjCrystModel();
 				fittedRootModel.bindToElement(null, root);
 
-				Map<String, ParUniqueElement> map = ParametersController.createParamsLookup(fittedRootModel);
+				Map<String, ParElement> map = ParametersController.createParamsLookup(fittedRootModel);
 				LOG.debug("XML output params loaded [{}]", map.size());
 				List<ExcludeXElement> excludeRegions = fittedRootModel.getExcludeRegions();
 
@@ -327,21 +327,21 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 	private void updateIhklParams(ObjCrystModel fittedRootModel) {
 		this.rootModel.updateIhklParams(fittedRootModel);
 
-		Map<String, ParUniqueElement> ihklUpdated = ParametersController.createParamsLookup(this.rootModel,
+		Map<String, ParElement> ihklUpdated = ParametersController.createParamsLookup(this.rootModel,
 				par -> par.isIhklParameter());
 		refinedParams.putAll(ihklUpdated);
 
-		List<ParUniqueElement> ihklParamsNotRefined = ihklUpdated.values().stream().filter(par -> !par.getRefinedProperty().get())
+		List<ParElement> ihklParamsNotRefined = ihklUpdated.values().stream().filter(par -> !par.getRefinedProperty().get())
 				.collect(Collectors.toList());
 		fittedParams.removeAll(ihklParamsNotRefined);
-		for (ParUniqueElement par : ihklParamsNotRefined) {
+		for (ParElement par : ihklParamsNotRefined) {
 			par.getFittedProperty().set(false);
 		}
 
-		List<ParUniqueElement> ihklParamsRefined = ihklUpdated.values().stream().filter(par -> par.getRefinedProperty().get())
+		List<ParElement> ihklParamsRefined = ihklUpdated.values().stream().filter(par -> par.getRefinedProperty().get())
 				.collect(Collectors.toList());
 		fittedParams.addAll(ihklParamsRefined);
-		for (ParUniqueElement par : ihklParamsRefined) {
+		for (ParElement par : ihklParamsRefined) {
 			par.getFittedProperty().set(true);
 		}
 	}
@@ -404,8 +404,8 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 				if (optimizationController != null) {
 					LOG.debug("Job [{}] initializing param tab", this);
 
-					for (Entry<String, ParUniqueElement> fittedPar : map.entrySet()) {
-						ParUniqueElement par = refinedParams.get(fittedPar.getKey());
+					for (Entry<String, ParElement> fittedPar : map.entrySet()) {
+						ParElement par = refinedParams.get(fittedPar.getKey());
 						if (par != null) {
 							par.getFittedValueProperty().set(fittedPar.getValue().getValueProperty().get());
 						} else {
@@ -528,13 +528,13 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 		jobRunner.terminate();
 	}
 
-	public void setRefinedParams(Map<String, ParUniqueElement> map) {
+	public void setRefinedParams(Map<String, ParElement> map) {
 		this.refinedParams = map;
 	}
 
 	public void markFittedParams() {
-		Set<ParUniqueElement> refinedParamKey = new LinkedHashSet<>();
-		for (Entry<String, ParUniqueElement> entry : refinedParams.entrySet()) {
+		Set<ParElement> refinedParamKey = new LinkedHashSet<>();
+		for (Entry<String, ParElement> entry : refinedParams.entrySet()) {
 			if (entry.getValue().refinedProperty.get()) {
 				refinedParamKey.add(entry.getValue());
 			}

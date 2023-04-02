@@ -6,7 +6,7 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindBooleanTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.bindDoubleTableColumn;
 import static cz.kfkl.mstruct.gui.utils.BindingUtils.doWhenFocuseLost;
 
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.instrumental.CoefficientParElement;
 import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternBackgroundChebyshev;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import javafx.beans.value.ChangeListener;
@@ -37,13 +37,13 @@ public class PowderPatternBackgroundChebyshevController
 	private Spinner<Integer> polynomialDegreeSpinner;
 
 	@FXML
-	private TableView<ParUniqueElement> coefficientsTableView;
+	private TableView<CoefficientParElement> coefficientsTableView;
 	@FXML
-	private TableColumn<ParUniqueElement, Integer> coefficientIndexTableColumn;
+	private TableColumn<CoefficientParElement, Integer> coefficientIndexTableColumn;
 	@FXML
-	private TableColumn<ParUniqueElement, String> coefficientValueTableColumn;
+	private TableColumn<CoefficientParElement, String> coefficientValueTableColumn;
 	@FXML
-	private TableColumn<ParUniqueElement, Boolean> coefficientRefinedTableColumn;
+	private TableColumn<CoefficientParElement, Boolean> coefficientRefinedTableColumn;
 
 	@Override
 	public void init() {

@@ -14,11 +14,11 @@ public class ReflectionProfilePVoigtAElement extends ReflectionProfileModel<Refl
 	private static final String FXML_FILE_NAME = "reflectionProfilePVoigtA.fxml";
 
 	@XmlUniqueElement
-	public ParUniqueElement wPar = new ParUniqueElement("W");
+	public ParUniqueElement uPar = new ParUniqueElement("U");
 	@XmlUniqueElement
 	public ParUniqueElement vPar = new ParUniqueElement("V");
 	@XmlUniqueElement
-	public ParUniqueElement uPar = new ParUniqueElement("U");
+	public ParUniqueElement wPar = new ParUniqueElement("W");
 
 	@XmlUniqueElement
 	public ParUniqueElement eta0Par = new ParUniqueElement("Eta0");

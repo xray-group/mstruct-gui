@@ -23,7 +23,7 @@ public class GeometryElement extends XmlLinkedModelElement {
 
 	@Override
 	public XmlIndentingStyle getXmlIndentingStyle() {
-		return XmlIndentingStyle.INLINE;
+		return XmlIndentingStyle.INLINE_WITH_GAP;
 	}
 
 	public Double decodeOmega() {
@@ -43,5 +43,4 @@ public class GeometryElement extends XmlLinkedModelElement {
 
 		return decoded;
 	}
-	
 }

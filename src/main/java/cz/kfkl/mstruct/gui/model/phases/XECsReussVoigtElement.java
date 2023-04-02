@@ -14,10 +14,9 @@ import javafx.collections.ObservableList;
 @XmlElementName("XECsReussVoigt")
 public class XECsReussVoigtElement extends XmlLinkedModelElement {
 
-	private static final String DEFAULT_NAME = "stressCorrAnataseXECs";
-
+	// Seems not really used, leaving not set for newly created elements
 	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty(DEFAULT_NAME);
+	public StringProperty nameProperty = new SimpleStringProperty();
 
 	@XmlElementList
 	public ObservableList<StiffnessConstantElement> stiffnessConstants = FXCollections.observableArrayList();

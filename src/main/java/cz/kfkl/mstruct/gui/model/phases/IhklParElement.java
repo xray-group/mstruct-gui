@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 import org.jdom2.Element;
 
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParElement;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
@@ -17,15 +17,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @XmlElementName("Par")
-public class IhklParElement extends ParUniqueElement {
+public class IhklParElement extends ParElement {
 
 	private static final String IHKL_PAR_NAME_PATTERN = "%s_Ihkl_%s_%s_%s";
 
 	public static final Comparator<IhklParElement> IHKL_PAR_COMPARATOR = Comparator.comparing(IhklParElement::getTwoThetaDouble,
 			nullsFirst(naturalOrder()));
-
-	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty("");
 
 	@XmlAttributeProperty("twoTheta")
 	public StringProperty twoTheta = new SimpleStringProperty("");
@@ -43,7 +40,7 @@ public class IhklParElement extends ParUniqueElement {
 	private StringProperty phaseName = new SimpleStringProperty("");
 
 	public IhklParElement() {
-		super(null);
+		super(new SimpleStringProperty(""));
 
 		minProperty.set("0");
 		maxProperty.set("100000");
@@ -58,12 +55,6 @@ public class IhklParElement extends ParUniqueElement {
 	@Override
 	public StringProperty getParamContainerNameProperty() {
 		return nameProperty;
-	}
-
-	// The getName() is called from the Parameters tree
-	@Override
-	public String getName() {
-		return nameProperty.getValue();
 	}
 
 	Double getTwoThetaDouble() {

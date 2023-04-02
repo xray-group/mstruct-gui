@@ -14,10 +14,10 @@ public class ReflectionProfileStressSimpleElement extends ReflectionProfileModel
 	private static final String FXML_FILE_NAME = "reflectionProfileStressSimple.fxml";
 
 	@XmlUniqueElement
-	public ParUniqueElement stressPar = new ParUniqueElement("Stress");
+	public XECsReussVoigtElement xECsReussVoigt = new XECsReussVoigtElement();
 
 	@XmlUniqueElement
-	public XECsReussVoigtElement xECsReussVoigt = new XECsReussVoigtElement();
+	public ParUniqueElement stressPar = new ParUniqueElement("Stress");
 
 	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(stressPar, xECsReussVoigt.rvWeightPar);
 

@@ -1,5 +1,7 @@
 package cz.kfkl.mstruct.gui.ui;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +23,7 @@ import cz.kfkl.mstruct.gui.utils.ObservableListWrapper;
 import cz.kfkl.mstruct.gui.utils.SimpleCombinedObservableList;
 import cz.kfkl.mstruct.gui.utils.tree.FilterableTreeItem;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
+import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
@@ -35,6 +38,12 @@ import javafx.collections.transformation.FilteredList;
 
 public class ObjCrystModel extends XmlLinkedModelElement implements ParamContainer {
 	private static final Logger LOG = LoggerFactory.getLogger(ObjCrystModel.class);
+
+	// Following two are used when creating a new file
+	@XmlAttributeProperty("Date")
+	public StringProperty date = new SimpleStringProperty(ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+	@XmlAttributeProperty("Revision")
+	public StringProperty revision = new SimpleStringProperty("2017002");
 
 	@XmlElementList
 	public ObservableList<CrystalModel> crystals = FXCollections.observableArrayList();

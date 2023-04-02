@@ -15,13 +15,12 @@ import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInterpolatedCo
 import cz.kfkl.mstruct.gui.utils.BindingUtils;
 import cz.kfkl.mstruct.gui.utils.BooleanZeroOneStringFormatter;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
+import cz.kfkl.mstruct.gui.xml.XmlUtils;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.TableView;
 
 @XmlElementName("PowderPatternBackground")
 public class PowderPatternBackgroundInterpolated
@@ -29,20 +28,14 @@ public class PowderPatternBackgroundInterpolated
 
 	private static final String FXML_FILE_NAME = "powderPatternBackgroundInterpolated.fxml";
 
-	private static final String NEW_LINE = "\n";
-	private static final String INDENT = "  ";
-
-	@XmlUniqueElement(isSibling = true)
-	public PowderPatternComponentElement powderPatternComponent = new PowderPatternComponentElement(nameProperty);
-
 	@XmlUniqueElement
 	public OptionUniqueElement interpolationModelOption = new OptionUniqueElement("Interpolation Model", 1, "Linear", "Spline");
 
-	@FXML
-	private TableView<TableOfDoubles.RowIndex> xIntensityListTableView;
-
 	@XmlUniqueElement("XIntensityList")
 	public SingleValueUniqueElement xIntensityListElement = new SingleValueUniqueElement("");
+
+	@XmlUniqueElement(isSibling = true)
+	public PowderPatternComponentElement powderPatternComponent = new PowderPatternComponentElement(nameProperty);
 
 	public ObservableList<XIntensityListItem> xIntensityList = FXCollections.observableArrayList();
 
@@ -89,8 +82,7 @@ public class PowderPatternBackgroundInterpolated
 		if (!list.isEmpty()) {
 
 			for (XIntensityListItem ri : list) {
-				sb.append(NEW_LINE);
-				indent(sb, this.xmlLevel + 1);
+				sb.append(XmlUtils.newLineAndIndentString(this.xmlLevel + 2));
 				sb.append(JvStringUtils.toStringNoDotZero(ri.x.getValue()));
 				sb.append(' ');
 				sb.append(JvStringUtils.toStringNoDotZero(ri.y.getValue()));
@@ -98,17 +90,10 @@ public class PowderPatternBackgroundInterpolated
 				sb.append(BooleanZeroOneStringFormatter.formatString(ri.refinedProperty.get()));
 			}
 
-			sb.append(NEW_LINE);
-			indent(sb, this.xmlLevel);
+			sb.append(XmlUtils.newLineAndIndentString(this.xmlLevel + 1));
 		}
 
 		return sb.toString();
-	}
-
-	private void indent(StringBuilder sb, int level) {
-		for (int i = 0; i < level; i++) {
-			sb.append(INDENT);
-		}
 	}
 
 	@Override

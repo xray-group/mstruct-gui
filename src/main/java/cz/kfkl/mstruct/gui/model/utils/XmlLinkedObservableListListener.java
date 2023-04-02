@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.jdom2.Content;
 import org.jdom2.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +17,15 @@ public class XmlLinkedObservableListListener<T extends XmlLinkedModelElement> im
 	private static final Logger LOG = LoggerFactory.getLogger(XmlLinkedObservableListListener.class);
 
 	private XmlLinkedModelElement parrentModelElement;
-	private XmlLinkedModelElement previousModelElement;
+	private Content previousXmlEl;
 
 	public XmlLinkedObservableListListener(XmlLinkedModelElement parrentModelElement) {
 		this.parrentModelElement = parrentModelElement;
 	}
 
-	public XmlLinkedObservableListListener(XmlLinkedModelElement parrentModelElement,
-			XmlLinkedModelElement previousModelElement) {
+	public XmlLinkedObservableListListener(XmlLinkedModelElement parrentModelElement, Content previousXmlElement) {
 		this(parrentModelElement);
-		this.previousModelElement = previousModelElement;
+		this.previousXmlEl = previousXmlElement;
 	}
 
 	@Override
@@ -59,17 +59,19 @@ public class XmlLinkedObservableListListener<T extends XmlLinkedModelElement> im
 				}
 
 				if (c.wasAdded()) {
-					XmlLinkedModelElement addAfterModelEl = null;
+
+					Content addAfterXmlEl = null;
 					int fromIndex = c.getFrom();
 					if (fromIndex > 0) {
-						addAfterModelEl = c.getList().get(fromIndex - 1);
+						XmlLinkedModelElement previousItemModelEl = c.getList().get(fromIndex - 1);
+						addAfterXmlEl = previousItemModelEl.getLastOwnedXmlElement();
 					} else {
-						addAfterModelEl = previousModelElement;
+						addAfterXmlEl = previousXmlEl;
 					}
 
 					for (T addedItem : c.getAddedSubList()) {
-						parrentModelElement.bindAndAddAfter(addedItem, addAfterModelEl);
-						addAfterModelEl = addedItem;
+						parrentModelElement.bindAndAddAfter(addedItem, addAfterXmlEl);
+						addAfterXmlEl = addedItem.getLastOwnedXmlElement();
 					}
 				}
 			}

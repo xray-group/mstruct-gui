@@ -7,15 +7,20 @@ import org.jdom2.Element;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
+import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
+import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElementKey;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @XmlElementName("Option")
-public class OptionUniqueElement extends UniqueElement {
+public class OptionUniqueElement extends XmlLinkedModelElement {
+
+	@XmlUniqueElementKey("Name")
+	public String name;
 
 	@XmlAttributeProperty("Choice")
 	public IntegerProperty choiceProperty = new SimpleIntegerProperty(0);
@@ -27,10 +32,13 @@ public class OptionUniqueElement extends UniqueElement {
 
 	public int selectedOptionIndex;
 
-	// <Option Name="Display Enantiomer" Choice="0" ChoiceName="No"/>
+	@Override
+	public XmlIndentingStyle getXmlIndentingStyle() {
+		return XmlIndentingStyle.INLINE;
+	}
 
 	public OptionUniqueElement(String name, int selectedOptionIndex, OptionChoice... optionChoices) {
-		super(name);
+		this.name = name;
 		this.optionChoices = optionChoices;
 		this.selectedOptionIndex = selectedOptionIndex;
 
@@ -89,6 +97,10 @@ public class OptionUniqueElement extends UniqueElement {
 	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
 		super.bindToElement(parentModelElement, wrappedElement);
 		setOption(choiceProperty.get());
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public IntegerProperty getChoiceProperty() {

@@ -1,34 +1,18 @@
 package cz.kfkl.mstruct.gui.model.instrumental;
 
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
-import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
+import cz.kfkl.mstruct.gui.model.ParElement;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 @XmlElementName("Par")
-public class CoefficientParElement extends ParUniqueElement {
+public class CoefficientParElement extends ParElement {
 
 	public static final String BACKGROUND_COEF_NAME_PREFIX = "Background_Coef_";
-
-	@XmlAttributeProperty("Name")
-	public StringProperty nameProperty = new SimpleStringProperty(BACKGROUND_COEF_NAME_PREFIX);
 
 	private int index;
 
 	public CoefficientParElement() {
-		super(null);
-	}
-
-	@Override
-	public StringProperty getParamContainerNameProperty() {
-		return nameProperty;
-	}
-
-	// The getName() is called from the Parameters tree
-	@Override
-	public String getName() {
-		return nameProperty.getValue();
+		super(new SimpleStringProperty(BACKGROUND_COEF_NAME_PREFIX));
 	}
 
 	public int getIndex() {

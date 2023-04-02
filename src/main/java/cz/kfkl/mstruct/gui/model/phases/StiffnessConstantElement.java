@@ -1,6 +1,6 @@
 package cz.kfkl.mstruct.gui.model.phases;
 
-import cz.kfkl.mstruct.gui.model.UniqueElement;
+import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementValueProperty;
@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @XmlElementName("StiffnessConstant")
-public class StiffnessConstantElement extends UniqueElement implements Comparable<StiffnessConstantElement> {
+public class StiffnessConstantElement extends XmlLinkedModelElement implements Comparable<StiffnessConstantElement> {
 
 	public static final String C_PREFIX = "C";
 
@@ -19,22 +19,14 @@ public class StiffnessConstantElement extends UniqueElement implements Comparabl
 	public StringProperty valueProperty = new SimpleStringProperty("0");
 
 	public StiffnessConstantElement() {
-		super(null);
 	}
 
 	public StiffnessConstantElement(String name) {
-		super(name);
+		nameProperty.set(name);
 	}
 
-	// The getName() is called from the Parameters tree
-	@Override
 	public String getName() {
-		return nameProperty.getValue();
-	}
-
-	@Override
-	public void setName(String name) {
-		nameProperty.setValue(name);
+		return nameProperty.get();
 	}
 
 	public String getValue() {

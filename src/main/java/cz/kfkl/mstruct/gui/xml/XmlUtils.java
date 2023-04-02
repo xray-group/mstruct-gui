@@ -15,9 +15,12 @@ import com.google.common.base.Strings;
 
 public class XmlUtils {
 
-	public static void addNewElementAfter(Element parent, Element newElement, Element addAfterElement, int level,
+	public static final String NEW_LINE = "\n";
+	private static final String INDENT = "  ";
+
+	public static void addNewElementAfter(Element parent, Element newElement, Content addAfterContent, int level,
 			XmlIndentingStyle indentStyle) {
-		int indexOf = addAfterElement == null ? -1 : parent.indexOf(addAfterElement);
+		int indexOf = addAfterContent == null ? -1 : parent.indexOf(addAfterContent);
 
 		List<Content> newElementIndented = new ArrayList<>();
 		if (indentStyle != null) {
@@ -31,17 +34,16 @@ public class XmlUtils {
 		newElementIndented.add(createIndentText(level));
 		newElementIndented.add(newElement);
 
-		addContentToIndex(parent, newElementIndented, indexOf);
+		addContentAfterIndex(parent, newElementIndented, indexOf);
 	}
 
-	public static void addContentAfter(Element parent, List<Content> content, Element addAfterElement, int level,
-			XmlIndentingStyle indentStyle) {
+	public static void addContentAfter(Element parent, List<Content> content, Content addAfterElement) {
 		int indexOf = addAfterElement == null ? -1 : parent.indexOf(addAfterElement);
 
-		addContentToIndex(parent, content, indexOf);
+		addContentAfterIndex(parent, content, indexOf);
 	}
 
-	private static void addContentToIndex(Element parent, List<Content> content, int indexOf) {
+	public static void addContentAfterIndex(Element parent, List<Content> content, int indexOf) {
 		int contentSize = parent.getContentSize();
 		if (indexOf >= 0 && indexOf + 1 < contentSize) {
 			parent.addContent(indexOf + 1, content);
@@ -50,13 +52,32 @@ public class XmlUtils {
 		}
 	}
 
+	public static void addContentBefore(Element parent, List<Content> content, Content addBeforeEl) {
+		int indexOf = addBeforeEl == null ? -1 : parent.indexOf(addBeforeEl);
+
+		addContentAfterIndex(parent, content, indexOf);
+	}
+
+	public static void addContentToIndex(Element parent, List<Content> content, int index) {
+		int contentSize = parent.getContentSize();
+		if (index >= 0 && index < contentSize) {
+			parent.addContent(index, content);
+		} else {
+			parent.addContent(content);
+		}
+	}
+
 	public static Text createIndentText(int level) {
-		Text indent = new Text("\n" + indentString(level));
+		Text indent = new Text(newLineAndIndentString(level));
 		return indent;
 	}
 
+	public static String newLineAndIndentString(int level) {
+		return NEW_LINE + Strings.repeat(INDENT, level);
+	}
+
 	public static String indentString(int level) {
-		return Strings.repeat("  ", level);
+		return Strings.repeat(INDENT, level);
 	}
 
 	public static void removeWithIndent(Element parent, Element elementToRemove) {

@@ -1,6 +1,7 @@
 package cz.kfkl.mstruct.gui.model.utils;
 
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotBlank;
+import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotEmpty;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertNotNull;
 import static cz.kfkl.mstruct.gui.utils.validation.Validator.assertTrue;
 
@@ -20,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.jdom2.Content;
 import org.jdom2.Element;
+import org.jdom2.Text;
 import org.jdom2.filter.Filters;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
@@ -81,8 +83,7 @@ public class XmlLinkedModelElement {
 		this.xmlElement = wrappedElement;
 		try {
 
-			Element lastElement = null;
-			XmlLinkedModelElement previousModelElement = null;
+			Content lastElement = null;
 			for (Field field : getAllFields(this.getClass())) {
 				XmlAttributeProperty propAnnotation = field.getAnnotation(XmlAttributeProperty.class);
 				if (propAnnotation != null) {
@@ -134,7 +135,6 @@ public class XmlLinkedModelElement {
 						fieldValueAsXmlLinked.bindToElement(this, childEl);
 
 						lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
-						previousModelElement = fieldValueAsXmlLinked;
 					}
 
 				}
@@ -147,14 +147,18 @@ public class XmlLinkedModelElement {
 
 					Map<String, Class<?>> mappedClasses = findMappedClasses(field, genericTypeClass);
 
-					List<Object> list = getFieldValueAsList(field);
-					XmlLinkedModelElement elementBeforList = previousModelElement;
+					Content previousFieldLastXmlEl = lastElement;
+					Element firstListElement = null;
 
+					List<Object> list = getFieldValueAsList(field);
 					for (Element child : xmlElement.getChildren()) {
 						String elementName = child.getName();
 						Class<?> mappedClass = mappedClasses.get(elementName);
 						if (mappedClasses.get(elementName) != null) {
 							lastElement = child;
+							if (firstListElement == null) {
+								firstListElement = child;
+							}
 							Object newInstance = null;
 							try {
 								Constructor<?> noArgsConstructor = mappedClass.getConstructor();
@@ -173,14 +177,26 @@ public class XmlLinkedModelElement {
 								fieldValueAsXmlLinked.bindToElement(this, child);
 
 								lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
-								previousModelElement = fieldValueAsXmlLinked;
 							}
 						}
 
 					}
 
 					if (list instanceof ObservableList) {
-						XmlLinkedObservableListListener listener = new XmlLinkedObservableListListener(this, elementBeforList);
+						Content marker = new Text("");
+						if (firstListElement == null) {
+							XmlUtils.addContentAfter(this.xmlElement, List.of(marker), previousFieldLastXmlEl);
+							lastElement = marker;
+						} else {
+							List<Content> firstElContent = XmlUtils.elementWithPreceedingBallast(this.xmlElement,
+									firstListElement);
+							assertNotEmpty(firstElContent, "The element [{}] should be a child of [{}]", firstListElement,
+									this.xmlElement);
+							firstElContent.get(0);
+
+							XmlUtils.addContentBefore(this.xmlElement, List.of(marker), firstElContent.get(0));
+						}
+						XmlLinkedObservableListListener listener = new XmlLinkedObservableListListener(this, marker);
 						((ObservableList) list).addListener(listener);
 					}
 				}
@@ -235,7 +251,7 @@ public class XmlLinkedModelElement {
 		return genericTypeClass;
 	}
 
-	private Element findOrCreateUniqueElement(String elementName, Map<String, String> keyAtributeValues, Element lastElement,
+	private Element findOrCreateUniqueElement(String elementName, Map<String, String> keyAtributeValues, Content lastXmlContent,
 			XmlIndentingStyle indentStyle) {
 		String uniqueElementSearchCondition = createUniqueElementSearchCondition(elementName, keyAtributeValues);
 		XPathFactory xpf = XPathFactory.instance();
@@ -250,10 +266,10 @@ public class XmlLinkedModelElement {
 
 		if (uniqueEl == null) {
 			uniqueEl = new Element(elementName);
-			for (Entry<String, String> attValueEntry : keyAtributeValues.entrySet()) {
-				uniqueEl.setAttribute(attValueEntry.getKey(), attValueEntry.getValue());
-			}
-			addAfter(xmlElement, uniqueEl, lastElement, indentStyle);
+//			for (Entry<String, String> attValueEntry : keyAtributeValues.entrySet()) {
+//				uniqueEl.setAttribute(attValueEntry.getKey(), attValueEntry.getValue());
+//			}
+			addAfter(xmlElement, uniqueEl, lastXmlContent, indentStyle);
 		}
 		return uniqueEl;
 	}
@@ -397,6 +413,8 @@ public class XmlLinkedModelElement {
 			XmlAttributeUpdater<String> updater = new XmlAttributeUpdater<>(xmlElement, attributeName);
 			StringProperty fieldValueSp = (StringProperty) fieldValue;
 			fieldValueSp.addListener(updater);
+		} else if (fieldValue instanceof String) {
+			xmlElement.setAttribute(attributeName, (String) fieldValue);
 		}
 	}
 
@@ -415,7 +433,7 @@ public class XmlLinkedModelElement {
 			if (fieldValue instanceof StringProperty) {
 
 			} else if (fieldValue instanceof DoubleProperty) {
-				// TODO: mayb need special converter ? (Number d) ->
+				// TODO: maybe need special converter ? (Number d) ->
 				// Double.toString(d.doubleValue())));
 				converterInstance = new NumberStringConverter();
 			} else if (fieldValue instanceof IntegerProperty) {
@@ -475,22 +493,20 @@ public class XmlLinkedModelElement {
 		return attributeName;
 	}
 
-	public <T extends XmlLinkedModelElement> void bindAndAddAfter(T addedItem, XmlLinkedModelElement addAfterModelEl) {
-		Element newElement = null;
-
-		Element addAfterElement = addAfterModelEl == null ? null : addAfterModelEl.getLastOwnedXmlElement();
+	public <T extends XmlLinkedModelElement> void bindAndAddAfter(T addedItem, Content addAfterEl) {
 		XmlIndentingStyle indentStyle = addedItem.getXmlIndentingStyle();
 
+		Element newElement = null;
 		// the "content" is set for elements imported from another file and will contain
 		// the xml element and the "Preceding Ballast"
 		List<Content> content = addedItem.getImportedXmlContent();
 		if (content == null) {
 			newElement = new Element(XmlLinkedModelElement.decideElementName(addedItem.getClass()));
-			addAfter(xmlElement, newElement, addAfterElement, indentStyle);
+			addAfter(xmlElement, newElement, addAfterEl, indentStyle);
 		} else {
 			// if the addedItem is imported from another XML the getXmlElement will be set
 			newElement = addedItem.getXmlElement();
-			XmlUtils.addContentAfter(xmlElement, content, addAfterElement, xmlLevel + 1, indentStyle);
+			XmlUtils.addContentAfter(xmlElement, content, addAfterEl);
 		}
 
 		addedItem.bindToElement(this, newElement);
@@ -500,9 +516,9 @@ public class XmlLinkedModelElement {
 		return XmlIndentingStyle.MULTILINE;
 	}
 
-	public <T extends XmlLinkedModelElement> void addAfter(Element parentElement, Element newElement, Element addAfterElement,
+	public <T extends XmlLinkedModelElement> void addAfter(Element parentEl, Element newEl, Content addAfterContent,
 			XmlIndentingStyle indentStyle) {
-		XmlUtils.addNewElementAfter(parentElement, newElement, addAfterElement, xmlLevel + 1, indentStyle);
+		XmlUtils.addNewElementAfter(parentEl, newEl, addAfterContent, xmlLevel + 1, indentStyle);
 	}
 
 	public int getXmlLevel() {

@@ -17,7 +17,7 @@ import java.util.Map;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.model.OptimizaitonModel;
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParElement;
 import cz.kfkl.mstruct.gui.model.PlotlyChartModel;
 import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
@@ -345,7 +345,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 		job.startJob();
 	}
 
-	private Map<String, ParUniqueElement> mapAllRefineableParameters() {
+	private Map<String, ParElement> mapAllRefineableParameters() {
 		ObjCrystModel rootModel = getModelInstance().getRootModel();
 		return ParametersController.createParamsLookup(rootModel);
 	}

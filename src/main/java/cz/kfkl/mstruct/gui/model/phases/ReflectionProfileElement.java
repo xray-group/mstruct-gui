@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 @XmlElementName("ReflectionProfile")
 public class ReflectionProfileElement extends XmlLinkedModelElement implements ParamContainer {
 
+	// Seems it is not really used, leaving empty for new elements
 	@XmlAttributeProperty("Name")
 	public StringProperty nameProperty = new SimpleStringProperty();
 

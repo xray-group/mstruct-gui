@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.escape.Escaper;
 import com.google.common.escape.Escapers;
 
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParElement;
 import cz.kfkl.mstruct.gui.model.ParamContainer;
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.ParametersModel;
@@ -199,7 +199,7 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 		parametersTreeTableView.refresh();
 	}
 
-	public void showFittedOptions(Set<ParUniqueElement> fittedParams) {
+	public void showFittedOptions(Set<ParElement> fittedParams) {
 
 		fittedTreeTableColumn.setVisible(true);
 		fittedValueTreeTableColumn.setVisible(true);
@@ -209,7 +209,7 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 		paramFilterFittedCheckBox.setIndeterminate(false);
 		paramFilterFittedCheckBox.setSelected(true);
 
-		for (ParUniqueElement par : fittedParams) {
+		for (ParElement par : fittedParams) {
 			par.getFittedProperty().set(true);
 		}
 	}
@@ -224,14 +224,13 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 	/**
 	 * Similar to the {@link #initParamsTree()}
 	 */
-	public static Map<String, ParUniqueElement> createParamsLookup(ObjCrystModel rootModel) {
+	public static Map<String, ParElement> createParamsLookup(ObjCrystModel rootModel) {
 		return createParamsLookup(rootModel, null);
 	}
 
-	public static Map<String, ParUniqueElement> createParamsLookup(ObjCrystModel rootModel,
-			Predicate<ParUniqueElement> filterPredicate) {
+	public static Map<String, ParElement> createParamsLookup(ObjCrystModel rootModel, Predicate<ParElement> filterPredicate) {
 
-		Map<String, ParUniqueElement> map = new LinkedHashMap<>();
+		Map<String, ParElement> map = new LinkedHashMap<>();
 
 //		FilterableTreeItem<RefinableParameter> treeRoot = addContainer(null, rootModel.formatParamContainerName());
 		String rootContainerKey = "";
@@ -253,15 +252,15 @@ public class ParametersController extends BaseController<ParametersModel, MStruc
 			if (children != null) {
 				for (ParamTreeNode node : children) {
 					if (node.isParameter()) {
-						if (node instanceof ParUniqueElement) {
-							ParUniqueElement par = (ParUniqueElement) node;
+						if (node instanceof ParElement) {
+							ParElement par = (ParElement) node;
 							String paramKey = formatKey(parentKey, par.getName());
 							if (filterPredicate == null || filterPredicate.test(par)) {
 								map.put(paramKey, par);
 								LOG.trace("Adding paramKey [{}], param [{}]", paramKey, par);
 							}
 						} else {
-							LOG.warn("The node [{}] should be of type ParUniqueElement", node);
+							LOG.warn("The node [{}] should be of type ParElement", node);
 						}
 					} else {
 						ParamContainer child = (ParamContainer) node;

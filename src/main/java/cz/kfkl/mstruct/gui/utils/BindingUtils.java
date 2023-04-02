@@ -16,7 +16,7 @@ import cz.kfkl.mstruct.gui.model.FxmlFileNameProvider;
 import cz.kfkl.mstruct.gui.model.HasUniqueName;
 import cz.kfkl.mstruct.gui.model.OptionChoice;
 import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
-import cz.kfkl.mstruct.gui.model.ParUniqueElement;
+import cz.kfkl.mstruct.gui.model.ParElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.HasParentController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiMain;
@@ -178,7 +178,7 @@ public final class BindingUtils {
 		textField.setTextFormatter(new DoubleTextFormatter());
 	}
 
-	public static void bindAndBuildParFieldsFullLarge(HBox bParContainer, ParUniqueElement par) {
+	public static void bindAndBuildParFieldsFullLarge(HBox bParContainer, ParElement par) {
 		bParContainer.getChildren().addAll(new Label(par.getName() + ":"));
 
 		addParValue(bParContainer, par);
@@ -186,19 +186,19 @@ public final class BindingUtils {
 		addParMinMax(bParContainer, par);
 	}
 
-	public static void bindAndBuildParFieldsNoName(HBox bParContainer, ParUniqueElement par) {
+	public static void bindAndBuildParFieldsNoName(HBox bParContainer, ParElement par) {
 		addParValue(bParContainer, par);
 		addParRefinedLimited(bParContainer, par);
 		addParMinMax(bParContainer, par);
 	}
 
-	public static void bindAndBuildParFieldsNoNameShort(HBox bParContainer, ParUniqueElement par) {
+	public static void bindAndBuildParFieldsNoNameShort(HBox bParContainer, ParElement par) {
 		addParValue(bParContainer, par);
 		addParRefinedLimitedShort(bParContainer, par);
 		addParMinMax(bParContainer, par);
 	}
 
-	private static void addParValue(HBox bParContainer, ParUniqueElement par) {
+	private static void addParValue(HBox bParContainer, ParElement par) {
 		TextField parValue = new TextField();
 		parValue.setMinWidth(VALUE_FIELD_MIN_WIDTH);
 		doubleTextField(parValue);
@@ -207,7 +207,7 @@ public final class BindingUtils {
 		bParContainer.getChildren().addAll(parValue);
 	}
 
-	private static void addParRefinedLimited(HBox bParContainer, ParUniqueElement par) {
+	private static void addParRefinedLimited(HBox bParContainer, ParElement par) {
 		CheckBox refinedCb = new CheckBox("Refined");
 		refinedCb.selectedProperty().bindBidirectional(par.refinedProperty);
 		setHBoxMarginLeft(refinedCb);
@@ -225,7 +225,7 @@ public final class BindingUtils {
 		HBox.setMargin(refinedCb, new Insets(0.0d, 0.0d, 0.0d, 6.0d));
 	}
 
-	private static void addParRefinedLimitedShort(HBox bParContainer, ParUniqueElement par) {
+	private static void addParRefinedLimitedShort(HBox bParContainer, ParElement par) {
 		CheckBox refinedCb = new CheckBox("R");
 		refinedCb.selectedProperty().bindBidirectional(par.refinedProperty);
 //		bindlBooleanPropertyToInteger(refinedCb.selectedProperty(), par.refinedProperty);
@@ -237,7 +237,7 @@ public final class BindingUtils {
 		bParContainer.getChildren().addAll(refinedCb, limitedCb);
 	}
 
-	private static void addParMinMax(HBox bParContainer, ParUniqueElement par) {
+	private static void addParMinMax(HBox bParContainer, ParElement par) {
 		Label minLabel = new Label("Min:");
 		TextField min = new TextField();
 		doubleTextField(min);

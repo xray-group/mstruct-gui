@@ -36,6 +36,7 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	public StringProperty paramContainerName = new SimpleStringProperty();
 
 	public StringProperty userNameProperty = new SimpleStringProperty();
+	public StringProperty phaseShortName = new SimpleStringProperty();
 
 	@XmlAttributeProperty("Crystal")
 	public StringProperty crystalProperty = new SimpleStringProperty("");
@@ -49,15 +50,15 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	@XmlUniqueElement
 	public ParUniqueElement globalBisoPar = new ParUniqueElement("globalBiso");
 
-	@XmlUniqueElement(isSibling = true)
-	public PowderPatternComponentWithScaleParElement powderPatternComponent = new PowderPatternComponentWithScaleParElement(
-			nameProperty);
-
 	@XmlUniqueElement
 	public AbsorptionCorrElement absorptionCorrElement = new AbsorptionCorrElement();
 
 	@XmlUniqueElement
 	public ArbitraryTextureElement arbitraryTextureElement = new ArbitraryTextureElement();
+
+	@XmlUniqueElement(isSibling = true)
+	public PowderPatternComponentWithScaleParElement powderPatternComponent = new PowderPatternComponentWithScaleParElement(
+			nameProperty);
 
 	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(globalBisoPar,
 			powderPatternComponent.scalePar, reflectionProfile, arbitraryTextureElement);
@@ -83,8 +84,8 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 			userNameProperty.set(xmlValue);
 		}
 
-		nameProperty.bind(Bindings.concat(DIFF_DATA_PREFIX,
-				Bindings.when(userNameProperty.isEmpty()).then(crystalProperty).otherwise(userNameProperty)));
+		phaseShortName.bind(Bindings.when(userNameProperty.isEmpty()).then(crystalProperty).otherwise(userNameProperty));
+		nameProperty.bind(Bindings.concat(DIFF_DATA_PREFIX, phaseShortName));
 
 		CrystalModel linkedCrystal = rootModel.getCrystal(crystalProperty.get());
 		if (linkedCrystal != null) {
@@ -113,6 +114,11 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 		}
 
 		return nameSuffix;
+	}
+
+	@Override
+	public Element getLastOwnedXmlElement() {
+		return powderPatternComponent.getLastOwnedXmlElement();
 	}
 
 	@Override

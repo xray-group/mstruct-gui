@@ -10,12 +10,15 @@ import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.core.HasAppContext;
+import cz.kfkl.mstruct.gui.utils.validation.ConfirmationUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MStructGuiMain extends Application {
 
@@ -46,6 +49,16 @@ public class MStructGuiMain extends Application {
 
 			primaryStage.setScene(scene);
 			LOG.trace("scene set");
+
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					ConfirmationUtils.confirmAction(
+							"Are you sure you want to exit the application? All not saved changes will be lost.",
+							() -> System.exit(0));
+					event.consume();
+				}
+			});
 
 			primaryStage.show();
 			LOG.trace("show finished");

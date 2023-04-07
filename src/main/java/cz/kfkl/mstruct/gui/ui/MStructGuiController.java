@@ -49,6 +49,7 @@ import cz.kfkl.mstruct.gui.ui.crystals.ImportedCrystalsController;
 import cz.kfkl.mstruct.gui.ui.job.JobStatus;
 import cz.kfkl.mstruct.gui.ui.optimization.OptimizationController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
+import cz.kfkl.mstruct.gui.utils.validation.ConfirmationUtils;
 import cz.kfkl.mstruct.gui.utils.validation.PopupErrorException;
 import cz.kfkl.mstruct.gui.utils.validation.Validator;
 import cz.kfkl.mstruct.gui.xml.XmlUtils;
@@ -221,16 +222,15 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	void newFile(ActionEvent event) {
-		// TODO dialog
-		try {
-			loadFile(createNewXmlDocument());
+		ConfirmationUtils.confirmAction("Starting a new file will discard all not saved changes. Do you want to continue?",
+				() -> doNewFile());
+	}
 
-			setBottomLabelText("New file created");
-			this.openedFileProperty.set(null);
-		} catch (Exception e) {
-			throw new PopupErrorException(e, "An unexpected error when creating a new file.");
-		}
+	private void doNewFile() {
+		loadFile(createNewXmlDocument());
 
+		setBottomLabelText("New file created");
+		this.openedFileProperty.set(null);
 	}
 
 	private Document createNewXmlDocument() {
@@ -248,7 +248,11 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	void openFile(ActionEvent event) throws FileNotFoundException, JDOMException, IOException {
-		// TODO dialog ??
+		ConfirmationUtils.confirmAction("Openning a file will discard all not saved changes. Do you want to continue?",
+				() -> doOpenFile());
+	}
+
+	private void doOpenFile() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open MStruct ObjCryst XML File");
 		configureExtensionFilter(fileChooser, MSTRUCT_XML_EXTENSION_FILTER);
@@ -279,8 +283,8 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	void exitApplication(ActionEvent event) {
-		// TODO dialog
-		System.exit(0);
+		ConfirmationUtils.confirmAction("Are you sure you want to exit the application? All not saved changes will be lost.",
+				() -> System.exit(0));
 	}
 
 	private void processSelectedFile(File selectedFile) {

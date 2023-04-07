@@ -25,15 +25,13 @@ import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternBackgroundType;
 import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
 import cz.kfkl.mstruct.gui.ui.BaseController;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
+import cz.kfkl.mstruct.gui.utils.validation.ConfirmationUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -254,14 +252,8 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	public void onPowderPatternComponentsRemoveButton() {
 		PowderPatternBackgroundModel<?> selectedItem = powderPatternComponentsListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
-			Alert alert = new Alert(AlertType.CONFIRMATION, null);
-			alert.setHeaderText("Are you sure you want to remove the \"" + selectedItem.toString() + "\" background?");
-			alert.showAndWait();
-			ButtonType result = alert.getResult();
-			if (result == ButtonType.OK) {
-				powderPatternComponentsListView.getItems().remove(selectedItem);
-			}
-
+			ConfirmationUtils.confirmAction("Are you sure you want to remove the \"" + selectedItem.toString() + "\" background?",
+					() -> powderPatternComponentsListView.getItems().remove(selectedItem));
 		}
 	}
 

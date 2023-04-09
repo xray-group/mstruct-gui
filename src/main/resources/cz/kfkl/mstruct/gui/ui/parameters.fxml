@@ -15,6 +15,9 @@
 
 <BorderPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/16"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.kfkl.mstruct.gui.ui.ParametersController">
+	<padding>
+		<Insets top="4.0"/>
+	</padding>
 	<left>
 		<VBox prefWidth="170.0" BorderPane.alignment="CENTER">
 			<children>

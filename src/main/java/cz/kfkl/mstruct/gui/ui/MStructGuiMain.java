@@ -33,7 +33,10 @@ public class MStructGuiMain extends Application {
 
 			context.init();
 
-			Scene scene = new Scene(loadFXML("mStructGui.fxml"), 880, 740);
+//			Scene scene = new Scene(loadFXML("mStructGui.fxml"), 880, 740);
+			Scene scene = new Scene(loadFXML("mStructGui_testNoMenu.fxml"), 880, 740);
+//			Scene scene = new Scene(loadFXML("mStructGui_testNoMenu_withIcons.fxml"), 880, 740);
+
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setTitle(M_STRUCT_UI_TITLE + " - starting");
 

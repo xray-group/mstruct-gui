@@ -61,3 +61,41 @@
 }
 
  */
+ 
+/* Customization of Main Tabs */
+
+.tab-pane.main-tabs  {
+    -fx-tab-min-width: 100px;
+    -fx-tab-min-height: 28px;
+}
+
+.tab-pane.main-tabs.with-icons  {
+    -fx-tab-min-width: 115px;
+    -fx-tab-min-height: 28px;
+}
+
+.tab.main-tabs {
+    -fx-background-insets: 0 0 0 1,0,0;
+}
+
+.tab-pane.main-tabs > .tab-header-area .tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-font-size: 12.5px;
+    -fx-padding: 0 8 0 8;   
+}
+
+.tab-pane.main-tabs > .tab-header-area .tab:selected .tab-label { 
+    -fx-font-weight: bold; 
+}
+
+.tab-pane:top.main-tabs > .tab-header-area {
+    -fx-background-insets: 0 5,5,5 20 0;
+    -fx-padding: 0 2 0 33;
+}
+
+/* hides the transversing focus (blue frame) */
+.tab-pane:focused .tab-header-area .headers-region .tab:selected .focus-indicator {
+ 	-fx-border-width: 0;
+	-fx-border-insets: 0 0 0 0;
+	-fx-border-radius: 0;
+}

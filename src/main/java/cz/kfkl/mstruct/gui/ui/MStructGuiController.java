@@ -65,11 +65,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -83,6 +85,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Window;
 
 public class MStructGuiController implements HasAppContext {
 
@@ -118,6 +121,8 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	private TabPane tabPane;
+	@FXML
+	private Button openFileMenuButton;
 
 	@FXML
 	private Tab tabCrystals;
@@ -776,6 +781,16 @@ public class MStructGuiController implements HasAppContext {
 	@Override
 	public void setAppContext(AppContext context) {
 		this.appContext = context;
+	}
+
+	@FXML
+	public void openFileMenu() {
+		ContextMenu cm = openFileMenuButton.getContextMenu();
+
+		Scene scene = tabPane.getScene();
+		Window topWindow = scene.getWindow();
+
+		cm.show(topWindow, topWindow.getX() + scene.getX(), topWindow.getY() + scene.getY() + openFileMenuButton.getHeight());
 	}
 
 }

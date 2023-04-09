@@ -227,8 +227,8 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	void newFile(ActionEvent event) {
-		ConfirmationUtils.confirmAction("Starting a new file will discard all not saved changes. Do you want to continue?",
-				() -> doNewFile());
+		ConfirmationUtils.confirmAction(appContext.confirmFileClose(),
+				"Starting a new file will discard all not saved changes. Do you want to continue?", () -> doNewFile());
 	}
 
 	private void doNewFile() {
@@ -253,8 +253,8 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	void openFile(ActionEvent event) throws FileNotFoundException, JDOMException, IOException {
-		ConfirmationUtils.confirmAction("Openning a file will discard all not saved changes. Do you want to continue?",
-				() -> doOpenFile());
+		ConfirmationUtils.confirmAction(appContext.confirmFileClose(),
+				"Openning a file will discard all not saved changes. Do you want to continue?", () -> doOpenFile());
 	}
 
 	private void doOpenFile() {
@@ -288,8 +288,8 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	void exitApplication(ActionEvent event) {
-		ConfirmationUtils.confirmAction("Are you sure you want to exit the application? All not saved changes will be lost.",
-				() -> System.exit(0));
+		ConfirmationUtils.confirmAction(appContext.confirmFileClose(),
+				"Are you sure you want to exit the application? All not saved changes will be lost.", () -> System.exit(0));
 	}
 
 	private void processSelectedFile(File selectedFile) {

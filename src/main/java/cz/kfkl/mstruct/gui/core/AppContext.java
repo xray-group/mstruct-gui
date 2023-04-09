@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
+import cz.kfkl.mstruct.gui.utils.config.JvProperties;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 
 public class AppContext {
@@ -54,6 +55,8 @@ public class AppContext {
 	private String exportTemplate;
 
 	private boolean showExportedChart = true;
+	private boolean confirmFileClose = true;
+	private boolean confirmComponentRemove = true;
 
 	public void init() {
 
@@ -100,6 +103,8 @@ public class AppContext {
 		plotlyChartExportTemplateFile = findReadableFile(props, "mstruct.gui.plotly.chart.export.template");
 
 		showExportedChart = parseBoolean(props, "mstruct.gui.plotly.chart.show.exported", Boolean.TRUE);
+		confirmFileClose = parseBoolean(props, "mstruct.gui.confirm.file.close", Boolean.TRUE);
+		confirmComponentRemove = parseBoolean(props, "mstruct.gui.confirm.component.remove", Boolean.TRUE);
 	}
 
 	private boolean parseBoolean(Properties props, String propertyName, Boolean defaultValue) {
@@ -307,6 +312,14 @@ public class AppContext {
 
 	public boolean showExportedChart() {
 		return showExportedChart;
+	}
+
+	public boolean confirmFileClose() {
+		return confirmFileClose;
+	}
+
+	public boolean confirmComponentRemove() {
+		return confirmComponentRemove;
 	}
 
 }

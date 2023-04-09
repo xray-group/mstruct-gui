@@ -266,7 +266,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 	public void onReflectionProfileRemoveButton() {
 		ReflectionProfileModel<?> selectedItem = reflectionProfileListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
-			ConfirmationUtils.confirmAction(
+			ConfirmationUtils.confirmAction(getAppContext().confirmComponentRemove(),
 					"Are you sure you want to remove the \"" + selectedItem.toString() + "\" reflection profile?",
 					() -> reflectionProfileListView.getItems().remove(selectedItem));
 		}

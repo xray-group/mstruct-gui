@@ -25,13 +25,13 @@ public class MStructGuiMain extends Application {
 	private static final Logger LOG = LoggerFactory.getLogger(MStructGuiMain.class);
 
 	public static final String M_STRUCT_UI_TITLE = "MStruct GUI";
-	private AppContext context = new AppContext();
+	private AppContext appContext = new AppContext();
 
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 
-			context.init();
+			appContext.init();
 
 //			Scene scene = new Scene(loadFXML("mStructGui.fxml"), 880, 740);
 			Scene scene = new Scene(loadFXML("mStructGui_testNoMenu.fxml"), 880, 740);
@@ -43,7 +43,7 @@ public class MStructGuiMain extends Application {
 			UncaughtExceptionHandler generalExceptionHandler = new PoupupErrorExceptionHandler();
 			Thread.setDefaultUncaughtExceptionHandler(generalExceptionHandler);
 
-			MStructGuiController controller = context.getMainController();
+			MStructGuiController controller = appContext.getMainController();
 
 			controller.setTitleProperty(primaryStage.titleProperty());
 			controller.init();
@@ -56,7 +56,7 @@ public class MStructGuiMain extends Application {
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent event) {
-					ConfirmationUtils.confirmAction(
+					ConfirmationUtils.confirmAction(appContext.confirmFileClose(),
 							"Are you sure you want to exit the application? All not saved changes will be lost.",
 							() -> System.exit(0));
 					event.consume();
@@ -71,7 +71,7 @@ public class MStructGuiMain extends Application {
 	}
 
 	private void loadTestFileOnStartup(MStructGuiController mc) {
-		File autoOpenFile = context.getAutoOpenFile();
+		File autoOpenFile = appContext.getAutoOpenFile();
 
 		if (autoOpenFile != null) {
 			try {
@@ -104,14 +104,14 @@ public class MStructGuiMain extends Application {
 		Object controller = fxmlLoader.getController();
 
 		if (controller instanceof HasAppContext) {
-			((HasAppContext) controller).setAppContext(context);
+			((HasAppContext) controller).setAppContext(appContext);
 		}
 
 		if (controller instanceof MStructGuiController) {
-			context.setMainController((MStructGuiController) controller);
+			appContext.setMainController((MStructGuiController) controller);
 		} else {
 			throw new UnexpectedException(
-					"The file [%s] should be configured with context of type MStructGuiController, got [%s]", fxml, controller);
+					"The file [%s] should be configured with controller of type MStructGuiController, got [%s]", fxml, controller);
 		}
 
 		return Parent;

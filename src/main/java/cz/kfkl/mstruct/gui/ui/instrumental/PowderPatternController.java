@@ -252,7 +252,8 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	public void onPowderPatternComponentsRemoveButton() {
 		PowderPatternBackgroundModel<?> selectedItem = powderPatternComponentsListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
-			ConfirmationUtils.confirmAction("Are you sure you want to remove the \"" + selectedItem.toString() + "\" background?",
+			ConfirmationUtils.confirmAction(getAppContext().confirmComponentRemove(),
+					"Are you sure you want to remove the \"" + selectedItem.toString() + "\" background?",
 					() -> powderPatternComponentsListView.getItems().remove(selectedItem));
 		}
 	}

@@ -26,11 +26,11 @@ public abstract class Job {
 
 	private StringBuilder jobLogsStringBuilder;
 
-	private AppContext context;
+	private AppContext appContext;
 
 	public Job(AppContext context) {
 		super();
-		this.context = context;
+		this.appContext = context;
 		this.jobLogsStringBuilder = new StringBuilder();
 	}
 
@@ -38,8 +38,8 @@ public abstract class Job {
 		return name;
 	}
 
-	protected AppContext getContext() {
-		return context;
+	protected AppContext getAppContext() {
+		return appContext;
 	}
 
 	public void setName(String name) {

@@ -4,7 +4,6 @@ import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentElement;
-import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundChebyshevController;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementList;
@@ -43,8 +42,8 @@ public class PowderPatternBackgroundChebyshev
 	}
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 
 		// TODO validate degree and coefficient names and order
 

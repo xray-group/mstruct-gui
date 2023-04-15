@@ -70,8 +70,8 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	}
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 
 		String xmlValue = nameProperty.getValue();
 		if (xmlValue != null && xmlValue.startsWith(DIFF_DATA_PREFIX)) {

@@ -8,7 +8,6 @@ import java.util.Comparator;
 import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.ParElement;
-import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlAttributeProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlElementName;
@@ -47,8 +46,8 @@ public class IhklParElement extends ParElement {
 	}
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 		nameProperty.bind(Bindings.format(IHKL_PAR_NAME_PATTERN, phaseName, h, k, l));
 	}
 

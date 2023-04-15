@@ -29,8 +29,8 @@ public class ExcludeXElement extends XmlLinkedModelElement {
 	public StringProperty toProperty = new SimpleStringProperty();
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 
 		String valueStr = valueProperty.get();
 		if (valueStr != null) {

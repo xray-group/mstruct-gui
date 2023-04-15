@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
-import cz.kfkl.mstruct.gui.utils.config.JvProperties;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 
 public class AppContext {

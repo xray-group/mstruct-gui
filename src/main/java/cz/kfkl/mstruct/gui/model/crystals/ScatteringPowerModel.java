@@ -44,8 +44,8 @@ public abstract class ScatteringPowerModel<C extends BaseController<?, ?>> exten
 	public Property<Color> colorProperty;
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 
 		colorProperty = new SimpleObjectProperty<>(colorFromColourStr());
 		colorProperty.addListener(newChanged(v -> this.colorToColourStr(v)));

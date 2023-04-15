@@ -31,7 +31,12 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
+import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
+import cz.kfkl.mstruct.gui.utils.reflection.BeanProperty;
+import cz.kfkl.mstruct.gui.utils.reflection.PropertyInterceptor;
+import cz.kfkl.mstruct.gui.utils.reflection.PropertyScanner;
+import cz.kfkl.mstruct.gui.utils.reflection.PublicFieldsInterceptor;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
 import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
 import cz.kfkl.mstruct.gui.xml.XmlUtils;
@@ -42,10 +47,6 @@ import cz.kfkl.mstruct.gui.xml.annotation.XmlElementValueProperty;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlMappedSubclasses;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElement;
 import cz.kfkl.mstruct.gui.xml.annotation.XmlUniqueElementKey;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
@@ -55,6 +56,9 @@ import javafx.util.converter.NumberStringConverter;
 public class XmlLinkedModelElement {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XmlLinkedModelElement.class);
+
+	private static final PropertyScanner scanner = new PropertyScanner(
+			new PropertyInterceptor[] { new PublicFieldsInterceptor() });
 
 	protected XmlLinkedModelElement parentModelElement;
 
@@ -68,48 +72,61 @@ public class XmlLinkedModelElement {
 
 	private Collection<Element> ownedSiblings = new ArrayList<>();
 
+	private AppContext appContext;
+
 	public XmlLinkedModelElement() {
 		super();
+	}
+
+	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
+		assertNotNull(parentModelElement,
+				"The parentModelElement must be specified. Otherwise call bindToElement(AppContext appContext, Element wrappedElement).");
+		this.parentModelElement = parentModelElement;
+		this.appContext = parentModelElement.appContext;
+
+		this.bindToElement(wrappedElement);
 	}
 
 	/**
 	 * parentModelElement is allowed to be null only for the Root model element, i.e
 	 * the {@link ObjCrystModel}
 	 */
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		this.parentModelElement = parentModelElement;
-		this.rootModel = decideRoot(parentModelElement);
+	public void bindRootElement(AppContext appContext, Element wrappedElement) {
+		this.appContext = appContext;
+
+		bindToElement(wrappedElement);
+	}
+
+	protected void bindToElement(Element wrappedElement) {
+		this.rootModel = decideRoot();
 		this.xmlLevel = parentModelElement == null ? 0 : parentModelElement.xmlLevel + 1;
 		this.xmlElement = wrappedElement;
+
 		try {
 
 			Content lastElement = null;
-			for (Field field : getAllFields(this.getClass())) {
-				XmlAttributeProperty propAnnotation = field.getAnnotation(XmlAttributeProperty.class);
+			for (BeanProperty prop : findClassProperties(this.getClass())) {
+				XmlAttributeProperty propAnnotation = prop.getAnnotation(XmlAttributeProperty.class);
 				if (propAnnotation != null) {
-					assertPublicOrProtected(field);
-					bindAttribute(field, decideAttributeName(field, propAnnotation.value()), propAnnotation.converter());
+					bindAttribute(prop, decideAttributeName(prop, propAnnotation.value()), propAnnotation.converter());
 				}
-				XmlElementValueProperty elementValueAnnotation = field.getAnnotation(XmlElementValueProperty.class);
+				XmlElementValueProperty elementValueAnnotation = prop.getAnnotation(XmlElementValueProperty.class);
 				if (elementValueAnnotation != null) {
-					assertPublicOrProtected(field);
-					bindElementContent(field, elementValueAnnotation.converter());
+					bindElementContent(prop, elementValueAnnotation.converter());
 				}
 
-				XmlUniqueElementKey uniqueKeyAttributeAnnotation = field.getAnnotation(XmlUniqueElementKey.class);
+				XmlUniqueElementKey uniqueKeyAttributeAnnotation = prop.getAnnotation(XmlUniqueElementKey.class);
 				if (uniqueKeyAttributeAnnotation != null) {
-					assertPublicOrProtected(field);
-					bindUniqueKeyAttribute(field, decideAttributeName(field, uniqueKeyAttributeAnnotation.value()));
+					bindUniqueKeyAttribute(prop, decideAttributeName(prop, uniqueKeyAttributeAnnotation.value()));
 				}
 
-				XmlUniqueElement uniqueElementAnnotation = field.getAnnotation(XmlUniqueElement.class);
+				XmlUniqueElement uniqueElementAnnotation = prop.getAnnotation(XmlUniqueElement.class);
 				if (uniqueElementAnnotation != null) {
-					assertPublicOrProtected(field);
-					Object fieldValue = getFieldValueNotNull(field);
+					Object fieldValue = getFieldValueNotNull(prop);
 
-					String elementName = decideUniqueElementName(uniqueElementAnnotation, field, fieldValue.getClass());
+					String elementName = decideUniqueElementName(uniqueElementAnnotation, prop, fieldValue.getClass());
 
-					Map<String, String> keyAtributeValues = findKeyAttributeValues(field, fieldValue, elementName);
+					Map<String, String> keyAtributeValues = findKeyAttributeValues(prop, fieldValue, elementName);
 
 					XmlIndentingStyle indentStyle = null;
 					if (fieldValue instanceof XmlLinkedModelElement) {
@@ -139,19 +156,19 @@ public class XmlLinkedModelElement {
 
 				}
 
-				XmlElementList elementListAnnotation = field.getAnnotation(XmlElementList.class);
+				XmlElementList elementListAnnotation = prop.getAnnotation(XmlElementList.class);
 				if (elementListAnnotation != null) {
-					assertPublicOrProtected(field);
+					Class<?> genericTypeClass = assertFieldTypeAndGetSingleTypeArgument(prop, List.class);
 
-					Class<?> genericTypeClass = assertFieldTypeAndGetSingleTypeArgument(field, List.class);
-
-					Map<String, Class<?>> mappedClasses = findMappedClasses(field, genericTypeClass);
+					Map<String, Class<?>> mappedClasses = findMappedClasses(genericTypeClass);
 
 					Content previousFieldLastXmlEl = lastElement;
 					Element firstListElement = null;
 
-					List<Object> list = getFieldValueAsList(field);
-					for (Element child : xmlElement.getChildren()) {
+					List<Object> list = getFieldValueAsList(prop);
+					List<Element> children = xmlElement.getChildren();
+					// to prevent ConcurrentModificationException: The
+					for (Element child : new ArrayList<>(children)) {
 						String elementName = child.getName();
 						Class<?> mappedClass = mappedClasses.get(elementName);
 						if (mappedClasses.get(elementName) != null) {
@@ -206,24 +223,24 @@ public class XmlLinkedModelElement {
 		}
 	}
 
-	protected ObjCrystModel decideRoot(XmlLinkedModelElement parentModelElement) {
+	protected ObjCrystModel decideRoot() {
 		assertNotNull(parentModelElement,
 				"The [%s] is created incorrectly. The parentModelElement is allowed to be null only for the Root model element",
 				this);
 		return parentModelElement.rootModel;
 	}
 
-	private List<Object> getFieldValueAsList(Field field) throws IllegalAccessException {
-		Object fieldValue = getFieldValueNotNull(field);
-		assertTrue(fieldValue instanceof List, "Field [%s] value [%s] should be an instance of List", field, fieldValue);
+	private List<Object> getFieldValueAsList(BeanProperty prop) throws IllegalAccessException {
+		Object fieldValue = getFieldValueNotNull(prop);
+		assertTrue(fieldValue instanceof List, "Field [%s] value [%s] should be an instance of List", prop, fieldValue);
 		@SuppressWarnings("unchecked")
 		List<Object> list = (List<Object>) fieldValue;
 		return list;
 	}
 
-	private Class<?> assertFieldTypeAndGetSingleTypeArgument(Field field, Class<List> expectedType) {
+	private Class<?> assertFieldTypeAndGetSingleTypeArgument(BeanProperty prop, Class<List> expectedType) {
 		Class<?> genericTypeClass = null;
-		AnnotatedType at = field.getAnnotatedType();
+		AnnotatedType at = prop.getAnnotatedType();
 		Type type = at.getType();
 		LOG.trace("Examining type [{}]", type);
 		if (type instanceof ParameterizedType) {
@@ -233,7 +250,7 @@ public class XmlLinkedModelElement {
 				if (pt.getRawType() instanceof Class && expectedType.isAssignableFrom((Class<?>) pt.getRawType())) {
 					Type[] actualTypeArguments = pt.getActualTypeArguments();
 					assertTrue(actualTypeArguments.length == 1,
-							"The field [%s] which is of type List should have one type argument, got [%s]", field,
+							"The field [%s] which is of type List should have one type argument, got [%s]", prop,
 							actualTypeArguments.length);
 					Type ta = actualTypeArguments[0];
 					if (ta instanceof Class) {
@@ -246,8 +263,8 @@ public class XmlLinkedModelElement {
 			}
 		}
 
-		assertNotNull(genericTypeClass, "The  field [%s] should be of type [%s] with single generic type argument defined.",
-				field, expectedType);
+		assertNotNull(genericTypeClass, "The  field [%s] should be of type [%s] with single generic type argument defined.", prop,
+				expectedType);
 		return genericTypeClass;
 	}
 
@@ -274,15 +291,8 @@ public class XmlLinkedModelElement {
 		return uniqueEl;
 	}
 
-	private List<Field> getAllFields(Class<?> cls) {
-		List<Field> fields = new ArrayList<>();
-
-		while (!cls.equals(Object.class)) {
-			fields.addAll(0, List.of(cls.getDeclaredFields()));
-			cls = cls.getSuperclass();
-		}
-
-		return fields;
+	private List<BeanProperty> findClassProperties(Class<?> cls) {
+		return scanner.scan(cls);
 	}
 
 	private String createUniqueElementSearchCondition(String elementName, Map<String, String> keyAtributeValues) {
@@ -301,40 +311,39 @@ public class XmlLinkedModelElement {
 
 	}
 
-	private Map<String, String> findKeyAttributeValues(Field field, Object fieldValue, String elementName)
+	private Map<String, String> findKeyAttributeValues(BeanProperty field, Object fieldValue, String elementName)
 			throws IllegalAccessException {
 		Map<String, String> keyAtributeValues = new LinkedHashMap<>();
-		for (Field typeField : getAllFields(fieldValue.getClass())) {
-			if (isPublicOrProtected(typeField)) {
-				XmlUniqueElementKey keyFieldAnnotation = typeField.getAnnotation(XmlUniqueElementKey.class);
-				if (keyFieldAnnotation != null) {
-					String keyAttName = keyFieldAnnotation.value();
-					if (Strings.isNullOrEmpty(keyAttName)) {
-						keyAttName = typeField.getName();
-					}
-
-					Object valueObj = typeField.get(fieldValue);
-					assertNotNull(valueObj,
-							"Field [%s] on object [%s] must be set by default as it is used as a XmlUniqueElementKey.", typeField,
-							fieldValue);
-
-					String keyValue = null;
-					if (valueObj instanceof String) {
-						keyValue = (String) valueObj;
-					} else if (valueObj instanceof StringProperty) {
-						keyValue = ((StringProperty) valueObj).getValue();
-						assertNotNull(keyValue,
-								"The string property field [%s] on object [%s] must be set as it is used as a XmlUniqueElementKey.",
-								typeField, fieldValue);
-					} else {
-						throw new UnexpectedException(
-								"XmlUniqueElementKey can be used only on field [%s] with type String or StringProperty but was [%s].",
-								typeField, fieldValue.getClass());
-					}
-
-					keyAtributeValues.put(keyAttName, keyValue);
+		for (BeanProperty typeField : findClassProperties(fieldValue.getClass())) {
+			XmlUniqueElementKey keyFieldAnnotation = typeField.getAnnotation(XmlUniqueElementKey.class);
+			if (keyFieldAnnotation != null) {
+				String keyAttName = keyFieldAnnotation.value();
+				if (Strings.isNullOrEmpty(keyAttName)) {
+					keyAttName = typeField.getName();
 				}
+
+				Object valueObj = typeField.getValue(fieldValue);
+				assertNotNull(valueObj,
+						"Field [%s] on object [%s] must be set by default as it is used as a XmlUniqueElementKey.", typeField,
+						fieldValue);
+
+				String keyValue = null;
+				if (valueObj instanceof String) {
+					keyValue = (String) valueObj;
+				} else if (valueObj instanceof StringProperty) {
+					keyValue = ((StringProperty) valueObj).getValue();
+					assertNotNull(keyValue,
+							"The string property field [%s] on object [%s] must be set as it is used as a XmlUniqueElementKey.",
+							typeField, fieldValue);
+				} else {
+					throw new UnexpectedException(
+							"XmlUniqueElementKey can be used only on field [%s] with type String or StringProperty but was [%s].",
+							typeField, fieldValue.getClass());
+				}
+
+				keyAtributeValues.put(keyAttName, keyValue);
 			}
+
 		}
 		return keyAtributeValues;
 	}
@@ -367,7 +376,7 @@ public class XmlLinkedModelElement {
 		return Modifier.isPublic(field.getModifiers()) || Modifier.isProtected(field.getModifiers());
 	}
 
-	private String decideUniqueElementName(XmlUniqueElement uniqueElementAnnotation, Field field,
+	private String decideUniqueElementName(XmlUniqueElement uniqueElementAnnotation, BeanProperty prop,
 			Class<? extends Object> fieldValueClass) {
 		String elementName = uniqueElementAnnotation.value();
 		if (Strings.isNullOrEmpty(elementName)) {
@@ -375,11 +384,11 @@ public class XmlLinkedModelElement {
 		}
 
 		assertNotBlank(elementName, "Element name was evaluated to a blank string which is not valid. Class [%s], field [%s]",
-				fieldValueClass.getClass(), field);
+				fieldValueClass.getClass(), prop);
 		return elementName;
 	}
 
-	private Map<String, Class<?>> findMappedClasses(Field field, Class<? extends Object> genericTypeClass) {
+	private Map<String, Class<?>> findMappedClasses(Class<? extends Object> genericTypeClass) {
 		Map<String, Class<?>> map = new LinkedHashMap<>();
 
 		XmlMappedSubclasses mappedSubclasses = genericTypeClass.getAnnotation(XmlMappedSubclasses.class);
@@ -406,8 +415,8 @@ public class XmlLinkedModelElement {
 		return elementName;
 	}
 
-	private void bindUniqueKeyAttribute(Field field, String attributeName) throws IllegalAccessException {
-		Object fieldValue = field.get(this);
+	private void bindUniqueKeyAttribute(BeanProperty prop, String attributeName) throws IllegalAccessException {
+		Object fieldValue = prop.getValue(this);
 
 		if (fieldValue instanceof StringProperty) {
 			XmlAttributeUpdater<String> updater = new XmlAttributeUpdater<>(xmlElement, attributeName);
@@ -418,41 +427,42 @@ public class XmlLinkedModelElement {
 		}
 	}
 
-	private void bindAttribute(Field field, String attributeName, Class<?> converter) throws IllegalAccessException {
-		bindXmlValue(field, getFieldValueNotNull(field), new XmlAttributeUpdater<String>(xmlElement, attributeName), converter);
+	private void bindAttribute(BeanProperty prop, String attributeName, Class<?> converterClass) throws IllegalAccessException {
+		bindXmlValue(prop, new XmlAttributeUpdater<String>(xmlElement, attributeName), converterClass);
 	}
 
-	private void bindElementContent(Field field, Class<?> converter) throws IllegalAccessException {
-		bindXmlValue(field, getFieldValueNotNull(field), new XmlElementContentUpdater<String>(xmlElement), converter);
+	private void bindElementContent(BeanProperty prop, Class<?> converterClass) throws IllegalAccessException {
+		bindXmlValue(prop, new XmlElementContentUpdater<String>(xmlElement), converterClass);
 	}
 
-	private void bindXmlValue(Field field, Object fieldValue, XmlValueUpdater<String> updater, Class<?> converter) {
-		StringConverter converterInstance = instantiateConverter(converter);
-
+	private void bindXmlValue(BeanProperty prop, XmlValueUpdater<String> updater, Class<?> converterClass) {
+		StringConverter converterInstance = instantiateConverter(converterClass);
 		if (converterInstance == null) {
-			if (fieldValue instanceof StringProperty) {
-
-			} else if (fieldValue instanceof DoubleProperty) {
-				// TODO: maybe need special converter ? (Number d) ->
-				// Double.toString(d.doubleValue())));
-				converterInstance = new NumberStringConverter();
-			} else if (fieldValue instanceof IntegerProperty) {
-				// TODO: maybe need special converter? (Number d) ->
-				// Integer.toString(d.intValue())));
-				converterInstance = new NumberStringConverter();
-			} else if (fieldValue instanceof BooleanProperty) {
-				converterInstance = new BooleanStringConverter();
-			} else {
-				throw new UnexpectedException(
-						"Field [%s] type [%s] is not mappable, no covereter found or can be decided for Property type..", field,
-						fieldValue.getClass());
-			}
+			converterInstance = decideConverter(prop);
 		}
-		if (fieldValue instanceof Property<?>) {
-			updater.bind((Property) fieldValue, converterInstance);
+		if (prop.isFxProperty() && prop.isWritable()) {
+			updater.bind(prop.getProperty(this), converterInstance);
 		} else {
-			throw new UnexpectedException("Field [%s] with type [%s] should be a property.", field, fieldValue.getClass());
+			throw new UnexpectedException("The [%s] is not a writable property.", prop);
 		}
+	}
+
+	private StringConverter<?> decideConverter(BeanProperty prop) {
+		StringConverter<?> converterInstance = null;
+		Class<?> valueClass = prop.getValueClass();
+		if (String.class.isAssignableFrom(valueClass)) {
+
+		} else if (Number.class.isAssignableFrom(valueClass)) {
+			// TODO: maybe Double need special converter ? (Number d) ->
+			// Double.toString(d.doubleValue())));
+			converterInstance = new NumberStringConverter();
+		} else if (Boolean.class.isAssignableFrom(valueClass)) {
+			converterInstance = new BooleanStringConverter();
+		} else {
+			throw new UnexpectedException("Type [%s] of field [%s] is not mappable, no covereter found or can be decided for..",
+					valueClass, prop);
+		}
+		return converterInstance;
 	}
 
 	private StringConverter<?> instantiateConverter(Class<?> converter) {
@@ -477,13 +487,13 @@ public class XmlLinkedModelElement {
 		return converterInstance;
 	}
 
-	private Object getFieldValueNotNull(Field field) throws IllegalAccessException {
-		Object fieldValue = field.get(this);
-		assertNotNull(fieldValue, "Field [%s] on class [%s] must be initialized.", field.getName(), field.getDeclaringClass());
+	private Object getFieldValueNotNull(BeanProperty prop) throws IllegalAccessException {
+		Object fieldValue = prop.getValue(this);
+		assertNotNull(fieldValue, "Property [%s] on [%s] must be initialized.", prop, this);
 		return fieldValue;
 	}
 
-	private String decideAttributeName(Field field, String annotationValue) {
+	private String decideAttributeName(BeanProperty field, String annotationValue) {
 		String attributeName = annotationValue;
 		if (Strings.isNullOrEmpty(attributeName)) {
 			attributeName = field.getName();

@@ -74,8 +74,8 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	}
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 		updateUsedCrystalsPredicate();
 		crystalsObserved = new ObservableListWrapper<CrystalModel>(crystals, item -> new Observable[] { item.nameProperty });
 	}
@@ -98,7 +98,7 @@ public class ObjCrystModel extends XmlLinkedModelElement implements ParamContain
 	}
 
 	@Override
-	protected ObjCrystModel decideRoot(XmlLinkedModelElement parentModelElement) {
+	protected ObjCrystModel decideRoot() {
 		return this;
 	}
 

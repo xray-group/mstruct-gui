@@ -15,7 +15,6 @@ import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
-import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.ObservableListWrapper;
@@ -48,7 +47,7 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	public ParUniqueElement thetaTransparencyPar = new ParUniqueElement("2ThetaTransparency");
 
 	@XmlUniqueElement
-	public OptionUniqueElement useIntegratedProfilesOption = new OptionUniqueElement("Use Integrated Profiles", 1,
+	public OptionUniqueElement useIntegratedProfilesOption = new OptionUniqueElement("Use Integrated Profiles", 0,
 			new OptionChoice("Yes (recommended)"), new OptionChoice("No"));
 
 	@XmlUniqueElement
@@ -83,8 +82,8 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	}
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 
 		// must be done after the binding so the wrapped list is already populated from
 		// XML, items added to the wrapped list only are shown but their observable

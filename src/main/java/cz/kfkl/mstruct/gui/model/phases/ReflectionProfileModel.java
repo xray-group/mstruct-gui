@@ -29,8 +29,8 @@ abstract public class ReflectionProfileModel<C extends BaseController<?, ?>> ext
 	public abstract ReflectionProfileType getType();
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 		paramContainerName.bind(Bindings.format("%s (%s)", nameProperty, getType()));
 	}
 

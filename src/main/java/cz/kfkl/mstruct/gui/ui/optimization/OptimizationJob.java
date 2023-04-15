@@ -296,7 +296,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 						"Expected XML file with root element [%s], got [%s]", MStructGuiController.OBJ_CRYST, root.getName());
 
 				ObjCrystModel fittedRootModel = new ObjCrystModel();
-				fittedRootModel.bindToElement(null, root);
+				fittedRootModel.bindRootElement(getAppContext(), root);
 
 				Map<String, ParElement> map = ParametersController.createParamsLookup(fittedRootModel);
 				LOG.debug("XML output params loaded [{}]", map.size());
@@ -462,13 +462,13 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 
 	public Node createChartNode(List<ExcludeXElement> currentExcludeRegions) {
 		PlotlyChartGenerator chartGenerator = createChartGenerator(currentExcludeRegions);
-		PlotlyChartModel optimizationEditRegionsModel = new PlotlyChartModel(this, getContext());
+		PlotlyChartModel optimizationEditRegionsModel = new PlotlyChartModel(this, getAppContext());
 
 		return optimizationEditRegionsModel.createChartNode(chartGenerator);
 	}
 
 	private PlotlyChartGenerator createChartGenerator(List<ExcludeXElement> currentExcludeRegions) {
-		PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getContext());
+		PlotlyChartGenerator chartGenerator = new PlotlyChartGenerator(getAppContext());
 		chartGenerator.forJob(this);
 		chartGenerator.useGuiTemplate();
 		if (excludeRegionsEdited) {

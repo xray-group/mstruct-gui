@@ -8,7 +8,6 @@ import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
 import cz.kfkl.mstruct.gui.model.phases.PowderPatternComponentElement;
-import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.TableOfDoubles;
 import cz.kfkl.mstruct.gui.ui.TabularDataParser;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternBackgroundInterpolatedController;
@@ -40,8 +39,8 @@ public class PowderPatternBackgroundInterpolated
 	public ObservableList<XIntensityListItem> xIntensityList = FXCollections.observableArrayList();
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 
 		TabularDataParser parser = new TabularDataParser();
 		TableOfDoubles tabularData = parser.parse(xIntensityListElement.valueProperty.get());

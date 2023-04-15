@@ -18,7 +18,7 @@ public class RefinementJob extends OptimizationJob {
 	public List<String> getCommandList() {
 		List<String> command = new ArrayList<>();
 
-		command.add(getContext().getMstructExeFile().getAbsolutePath());
+		command.add(getAppContext().getMstructExeFile().getAbsolutePath());
 		command.add(this.getInputFile().getAbsolutePath());
 
 		Integer iterations = getIterations();

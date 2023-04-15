@@ -41,8 +41,8 @@ public abstract class ScattererModel<C extends BaseController<?, ?>> extends Xml
 	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(xPar, yPar, zPar, occupPar);
 
 	@Override
-	public void bindToElement(XmlLinkedModelElement parentModelElement, Element wrappedElement) {
-		super.bindToElement(parentModelElement, wrappedElement);
+	public void bindToElement(Element wrappedElement) {
+		super.bindToElement(wrappedElement);
 		paramContainerName.bind(Bindings.format("%s: %s", getType(), nameProperty));
 	}
 

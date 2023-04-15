@@ -317,7 +317,7 @@ public class MStructGuiController implements HasAppContext {
 				rootXmlEl.getName());
 
 		rootModel = new ObjCrystModel();
-		rootModel.bindToElement(null, rootXmlEl);
+		rootModel.bindRootElement(appContext, rootXmlEl);
 
 		crystalsListView.setItems(rootModel.crystalsObserved);
 		crystalsListView.getSelectionModel().selectFirst();

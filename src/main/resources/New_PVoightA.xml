@@ -1,0 +1,10 @@
+        <pVoigtA>
+          <Par Refined="1" Limited="1" Min="0" Max="10.0001" Name="U">0</Par>
+          <Par Refined="0" Limited="1" Min="-1" Max="1" Name="V">0</Par>
+          <Par Refined="0" Limited="1" Min="0" Max="1" Name="W">0</Par>
+          <Par Refined="0" Limited="1" Min="0" Max="1" Name="Eta0">0</Par>
+          <Par Refined="0" Limited="1" Min="-1" Max="1" Name="Eta1">0</Par>
+          <Par Refined="0" Limited="1" Min="0.01" Max="10" Name="Asym0">1</Par>
+          <Par Refined="0" Limited="1" Min="-1" Max="1" Name="Asym1">0</Par>
+          <Par Refined="0" Limited="1" Min="-1" Max="1" Name="Asym2">0</Par>
+        </pVoigtA>

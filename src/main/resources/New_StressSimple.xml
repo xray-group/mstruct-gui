@@ -1,0 +1,6 @@
+        <StressSimple>
+          <Par Refined="1" Limited="1" Min="-100" Max="100" Name="Stress">0</Par>
+          <XECsReussVoigt Name="">
+            <Par Refined="0" Limited="1" Min="0" Max="1" Name="RV_weight">0.3</Par>
+          </XECsReussVoigt>
+        </StressSimple>

@@ -12,8 +12,13 @@ import static cz.kfkl.mstruct.gui.utils.BindingUtils.setupSelectionToChildrenLis
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
 import cz.kfkl.mstruct.gui.model.phases.ArbitraryTextureElement;
@@ -27,6 +32,8 @@ import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.ConfirmationUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
+import cz.kfkl.mstruct.gui.xml.XmlIndentingStyle;
+import cz.kfkl.mstruct.gui.xml.XmlUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -247,6 +254,15 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 				Constructor<? extends ReflectionProfileModel<?>> constructor = selectedType.getModelClass().getConstructor();
 				ReflectionProfileModel<?> newInstance = constructor.newInstance();
 
+				Document doc = getAppContext().loadNewXmlElementTemplate(selectedType.getTypeName());
+				if (doc != null) {
+					Element child = doc.getRootElement().detach();
+
+					List<Content> content = indentedContend(child, newInstance.getXmlIndentingStyle());
+					newInstance.setImportedXmlContent(content);
+					newInstance.setXmlElement(child);
+				}
+
 				newInstance.setName(newInstance.getType().getNamePrefix() + getModelInstance().getNameSuffix());
 				newInstance.setName(createUniqueName(newInstance, reflectionProfileListView.getItems()));
 
@@ -260,6 +276,18 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 			}
 
 		}
+	}
+
+	private List<Content> indentedContend(Element child, XmlIndentingStyle indentingStyle) {
+		int level = getModelInstance().reflectionProfile.getXmlLevel() + 1;
+		List<Content> content = new ArrayList<Content>();
+
+		if (indentingStyle.isNewLineBefore() && reflectionProfileListView.getItems().size() >= 0) {
+			content.add(XmlUtils.createNewLineIndentText(0));
+		}
+		content.add(XmlUtils.createNewLineIndentText(level));
+		content.add(child);
+		return content;
 	}
 
 	@FXML

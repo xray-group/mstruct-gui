@@ -9,11 +9,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileType;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.validation.UnexpectedException;
@@ -34,6 +44,15 @@ public class AppContext {
 	private static final String DEFAULT_HTML_GUI_TEMPLATE_PATH = "/DefaultPlotlyChartTemplate_GUI.html";
 	private static final String DEFAULT_HTML_EDIT_TEMPLATE_PATH = "/DefaultPlotlyChartTemplate_EditShapes.html";
 	private static final String DEFAULT_HTML_EXPORT_TEMPLATE_PATH = "/DefaultPlotlyChartTemplate_Export.html";
+	private static final List<String> XML_TEMPLATE_IDS = new ArrayList<String>();
+	static {
+		XML_TEMPLATE_IDS.add("ObjCryst");
+		XML_TEMPLATE_IDS.add("PowderPatternCrystal");
+		XML_TEMPLATE_IDS.addAll(
+				Arrays.asList(ReflectionProfileType.values()).stream().map(t -> t.getTypeName()).collect(Collectors.toList()));
+	}
+
+	private static final String XML_TEMPLATE_PROPERTY_NAME_PREFIX = "mstruct.gui.plotly.model.template.";
 
 	private File appLocationDir;
 	private File lastSelectedFileDirectory;
@@ -48,6 +67,8 @@ public class AppContext {
 	private File plotlyChartGuiTemplateFile;
 	private File plotlyChartEditShapesTemplateFile;
 	private File plotlyChartExportTemplateFile;
+
+	private Map<String, File> templateFiles = new LinkedHashMap<>(XML_TEMPLATE_IDS.size());
 
 	private String guiTemplate;
 	private String editShapesTemplate;
@@ -104,6 +125,14 @@ public class AppContext {
 		showExportedChart = parseBoolean(props, "mstruct.gui.plotly.chart.show.exported", Boolean.TRUE);
 		confirmFileClose = parseBoolean(props, "mstruct.gui.confirm.file.close", Boolean.TRUE);
 		confirmComponentRemove = parseBoolean(props, "mstruct.gui.confirm.component.remove", Boolean.TRUE);
+
+		for (String templateId : XML_TEMPLATE_IDS) {
+			templateFiles.put(templateId, findReadableFile(props, formatXmlTemplatePropertyName(templateId)));
+		}
+	}
+
+	private String formatXmlTemplatePropertyName(String templateId) {
+		return XML_TEMPLATE_PROPERTY_NAME_PREFIX + templateId;
 	}
 
 	private boolean parseBoolean(Properties props, String propertyName, Boolean defaultValue) {
@@ -120,12 +149,14 @@ public class AppContext {
 	private File findReadableFile(Properties props, String propName) {
 		String filePath = props.getProperty(propName);
 
+		LOG.debug("Looking for file [{}] configured by property [{}].", filePath, propName);
 		File confirmedFile = null;
 		if (JvStringUtils.isNotBlank(filePath)) {
 			File openFile = new File(filePath);
 			if (openFile.exists()) {
 				if (openFile.canRead()) {
 					confirmedFile = openFile;
+					LOG.debug("File [{}] was found and is readable.", filePath);
 				} else {
 					LOG.warn("The file [{}] is not readable.", openFile);
 				}
@@ -227,6 +258,53 @@ public class AppContext {
 		}
 
 		return exportTemplate;
+	}
+
+	public Document loadNewXmlElementTemplate(String templateId) {
+		Document doc = null;
+		InputStream xmlTemplate = loadXmlTemplateOrDefault(templateId);
+		if (xmlTemplate != null) {
+			try {
+				SAXBuilder builder = new SAXBuilder();
+				doc = builder.build(xmlTemplate);
+			} catch (JDOMException | IOException e) {
+				LOG.error("Failed to parse XML template file.", e);
+			}
+		}
+
+		if (doc == null) {
+			LOG.info("XML template [{}] not provided. Default document will be created.", templateId);
+		}
+
+		return doc;
+	}
+
+	private InputStream loadXmlTemplateOrDefault(String xmlTemplateId) {
+		String defaultTemplatePath = formatDefaultTemplateFileName(xmlTemplateId);
+		File userTemplateFile = templateFiles.get(xmlTemplateId);
+
+		InputStream is = null;
+		if (userTemplateFile != null) {
+			try {
+				is = new FileInputStream(userTemplateFile);
+			} catch (IOException e) {
+				LOG.error(String.format(
+						"Failed to read XML template file [%s] configured with property [%s], will use default template.",
+						userTemplateFile, formatXmlTemplatePropertyName(xmlTemplateId)), e);
+			}
+		}
+
+		if (is == null) {
+			is = AppContext.class.getResourceAsStream(defaultTemplatePath);
+			if (is == null) {
+				LOG.error(String.format("The default XML template file [%s] not found.", defaultTemplatePath));
+			}
+		}
+		return is;
+	}
+
+	private String formatDefaultTemplateFileName(String xmlTemplateId) {
+		return "/New_" + xmlTemplateId + ".xml";
 	}
 
 	private String loadTemplateOrDefault(File userTemplateFile, String defaultTemplatePath) {

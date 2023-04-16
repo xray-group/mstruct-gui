@@ -25,13 +25,13 @@ public class XmlUtils {
 		List<Content> newElementIndented = new ArrayList<>();
 		if (indentStyle != null) {
 			if (indentStyle.isNewLineBefore() && indexOf >= 0) {
-				newElementIndented.add(createIndentText(0));
+				newElementIndented.add(createNewLineIndentText(0));
 			}
 			if (indentStyle.isEndTagOnNewLine()) {
-				newElement.addContent(createIndentText(level));
+				newElement.addContent(createNewLineIndentText(level));
 			}
 		}
-		newElementIndented.add(createIndentText(level));
+		newElementIndented.add(createNewLineIndentText(level));
 		newElementIndented.add(newElement);
 
 		addContentAfterIndex(parent, newElementIndented, indexOf);
@@ -67,9 +67,12 @@ public class XmlUtils {
 		}
 	}
 
+	public static Text createNewLineIndentText(int level) {
+		return new Text(newLineAndIndentString(level));
+	}
+
 	public static Text createIndentText(int level) {
-		Text indent = new Text(newLineAndIndentString(level));
-		return indent;
+		return new Text(indentString(level));
 	}
 
 	public static String newLineAndIndentString(int level) {
@@ -125,10 +128,13 @@ public class XmlUtils {
 		parent.sortContent(sortingFilter, sortingFilter);
 	}
 
-	public static <T extends Content> void detachContent(List<T> contentList) {
-		for (T content : contentList) {
-			content.detach();
+	public static List<Content> detachContent(List<Content> contentList) {
+		List<Content> detachedContent = new ArrayList<>();
+		for (Content content : new ArrayList<>(contentList)) {
+			detachedContent.add(content.detach());
 		}
+
+		return detachedContent;
 	}
 
 }

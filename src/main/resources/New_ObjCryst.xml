@@ -1,0 +1,22 @@
+<ObjCryst Date="2022-05-18T08:33:46" Revision="2017002">
+  <PowderPattern Name="pattern0">
+    <Par Refined="0" Limited="1" Min="-2.86479" Max="2.86479" Name="Zero">0</Par>
+    <Par Refined="0" Limited="1" Min="-2.86479" Max="2.86479" Name="2ThetaDisplacement">0</Par>
+    <Par Refined="0" Limited="1" Min="-2.86479" Max="2.86479" Name="2ThetaTransparency">0</Par>
+    <Option Name="Use Integrated Profiles" Choice="0" ChoiceName="Yes (recommended)" />
+
+    <Radiation>
+      <Option Name="Radiation" Choice="1" ChoiceName="X-Ray" />
+      <Option Name="Spectrum" Choice="1" ChoiceName="X-Ray Tube" />
+      <LinearPolarRate>0.3</LinearPolarRate>
+      <Par Refined="0" Limited="1" Min="0.05" Max="20" Name="Wavelength">1.54184</Par>
+      <Par Refined="0" Limited="1" Min="0.01" Max="20" Name="XRayTubeDeltaLambda">0.01</Par>
+      <Par Refined="0" Limited="1" Min="0" Max="0.5" Name="XRayTubeAlpha2Alpha1Ratio">0</Par>
+    </Radiation>
+    <MaxSinThetaOvLambda>0.631</MaxSinThetaOvLambda>
+    <Geometry Omega="0.500000" />
+
+    <XIobsSigmaWeightList>
+    </XIobsSigmaWeightList>
+  </PowderPattern>
+</ObjCryst>

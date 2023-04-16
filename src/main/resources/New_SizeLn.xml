@@ -1,0 +1,4 @@
+        <SizeLn>
+          <Par Refined="1" Limited="1" Min="2" Max="500" Name="M">270</Par>
+          <Par Refined="0" Limited="1" Min="0.05" Max="1.5" Name="Sigma">0.3</Par>
+        </SizeLn>

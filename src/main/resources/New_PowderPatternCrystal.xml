@@ -1,0 +1,25 @@
+<ObjCryst>
+
+    <PowderPatternCrystal Name="diffData_" Crystal="" IgnoreImagScattFact="1">
+      <ReflectionProfile>
+        <pVoigtA Name="instrProfile">
+          <Par Refined="0" Limited="1" Min="-1" Max="1" Name="U">0</Par>
+          <Par Refined="0" Limited="1" Min="-1" Max="1" Name="V">0.009211</Par>
+          <Par Refined="0" Limited="1" Min="0" Max="1" Name="W">0.06246</Par>
+          <Par Refined="0" Limited="1" Min="0" Max="1" Name="Eta0">0.002135</Par>
+          <Par Refined="0" Limited="1" Min="-1" Max="1" Name="Eta1">0.147385</Par>
+          <Par Refined="0" Limited="0" Min="0.01" Max="10" Name="Asym0">1</Par>
+          <Par Refined="0" Limited="0" Min="-1" Max="1" Name="Asym1">0</Par>
+          <Par Refined="0" Limited="0" Min="-1" Max="1" Name="Asym2">0</Par>
+        </pVoigtA>
+      </ReflectionProfile>
+      <Par Refined="0" Limited="0" Min="-1" Max="1" Name="globalBiso">0.01</Par>
+      <AbsorptionCorr Name="AbsorptionCorr" Thickness="300" AbsorptionFactor="470" Depth="0" />
+      <ArbitraryTexture Name="ArbitraryTexture" Tag="Current">
+        <Option Name="ArbitraryTexture.choice" Choice="1" ChoiceName="Generate" />
+      </ArbitraryTexture>
+    </PowderPatternCrystal>
+
+    <PowderPatternComponent Name="diffData_">
+      <Par Refined="0" Limited="0" Min="1e-10" Max="1e+10" Name="Scale">1</Par>
+    </PowderPatternComponent></ObjCryst>

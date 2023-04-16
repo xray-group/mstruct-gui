@@ -104,6 +104,8 @@ public class MStructGuiController implements HasAppContext {
 	private static final String[] DATA_TABLE_COLUMNS = new String[] { "2Theta/TOF", "Iobs", "Sigma", "Weight" };
 
 	public static final String OBJ_CRYST = "ObjCryst";
+	private static final String POWDER_PATTERN_CRYSTAL = "PowderPatternCrystal";
+
 	public static final String INPUT_DATA_ELEMENT_NAME = "/" + OBJ_CRYST + "/PowderPattern/XIobsSigmaWeightList";
 
 	@FXML
@@ -232,21 +234,29 @@ public class MStructGuiController implements HasAppContext {
 	}
 
 	private void doNewFile() {
-		loadFile(createNewXmlDocument());
+		loadFile(initNewObjCrystXmlDocument());
 
 		setBottomLabelText("New file created");
 		this.openedFileProperty.set(null);
+	}
+
+	private Document initNewObjCrystXmlDocument() {
+		Document doc = appContext.loadNewXmlElementTemplate(OBJ_CRYST);
+		if (doc == null) {
+			doc = createNewXmlDocument();
+		}
+		return doc;
 	}
 
 	private Document createNewXmlDocument() {
 		Element newRootXmlElement = new Element(OBJ_CRYST);
 
 		Element ppXmlElement = new Element(XmlLinkedModelElement.decideElementName(PowderPatternElement.class));
-		ppXmlElement.addContent(XmlUtils.createIndentText(1));
+		ppXmlElement.addContent(XmlUtils.createNewLineIndentText(1));
 
-		newRootXmlElement.addContent(XmlUtils.createIndentText(1));
+		newRootXmlElement.addContent(XmlUtils.createNewLineIndentText(1));
 		newRootXmlElement.addContent(ppXmlElement);
-		newRootXmlElement.addContent(XmlUtils.createIndentText(0));
+		newRootXmlElement.addContent(XmlUtils.createNewLineIndentText(0));
 
 		return new Document(newRootXmlElement);
 	}
@@ -525,10 +535,8 @@ public class MStructGuiController implements HasAppContext {
 
 				CrystalModel cm = new CrystalModel();
 
-				XmlUtils.detachContent(importedCrystal.getCrystalWithPreceedingBallast());
-
 				cm.setXmlElement(importedCrystal.getCrystalElement());
-				cm.setImportedXmlContent(importedCrystal.getCrystalWithPreceedingBallast());
+				cm.setImportedXmlContent(XmlUtils.detachContent(importedCrystal.getCrystalWithPreceedingBallast()));
 
 				String newCrystalName = null;
 
@@ -696,7 +704,12 @@ public class MStructGuiController implements HasAppContext {
 	@FXML
 	public void addPhase() {
 		PowderPatternCrystalsModel newInstance = new PowderPatternCrystalsModel();
-
+		Document doc = appContext.loadNewXmlElementTemplate(POWDER_PATTERN_CRYSTAL);
+		if (doc != null) {
+			Element child = doc.getRootElement().getChild(POWDER_PATTERN_CRYSTAL);
+			newInstance.setImportedXmlContent(XmlUtils.detachContent(doc.getRootElement().getContent()));
+			newInstance.setXmlElement(child);
+		}
 		newInstance.setName(createUniqueName(newInstance, phasesListView.getItems()));
 
 		phasesListView.getItems().add(newInstance);

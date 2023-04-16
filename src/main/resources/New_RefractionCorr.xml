@@ -1,0 +1,4 @@
+        <RefractionCorr>
+          <Option Name="chi0.source" Choice="1" ChoiceName="crystal" />
+          <Par Refined="0" Limited="1" Min="0.1" Max="10" Name="relDensity">0.96</Par>
+        </RefractionCorr>

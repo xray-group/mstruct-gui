@@ -20,7 +20,7 @@ public class ParElement extends XmlLinkedModelElement implements ParamTreeNode {
 	public BooleanProperty refinedProperty = new SimpleBooleanProperty(false);
 
 	@XmlAttributeProperty(value = "Limited", converter = BooleanZeroOneStringFormatter.class)
-	public BooleanProperty limitedProperty = new SimpleBooleanProperty(false);
+	public BooleanProperty limitedProperty = new SimpleBooleanProperty(true);
 
 	@XmlAttributeProperty("Min")
 	public StringProperty minProperty = new SimpleStringProperty("1");

@@ -14,19 +14,13 @@ public abstract class XmlValueUpdater<T> implements ChangeListener<T> {
 
 	private StringConverter<T> stringConvertor;
 
-	public XmlValueUpdater() {
-		super();
-	}
-
 	public XmlValueUpdater(StringConverter<T> stringConvertor) {
-		this();
+		super();
 		this.stringConvertor = stringConvertor;
 	}
 
-	public void bind(Property<T> ssp, StringConverter<T> stringConvertor) {
+	void bind(Property<T> ssp) {
 		String xmlValue = getXmlValue();
-		this.stringConvertor = stringConvertor;
-
 		initValue(ssp, xmlValue);
 		ssp.addListener(this);
 	}
@@ -39,11 +33,7 @@ public abstract class XmlValueUpdater<T> implements ChangeListener<T> {
 				convertAndSetValue(defaultValue);
 			}
 		} else {
-			if (stringConvertor == null) {
-				ssp.setValue((T) xmlValue);
-			} else {
-				ssp.setValue(stringConvertor.fromString(xmlValue));
-			}
+			ssp.setValue(stringConvertor.fromString(xmlValue));
 		}
 
 	}
@@ -54,11 +44,7 @@ public abstract class XmlValueUpdater<T> implements ChangeListener<T> {
 	}
 
 	private void convertAndSetValue(T newValue) {
-		if (stringConvertor != null) {
-			setXmlValue(stringConvertor.toString(newValue));
-		} else if (newValue != null) {
-			setXmlValue(newValue.toString());
-		}
+		setXmlValue(stringConvertor.toString(newValue));
 	}
 
 	protected abstract void setXmlValue(String strValue);

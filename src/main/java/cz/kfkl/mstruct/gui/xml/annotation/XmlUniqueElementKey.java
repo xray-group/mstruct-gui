@@ -5,10 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javafx.util.StringConverter;
+
 @Target({ ElementType.FIELD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XmlUniqueElementKey {
 
 	public String value() default "";
+
+	public Class<?> converter() default StringConverter.class;
 
 }

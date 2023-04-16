@@ -33,6 +33,7 @@ import com.google.common.base.Strings;
 
 import cz.kfkl.mstruct.gui.core.AppContext;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
+import cz.kfkl.mstruct.gui.utils.ObjectToStringConverter;
 import cz.kfkl.mstruct.gui.utils.reflection.BeanProperty;
 import cz.kfkl.mstruct.gui.utils.reflection.PropertyInterceptor;
 import cz.kfkl.mstruct.gui.utils.reflection.PropertyScanner;
@@ -102,125 +103,127 @@ public class XmlLinkedModelElement {
 		this.xmlLevel = parentModelElement == null ? 0 : parentModelElement.xmlLevel + 1;
 		this.xmlElement = wrappedElement;
 
-		try {
+		Content lastElement = null;
+		for (BeanProperty prop : findClassProperties(this.getClass())) {
+			try {
+				lastElement = bindProperty(prop, lastElement);
+			} catch (Exception e) {
+				throw new UnexpectedException(e, "Exception when binding property [%s]", prop);
+			}
+		}
+	}
 
-			Content lastElement = null;
-			for (BeanProperty prop : findClassProperties(this.getClass())) {
-				XmlAttributeProperty propAnnotation = prop.getAnnotation(XmlAttributeProperty.class);
-				if (propAnnotation != null) {
-					bindAttribute(prop, decideAttributeName(prop, propAnnotation.value()), propAnnotation.converter());
-				}
-				XmlElementValueProperty elementValueAnnotation = prop.getAnnotation(XmlElementValueProperty.class);
-				if (elementValueAnnotation != null) {
-					bindElementContent(prop, elementValueAnnotation.converter());
-				}
+	private Content bindProperty(BeanProperty prop, Content lastElement) throws IllegalAccessException {
+		XmlAttributeProperty propAnnotation = prop.getAnnotation(XmlAttributeProperty.class);
+		if (propAnnotation != null) {
+			bindAttribute(prop, decideAttributeName(prop, propAnnotation.value()), propAnnotation.converter());
+		}
+		XmlElementValueProperty elementValueAnnotation = prop.getAnnotation(XmlElementValueProperty.class);
+		if (elementValueAnnotation != null) {
+			bindElementContent(prop, elementValueAnnotation.converter());
+		}
 
-				XmlUniqueElementKey uniqueKeyAttributeAnnotation = prop.getAnnotation(XmlUniqueElementKey.class);
-				if (uniqueKeyAttributeAnnotation != null) {
-					bindUniqueKeyAttribute(prop, decideAttributeName(prop, uniqueKeyAttributeAnnotation.value()));
-				}
+		XmlUniqueElementKey uniqueKeyAttributeAnnotation = prop.getAnnotation(XmlUniqueElementKey.class);
+		if (uniqueKeyAttributeAnnotation != null) {
+			bindUniqueKeyAttribute(prop, decideAttributeName(prop, uniqueKeyAttributeAnnotation.value()),
+					uniqueKeyAttributeAnnotation.converter());
+		}
 
-				XmlUniqueElement uniqueElementAnnotation = prop.getAnnotation(XmlUniqueElement.class);
-				if (uniqueElementAnnotation != null) {
-					Object fieldValue = getFieldValueNotNull(prop);
+		XmlUniqueElement uniqueElementAnnotation = prop.getAnnotation(XmlUniqueElement.class);
+		if (uniqueElementAnnotation != null) {
+			Object fieldValue = getFieldValueNotNull(prop);
 
-					String elementName = decideUniqueElementName(uniqueElementAnnotation, prop, fieldValue.getClass());
+			String elementName = decideUniqueElementName(uniqueElementAnnotation, prop, fieldValue.getClass());
 
-					Map<String, String> keyAtributeValues = findKeyAttributeValues(prop, fieldValue, elementName);
+			Map<String, String> keyAtributeValues = findKeyAttributeValues(prop, fieldValue, elementName);
 
-					XmlIndentingStyle indentStyle = null;
-					if (fieldValue instanceof XmlLinkedModelElement) {
-						indentStyle = ((XmlLinkedModelElement) fieldValue).getXmlIndentingStyle();
-					}
+			XmlIndentingStyle indentStyle = null;
+			if (fieldValue instanceof XmlLinkedModelElement) {
+				indentStyle = ((XmlLinkedModelElement) fieldValue).getXmlIndentingStyle();
+			}
 
-					Element childEl = null;
-					if (uniqueElementAnnotation.isSibling()) {
-						childEl = parentModelElement.findOrCreateUniqueElement(elementName, keyAtributeValues, xmlElement,
-								indentStyle);
-						ownedSiblings.add(childEl);
-					} else {
-						childEl = findOrCreateUniqueElement(elementName, keyAtributeValues, lastElement, indentStyle);
-					}
-					lastElement = childEl;
+			Element childEl = null;
+			if (uniqueElementAnnotation.isSibling()) {
+				childEl = parentModelElement.findOrCreateUniqueElement(elementName, keyAtributeValues, xmlElement, indentStyle);
+				ownedSiblings.add(childEl);
+			} else {
+				childEl = findOrCreateUniqueElement(elementName, keyAtributeValues, lastElement, indentStyle);
+			}
+			lastElement = childEl;
 
-					if (fieldValue instanceof XmlLinkedModelElement) {
-						XmlLinkedModelElement fieldValueAsXmlLinked = (XmlLinkedModelElement) fieldValue;
+			if (fieldValue instanceof XmlLinkedModelElement) {
+				XmlLinkedModelElement fieldValueAsXmlLinked = (XmlLinkedModelElement) fieldValue;
 //						if (fieldValueAsXmlLinked.isNew()) {
 //							setKeyAttributeValues(field, fieldValue, keyAtributeValues, elementName);
 //						}
 
-						fieldValueAsXmlLinked.bindToElement(this, childEl);
+				fieldValueAsXmlLinked.bindToElement(this, childEl);
+
+				lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
+			}
+
+		}
+
+		XmlElementList elementListAnnotation = prop.getAnnotation(XmlElementList.class);
+		if (elementListAnnotation != null) {
+			Class<?> genericTypeClass = assertFieldTypeAndGetSingleTypeArgument(prop, List.class);
+
+			Map<String, Class<?>> mappedClasses = findMappedClasses(genericTypeClass);
+
+			Content previousFieldLastXmlEl = lastElement;
+			Element firstListElement = null;
+
+			List<Object> list = getFieldValueAsList(prop);
+			List<Element> children = xmlElement.getChildren();
+			// to prevent ConcurrentModificationException: The
+			for (Element child : new ArrayList<>(children)) {
+				String elementName = child.getName();
+				Class<?> mappedClass = mappedClasses.get(elementName);
+				if (mappedClasses.get(elementName) != null) {
+					lastElement = child;
+					if (firstListElement == null) {
+						firstListElement = child;
+					}
+					Object newInstance = null;
+					try {
+						Constructor<?> noArgsConstructor = mappedClass.getConstructor();
+						newInstance = noArgsConstructor.newInstance();
+
+						list.add(newInstance);
+
+					} catch (NoSuchMethodException | InstantiationException | IllegalArgumentException
+							| InvocationTargetException e) {
+						throw new UnexpectedException(e, "Failed to find or invoke no argument constructor on [%s]", mappedClass);
+					}
+
+					if (newInstance instanceof XmlLinkedModelElement) {
+						XmlLinkedModelElement fieldValueAsXmlLinked = (XmlLinkedModelElement) newInstance;
+						fieldValueAsXmlLinked.bindToElement(this, child);
 
 						lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
 					}
-
 				}
 
-				XmlElementList elementListAnnotation = prop.getAnnotation(XmlElementList.class);
-				if (elementListAnnotation != null) {
-					Class<?> genericTypeClass = assertFieldTypeAndGetSingleTypeArgument(prop, List.class);
-
-					Map<String, Class<?>> mappedClasses = findMappedClasses(genericTypeClass);
-
-					Content previousFieldLastXmlEl = lastElement;
-					Element firstListElement = null;
-
-					List<Object> list = getFieldValueAsList(prop);
-					List<Element> children = xmlElement.getChildren();
-					// to prevent ConcurrentModificationException: The
-					for (Element child : new ArrayList<>(children)) {
-						String elementName = child.getName();
-						Class<?> mappedClass = mappedClasses.get(elementName);
-						if (mappedClasses.get(elementName) != null) {
-							lastElement = child;
-							if (firstListElement == null) {
-								firstListElement = child;
-							}
-							Object newInstance = null;
-							try {
-								Constructor<?> noArgsConstructor = mappedClass.getConstructor();
-								newInstance = noArgsConstructor.newInstance();
-
-								list.add(newInstance);
-
-							} catch (NoSuchMethodException | InstantiationException | IllegalArgumentException
-									| InvocationTargetException e) {
-								throw new UnexpectedException(e, "Failed to find or invoke no argument constructor on [%s]",
-										mappedClass);
-							}
-
-							if (newInstance instanceof XmlLinkedModelElement) {
-								XmlLinkedModelElement fieldValueAsXmlLinked = (XmlLinkedModelElement) newInstance;
-								fieldValueAsXmlLinked.bindToElement(this, child);
-
-								lastElement = fieldValueAsXmlLinked.getLastOwnedXmlElement();
-							}
-						}
-
-					}
-
-					if (list instanceof ObservableList) {
-						Content marker = new Text("");
-						if (firstListElement == null) {
-							XmlUtils.addContentAfter(this.xmlElement, List.of(marker), previousFieldLastXmlEl);
-							lastElement = marker;
-						} else {
-							List<Content> firstElContent = XmlUtils.elementWithPreceedingBallast(this.xmlElement,
-									firstListElement);
-							assertNotEmpty(firstElContent, "The element [{}] should be a child of [{}]", firstListElement,
-									this.xmlElement);
-							firstElContent.get(0);
-
-							XmlUtils.addContentBefore(this.xmlElement, List.of(marker), firstElContent.get(0));
-						}
-						XmlLinkedObservableListListener listener = new XmlLinkedObservableListListener(this, marker);
-						((ObservableList) list).addListener(listener);
-					}
-				}
 			}
-		} catch (IllegalAccessException iae) {
-			throw new UnexpectedException(iae, "Exception when processing fields of class [%s]", this.getClass());
+
+			if (list instanceof ObservableList) {
+				Content marker = new Text("");
+				if (firstListElement == null) {
+					XmlUtils.addContentAfter(this.xmlElement, List.of(marker), previousFieldLastXmlEl);
+					lastElement = marker;
+				} else {
+					List<Content> firstElContent = XmlUtils.elementWithPreceedingBallast(this.xmlElement, firstListElement);
+					assertNotEmpty(firstElContent, "The element [{}] should be a child of [{}]", firstListElement,
+							this.xmlElement);
+					firstElContent.get(0);
+
+					XmlUtils.addContentBefore(this.xmlElement, List.of(marker), firstElContent.get(0));
+				}
+				XmlLinkedObservableListListener listener = new XmlLinkedObservableListListener(this, marker);
+				((ObservableList) list).addListener(listener);
+			}
 		}
+		return lastElement;
 	}
 
 	protected ObjCrystModel decideRoot() {
@@ -415,40 +418,45 @@ public class XmlLinkedModelElement {
 		return elementName;
 	}
 
-	private void bindUniqueKeyAttribute(BeanProperty prop, String attributeName) throws IllegalAccessException {
-		Object fieldValue = prop.getValue(this);
-
-		if (fieldValue instanceof StringProperty) {
-			XmlAttributeUpdater<String> updater = new XmlAttributeUpdater<>(xmlElement, attributeName);
-			StringProperty fieldValueSp = (StringProperty) fieldValue;
-			fieldValueSp.addListener(updater);
-		} else if (fieldValue instanceof String) {
-			xmlElement.setAttribute(attributeName, (String) fieldValue);
+	private void bindUniqueKeyAttribute(BeanProperty prop, String attributeName, Class<?> converterClass)
+			throws IllegalAccessException {
+		StringConverter converterInstance = decideConverter(prop, converterClass);
+		if (prop.isFxProperty() && prop.isWritable()) {
+			XmlAttributeUpdater<String> updater = new XmlAttributeUpdater<>(xmlElement, attributeName, converterInstance);
+			prop.getProperty(this).addListener(updater);
+		} else {
+			Object fieldValue = prop.getValue(this);
+			String valueStr = converterInstance.toString(fieldValue);
+			xmlElement.setAttribute(attributeName, valueStr);
 		}
 	}
 
 	private void bindAttribute(BeanProperty prop, String attributeName, Class<?> converterClass) throws IllegalAccessException {
-		bindXmlValue(prop, new XmlAttributeUpdater<String>(xmlElement, attributeName), converterClass);
+		bindXmlValue(prop, new XmlAttributeUpdater<String>(xmlElement, attributeName, decideConverter(prop, converterClass)));
 	}
 
 	private void bindElementContent(BeanProperty prop, Class<?> converterClass) throws IllegalAccessException {
-		bindXmlValue(prop, new XmlElementContentUpdater<String>(xmlElement), converterClass);
+		bindXmlValue(prop, new XmlElementContentUpdater<String>(xmlElement, decideConverter(prop, converterClass)));
 	}
 
-	private void bindXmlValue(BeanProperty prop, XmlValueUpdater<String> updater, Class<?> converterClass) {
-		StringConverter converterInstance = instantiateConverter(converterClass);
-		if (converterInstance == null) {
-			converterInstance = decideConverter(prop);
-		}
+	private void bindXmlValue(BeanProperty prop, XmlValueUpdater<String> updater) {
 		if (prop.isFxProperty() && prop.isWritable()) {
-			updater.bind(prop.getProperty(this), converterInstance);
+			updater.bind(prop.getProperty(this));
 		} else {
 			throw new UnexpectedException("The [%s] is not a writable property.", prop);
 		}
 	}
 
+	private StringConverter decideConverter(BeanProperty prop, Class<?> converterClass) {
+		StringConverter converterInstance = instantiateConverter(converterClass);
+		if (converterInstance == null) {
+			converterInstance = decideConverter(prop);
+		}
+		return converterInstance;
+	}
+
 	private StringConverter<?> decideConverter(BeanProperty prop) {
-		StringConverter<?> converterInstance = null;
+		StringConverter<?> converterInstance = ObjectToStringConverter.INSTANCE;
 		Class<?> valueClass = prop.getValueClass();
 		if (String.class.isAssignableFrom(valueClass)) {
 

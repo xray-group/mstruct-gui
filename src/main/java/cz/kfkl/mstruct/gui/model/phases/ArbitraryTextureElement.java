@@ -53,8 +53,8 @@ public class ArbitraryTextureElement extends XmlLinkedModelElement implements Pa
 		super.bindToElement(wrappedElement);
 
 		XmlLinkedModelElement pme = getParentModelElement();
-		if (pme instanceof PowderPatternCrystalsModel) {
-			PowderPatternCrystalsModel pwdPatternCryst = (PowderPatternCrystalsModel) pme;
+		if (pme instanceof PowderPatternCrystalModel) {
+			PowderPatternCrystalModel pwdPatternCryst = (PowderPatternCrystalModel) pme;
 			phaseName = pwdPatternCryst.getName();
 		}
 

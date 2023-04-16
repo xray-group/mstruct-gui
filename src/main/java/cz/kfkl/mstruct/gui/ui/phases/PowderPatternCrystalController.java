@@ -23,7 +23,7 @@ import org.jdom2.Element;
 import cz.kfkl.mstruct.gui.model.crystals.CrystalModel;
 import cz.kfkl.mstruct.gui.model.phases.ArbitraryTextureElement;
 import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
-import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalModel;
 import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileModel;
 import cz.kfkl.mstruct.gui.model.phases.ReflectionProfileType;
 import cz.kfkl.mstruct.gui.ui.BaseController;
@@ -51,7 +51,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
-public class PowderPatternCrystalController extends BaseController<PowderPatternCrystalsModel, MStructGuiController> {
+public class PowderPatternCrystalController extends BaseController<PowderPatternCrystalModel, MStructGuiController> {
 
 	@FXML
 	private ComboBox<CrystalModel> powderPatternCrystalNameComboBox;
@@ -138,7 +138,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 
 	@Override
 	public void init() {
-		PowderPatternCrystalsModel model = getModelInstance();
+		PowderPatternCrystalModel model = getModelInstance();
 
 		powderPatternCrystalInternalNameTextField.textProperty().bind(model.nameProperty);
 		powderPatternCrystalUserNameTextField.textProperty().bindBidirectional(model.userNameProperty);
@@ -168,7 +168,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		initArbitraryTexture(model);
 	}
 
-	private void initAbsorptionCorrection(PowderPatternCrystalsModel model) {
+	private void initAbsorptionCorrection(PowderPatternCrystalModel model) {
 		absorptionCorrectionNameTextField.textProperty().bindBidirectional(model.absorptionCorrElement.nameProperty);
 		doubleTextField(absorptionDepthTextField);
 		absorptionDepthTextField.textProperty().bindBidirectional(model.absorptionCorrElement.depthProperty);
@@ -178,7 +178,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 		absorptionFactorTextField.textProperty().bindBidirectional(model.absorptionCorrElement.absorptionFactorProperty);
 	}
 
-	private void initReflectionProfile(PowderPatternCrystalsModel model) {
+	private void initReflectionProfile(PowderPatternCrystalModel model) {
 		reflectionProfileListView.setItems(model.reflectionProfile.reflectionProfilesList);
 //		setupListViewListener(reflectionProfileListView, reflectionProfileStackPane, getAppContext());
 		setupSelectionToChildrenListener(this, reflectionProfileListView.getSelectionModel().selectedItemProperty(),
@@ -189,7 +189,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 				.bind(reflectionProfileListView.getSelectionModel().selectedItemProperty().isNull());
 	}
 
-	private void initArbitraryTexture(PowderPatternCrystalsModel model) {
+	private void initArbitraryTexture(PowderPatternCrystalModel model) {
 		arbitraryTextureNameTextField.textProperty().bindBidirectional(model.arbitraryTextureElement.nameProperty);
 		arbitraryTextureTagTextField.textProperty().bindBidirectional(model.arbitraryTextureElement.tagProperty);
 

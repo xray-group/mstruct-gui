@@ -389,7 +389,7 @@ public class OptimizationController extends BaseController<OptimizaitonModel, MS
 //		}
 //
 //		List<IhklParElement> ihklParams = new ArrayList<>();
-//		for (PowderPatternCrystalsModel fittedPpc : fittedRootModel.getFirstPowderPattern().powderPatternCrystals) {
+//		for (PowderPatternCrystalModel fittedPpc : fittedRootModel.getFirstPowderPattern().powderPatternCrystals) {
 //			fittedPpc.getName();
 //			ihklParams.addAll(fittedPpc.arbitraryTextureElement.ihklParams);
 //		}

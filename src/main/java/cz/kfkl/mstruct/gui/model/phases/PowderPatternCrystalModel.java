@@ -24,7 +24,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 @XmlElementName("PowderPatternCrystal")
-public class PowderPatternCrystalsModel extends XmlLinkedModelElement
+public class PowderPatternCrystalModel extends XmlLinkedModelElement
 		implements FxmlFileNameProvider<PowderPatternController>, ParamContainer, HasUniqueName {
 	private static final String DIFF_DATA_PREFIX = "diffData_";
 
@@ -63,7 +63,7 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 	private ObservableList<ParamTreeNode> children = FXCollections.observableArrayList(globalBisoPar,
 			powderPatternComponent.scalePar, reflectionProfile, arbitraryTextureElement);
 
-	public PowderPatternCrystalsModel() {
+	public PowderPatternCrystalModel() {
 		// needed for the powderPatternComponent sibling component when creating new
 		// from UI
 		this.nameProperty.set(DIFF_DATA_PREFIX);
@@ -155,7 +155,7 @@ public class PowderPatternCrystalsModel extends XmlLinkedModelElement
 		nameProperty.setValue(name);
 	}
 
-	public void updateIhklParams(PowderPatternCrystalsModel fittedPpc) {
+	public void updateIhklParams(PowderPatternCrystalModel fittedPpc) {
 		ArbitraryTextureElement fittedArbitraryTextrure = fittedPpc.arbitraryTextureElement;
 		if (arbitraryTextureElement.canUpdateIhklParas() && fittedArbitraryTextrure.canUpdateIhklParas()) {
 			arbitraryTextureElement.updateIhklParams(fittedArbitraryTextrure);

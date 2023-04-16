@@ -42,7 +42,7 @@ import cz.kfkl.mstruct.gui.model.crystals.ImportedCrystal;
 import cz.kfkl.mstruct.gui.model.crystals.ImportedCrystalsModel;
 import cz.kfkl.mstruct.gui.model.instrumental.InstrumentalModel;
 import cz.kfkl.mstruct.gui.model.instrumental.PowderPatternElement;
-import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalModel;
 import cz.kfkl.mstruct.gui.model.utils.XmlLinkedModelElement;
 import cz.kfkl.mstruct.gui.ui.crystals.CrystalCifImportJob;
 import cz.kfkl.mstruct.gui.ui.crystals.ImportedCrystalsController;
@@ -149,7 +149,7 @@ public class MStructGuiController implements HasAppContext {
 	@FXML
 	private ComboBox<InstrumentalModel<?>> instrumentalComboBox;
 	@FXML
-	private ListView<PowderPatternCrystalsModel> phasesListView;
+	private ListView<PowderPatternCrystalModel> phasesListView;
 	@FXML
 	private ScrollPane tabPhasesCenterPane;
 	@FXML
@@ -710,7 +710,7 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	public void addPhase() {
-		PowderPatternCrystalsModel newInstance = new PowderPatternCrystalsModel();
+		PowderPatternCrystalModel newInstance = new PowderPatternCrystalModel();
 		Document doc = appContext.loadNewXmlElementTemplate(POWDER_PATTERN_CRYSTAL);
 		if (doc != null) {
 			Element child = doc.getRootElement().getChild(POWDER_PATTERN_CRYSTAL);

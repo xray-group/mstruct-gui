@@ -33,7 +33,7 @@ import cz.kfkl.mstruct.gui.model.ParElement;
 import cz.kfkl.mstruct.gui.model.PlotlyChartModel;
 import cz.kfkl.mstruct.gui.model.instrumental.ExcludeXElement;
 import cz.kfkl.mstruct.gui.model.phases.IhklParElement;
-import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalModel;
 import cz.kfkl.mstruct.gui.ui.MStructGuiController;
 import cz.kfkl.mstruct.gui.ui.ObjCrystModel;
 import cz.kfkl.mstruct.gui.ui.ParametersController;
@@ -303,7 +303,7 @@ public abstract class OptimizationJob extends Job implements TextBuffer {
 				List<ExcludeXElement> excludeRegions = fittedRootModel.getExcludeRegions();
 
 				List<IhklParElement> ihklParams = new ArrayList<>();
-				for (PowderPatternCrystalsModel fittedPpc : fittedRootModel.getFirstPowderPattern().powderPatternCrystals) {
+				for (PowderPatternCrystalModel fittedPpc : fittedRootModel.getFirstPowderPattern().powderPatternCrystals) {
 					fittedPpc.getName();
 					ihklParams.addAll(fittedPpc.arbitraryTextureElement.ihklParams);
 				}

@@ -14,7 +14,7 @@ import cz.kfkl.mstruct.gui.model.OptionUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParUniqueElement;
 import cz.kfkl.mstruct.gui.model.ParamTreeNode;
 import cz.kfkl.mstruct.gui.model.SingleValueUniqueElement;
-import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalsModel;
+import cz.kfkl.mstruct.gui.model.phases.PowderPatternCrystalModel;
 import cz.kfkl.mstruct.gui.ui.instrumental.PowderPatternController;
 import cz.kfkl.mstruct.gui.utils.JvStringUtils;
 import cz.kfkl.mstruct.gui.utils.ObservableListWrapper;
@@ -63,8 +63,8 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	public ObservableList<PowderPatternBackgroundModel<?>> powderPatternComponents = FXCollections.observableArrayList();
 
 	@XmlElementList
-	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystals = FXCollections.observableArrayList();
-	public ObservableList<PowderPatternCrystalsModel> powderPatternCrystalsObserved = null;
+	public ObservableList<PowderPatternCrystalModel> powderPatternCrystals = FXCollections.observableArrayList();
+	public ObservableList<PowderPatternCrystalModel> powderPatternCrystalsObserved = null;
 
 	@XmlUniqueElement("XIobsSigmaWeightList")
 	public SingleValueUniqueElement xIobsSigmaWeightListElement = new SingleValueUniqueElement("");
@@ -88,14 +88,14 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 		// must be done after the binding so the wrapped list is already populated from
 		// XML, items added to the wrapped list only are shown but their observable
 		// properties are not bound
-		powderPatternCrystalsObserved = new ObservableListWrapper<PowderPatternCrystalsModel>(powderPatternCrystals,
+		powderPatternCrystalsObserved = new ObservableListWrapper<PowderPatternCrystalModel>(powderPatternCrystals,
 				item -> new Observable[] { item.nameProperty, item.crystalProperty });
 	}
 
 	@Override
 	public Set<? extends String> findUsedCrystals() {
 		Set<String> usedCrystalNames = new LinkedHashSet<String>();
-		for (PowderPatternCrystalsModel ppCrystalPhase : powderPatternCrystals) {
+		for (PowderPatternCrystalModel ppCrystalPhase : powderPatternCrystals) {
 			String crystalName = ppCrystalPhase.crystalProperty.get();
 			if (JvStringUtils.isNotBlank(crystalName)) {
 				usedCrystalNames.add(crystalName);
@@ -136,10 +136,10 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 	}
 
 	public void updateIhklParams(PowderPatternElement firstPowderPattern) {
-		for (PowderPatternCrystalsModel ppc : powderPatternCrystals) {
+		for (PowderPatternCrystalModel ppc : powderPatternCrystals) {
 
 			String name = ppc.getName();
-			PowderPatternCrystalsModel fittedPpc = firstPowderPattern.findPowderPatternCrytal(name);
+			PowderPatternCrystalModel fittedPpc = firstPowderPattern.findPowderPatternCrytal(name);
 			if (fittedPpc != null) {
 				ppc.updateIhklParams(fittedPpc);
 			} else {
@@ -150,8 +150,8 @@ public class PowderPatternElement extends InstrumentalModel<PowderPatternControl
 
 	}
 
-	private PowderPatternCrystalsModel findPowderPatternCrytal(String name) {
-		for (PowderPatternCrystalsModel ppc : powderPatternCrystals) {
+	private PowderPatternCrystalModel findPowderPatternCrytal(String name) {
+		for (PowderPatternCrystalModel ppc : powderPatternCrystals) {
 			if (ppc.getName().equals(name)) {
 				return ppc;
 			}

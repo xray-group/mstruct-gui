@@ -217,7 +217,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	}
 
 	@FXML
-	public void onPowderPatternComponentsAddButton() {
+	public void addPowderPatternComponent() {
 		ChoiceDialog<PowderPatternBackgroundType> choiceDialog = new ChoiceDialog<PowderPatternBackgroundType>(
 				PowderPatternBackgroundType.Chebyshev, allowedPowderPatternBackgrounds);
 		choiceDialog.setGraphic(null);
@@ -249,7 +249,7 @@ public class PowderPatternController extends BaseController<PowderPatternElement
 	}
 
 	@FXML
-	public void onPowderPatternComponentsRemoveButton() {
+	public void removePowderPatternComponent() {
 		PowderPatternBackgroundModel<?> selectedItem = powderPatternComponentsListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
 			ConfirmationUtils.confirmAction(getAppContext().confirmComponentRemove(),

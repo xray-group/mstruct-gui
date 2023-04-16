@@ -145,7 +145,7 @@
 								<ListView fx:id="powderPatternComponentsListView" prefWidth="140.0" minHeight="40.0" BorderPane.alignment="CENTER"  VBox.vgrow="ALWAYS" />
 								<HBox alignment="TOP_CENTER" spacing="8.0">
 		                           <children>
-		                              <Button fx:id="powderPatternComponentsAddButton" onAction="#onPowderPatternComponentsAddButton" mnemonicParsing="false" text="Add">
+		                              <Button fx:id="powderPatternComponentsAddButton" onAction="#addPowderPatternComponent" mnemonicParsing="false" text="Add">
 		                                 <graphic>
 		                                    <ImageView>
 		                                       <image>
@@ -154,7 +154,7 @@
 		                                    </ImageView>
 		                                 </graphic>
 		                              </Button>
-		                              <Button fx:id="powderPatternComponentsRemoveButton" onAction="#onPowderPatternComponentsRemoveButton"  layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Remove">
+		                              <Button fx:id="powderPatternComponentsRemoveButton" onAction="#removePowderPatternComponent"  layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Remove">
 		                                 <graphic>
 		                                    <ImageView>
 		                                       <image>

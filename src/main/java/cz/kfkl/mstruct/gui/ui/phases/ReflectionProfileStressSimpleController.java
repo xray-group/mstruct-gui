@@ -80,14 +80,14 @@ public class ReflectionProfileStressSimpleController
 	}
 
 	@FXML
-	public void onStiffnessConstantAddButton() {
+	public void addStiffnessConstant() {
 		StiffnessConstantElement newConstant = new StiffnessConstantElement();
 		stiffnessConstantsTableView.getItems().add(newConstant);
 		stiffnessConstantsTableView.getSelectionModel().select(newConstant);
 	}
 
 	@FXML
-	public void onStiffnessConstantRemoveButton() {
+	public void removeStiffnessConstant() {
 
 		StiffnessConstantElement selectedItem = stiffnessConstantsTableView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {

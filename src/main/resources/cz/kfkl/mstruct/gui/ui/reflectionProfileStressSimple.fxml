@@ -63,7 +63,7 @@
 				</TableView>
 				<VBox alignment="CENTER_LEFT" spacing="8">
 					<children>
-						<Button fx:id="stiffnessConstantAddButton" onAction="#onStiffnessConstantAddButton" mnemonicParsing="false"
+						<Button fx:id="stiffnessConstantAddButton" onAction="#addStiffnessConstant" mnemonicParsing="false"
 							text="Add">
 							<graphic>
 								<ImageView>
@@ -73,7 +73,7 @@
 								</ImageView>
 							</graphic>
 						</Button>
-						<Button fx:id="stiffnessConstantRemoveButton" onAction="#onStiffnessConstantRemoveButton" layoutX="10.0"
+						<Button fx:id="stiffnessConstantRemoveButton" onAction="#removeStiffnessConstant" layoutX="10.0"
 							layoutY="10.0" mnemonicParsing="false" text="Remove">
 							<graphic>
 								<ImageView>

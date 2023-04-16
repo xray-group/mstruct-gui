@@ -239,7 +239,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 	}
 
 	@FXML
-	public void onReflectionProfileAddButton() {
+	public void addReflectionProfile() {
 		ChoiceDialog<ReflectionProfileType> choiceDialog = new ChoiceDialog<ReflectionProfileType>(null,
 				allowedReflectionProfiles);
 		choiceDialog.setGraphic(null);
@@ -291,7 +291,7 @@ public class PowderPatternCrystalController extends BaseController<PowderPattern
 	}
 
 	@FXML
-	public void onReflectionProfileRemoveButton() {
+	public void removeReflectionProfile() {
 		ReflectionProfileModel<?> selectedItem = reflectionProfileListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
 			ConfirmationUtils.confirmAction(getAppContext().confirmComponentRemove(),

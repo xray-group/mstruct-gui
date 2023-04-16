@@ -116,7 +116,7 @@
 								<ListView fx:id="reflectionProfileListView" prefWidth="140.0" VBox.vgrow="ALWAYS" />
 								<HBox alignment="TOP_CENTER" spacing="8.0">
 									<children>
-										<Button fx:id="reflectionProfileAddButton" onAction="#onReflectionProfileAddButton" mnemonicParsing="false"
+										<Button fx:id="reflectionProfileAddButton" onAction="#addReflectionProfile" mnemonicParsing="false"
 											text="Add">
 											<graphic>
 												<ImageView>
@@ -126,7 +126,7 @@
 												</ImageView>
 											</graphic>
 										</Button>
-										<Button fx:id="reflectionProfileRemoveButton" onAction="#onReflectionProfileRemoveButton" layoutX="10.0"
+										<Button fx:id="reflectionProfileRemoveButton" onAction="#removeReflectionProfile" layoutX="10.0"
 											layoutY="10.0" mnemonicParsing="false" text="Remove">
 											<graphic>
 												<ImageView>

@@ -195,7 +195,9 @@ public class MStructGuiController implements HasAppContext {
 
 		titleProperty.bind(Bindings.concat(MStructGuiMain.M_STRUCT_UI_TITLE, " - ", fileNameProperty));
 
-		saveMenuItem.disableProperty().bind(openedFileProperty.isNull());
+		// rather redirecting to SaveAs (see the saveFile method), otherwise if new file
+		// is created Ctrl+S would do nothing
+//		saveMenuItem.disableProperty().bind(openedFileProperty.isNull());
 
 		instrumentalListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null) {
@@ -216,6 +218,7 @@ public class MStructGuiController implements HasAppContext {
 		// enable the Add instrument button only if instrumentalListView has no item
 		ListProperty<InstrumentalModel<?>> lstProp = new SimpleListProperty<>(instrumentalListView.getItems());
 		lstProp.bind(instrumentalListView.itemsProperty());
+
 		addInstrumentButton.disableProperty().bind(Bindings.not(lstProp.emptyProperty()));
 
 		crystalsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -385,9 +388,13 @@ public class MStructGuiController implements HasAppContext {
 
 	@FXML
 	void saveFile(ActionEvent event) {
-		File outFile = openedFileProperty.get();
-		saveXmlDocument(outFile);
-		setBottomLabelText("File [%s] was saved.", outFile);
+		if (openedFileProperty.get() == null) {
+			saveFileAs(event);
+		} else {
+			File outFile = openedFileProperty.get();
+			saveXmlDocument(outFile);
+			setBottomLabelText("File [%s] was saved.", outFile);
+		}
 	}
 
 	@FXML

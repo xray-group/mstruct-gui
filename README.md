@@ -4,6 +4,53 @@ MStruct GUI is an extension of the [MStruct](https://github.com/xray-group/mstru
 
 It is a desktop application providing a graphical interface for calling MStruct and processing its results. Besides configuring input parameters users can review the output data in a graphical form and use fitted parameters.
 
+## Features
+* Platform independent desktop Java application
+* Optimization run from the UI application showing calculated data, fitted parameters and MStruct logs
+* Rich interactive chart depicting calculated and measured values, their difference, background levels and excluded regions
+* Full edit of all crystal and instrumentals parameters
+* Various types of powder pattern backgrounds are supported (Chebyshev, InvX, Interpolated)
+* Definition of reflection profile components of various types (SizeLn, PVoightA, RefractionCorr, StressSimple)
+* All parameters shown also in a tree like view allowing search, filtering and bulk editing.
+* Excluded regions can be entered directly or interactively from the generated chart
+* Import crystals definition from a cif file or an ObjctCryst xml file.
+* View and edit crystals parameters
+* Import and export of data from various formats
+
+
+## Screenshots
+Import crystals and edit their parameters:
+![Alt text](./doc/images/crystals.png?raw=true "crystals definition screen")
+
+Define and edit instrumental parameters, radiation type, background patterns or excluded regions:
+![Alt text](./doc/images/instrumental.png "instrumental parameters screen")
+
+Configure crystal phases and their parameters. Various types of reflection profile components can be added and configured.
+![Alt text](./doc/images/phases-stressSimpleComponent.png?raw=true "phases parameters screen with stress simple component selected")
+
+Choose if arbitrary texture difraction points should be used, generated, refined or compute with provided parameters:
+![Alt text](./doc/images/phases-arbitraryTexture.png?raw=true "phases parameters screen arbitrary texture definition")
+
+All parameters can be searched, filtered, reviewed and edited in a tree like view:
+![Alt text](./doc/images/parameters.png?raw=true "parameters tree screen")
+
+Import and review input data:
+![Alt text](./doc/images/data.png?raw=true "parameters tree screen")
+
+Optimization screen runs the simulation or refinement process calling the [MStruct](https://github.com/xray-group/mstruct) library and display its result:
+![Alt text](./doc/images/optimization-output.png?raw=true "optimization screen showing mStruct console output")
+
+Input and calculated data are displayed on an interactive chart:
+![Alt text](./doc/images/optimization-chart.png?raw=true "optimization screen chart")
+
+Values of refined parameters can be reviewed and copied back to the model:
+![Alt text](./doc/images/optimization-fittedParams.png?raw=true "optimization screen fitted params")
+
+Excluded regions can be edited directly in the chart:
+![Alt text](./doc/images/optimization-fittedParams.png?raw=true "edit excluded regions in the chart")
+
+
+
 ## Installation
 
 ##### The minimal distribution - `mstructgui-0.3-dist-min.zip`

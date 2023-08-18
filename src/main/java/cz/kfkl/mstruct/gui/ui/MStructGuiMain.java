@@ -34,8 +34,8 @@ public class MStructGuiMain extends Application {
 			appContext.init();
 
 //			Scene scene = new Scene(loadFXML("mStructGui.fxml"), 880, 740);
-			Scene scene = new Scene(loadFXML("mStructGui_testNoMenu.fxml"), 880, 740);
-//			Scene scene = new Scene(loadFXML("mStructGui_testNoMenu_withIcons.fxml"), 880, 740);
+//			Scene scene = new Scene(loadFXML("mStructGui_testNoMenu.fxml"), 880, 740);
+			Scene scene = new Scene(loadFXML("mStructGui_testNoMenu_withIcons.fxml"), 880, 740);
 
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setTitle(M_STRUCT_UI_TITLE + " - starting");
@@ -111,7 +111,8 @@ public class MStructGuiMain extends Application {
 			appContext.setMainController((MStructGuiController) controller);
 		} else {
 			throw new UnexpectedException(
-					"The file [%s] should be configured with controller of type MStructGuiController, got [%s]", fxml, controller);
+					"The file [%s] should be configured with controller of type MStructGuiController, got [%s]", fxml,
+					controller);
 		}
 
 		return Parent;

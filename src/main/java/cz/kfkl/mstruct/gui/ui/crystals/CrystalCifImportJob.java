@@ -81,7 +81,7 @@ public class CrystalCifImportJob extends Job implements TextBuffer {
 
 	protected List<String> getCommandList() {
 		this.outFileName = changeFileExtension(inputFile, "xml").getName();
-		return List.of(getAppContext().getFoxExeFile().getAbsolutePath(), inputFile.getAbsolutePath(), "--nogui", "-o", outFileName);
+		return List.of(getAppContext().getMstructExeFile().getAbsolutePath(), "--cif-to-xml", inputFile.getAbsolutePath(), "-o", outFileName);
 	}
 
 	public File changeFileExtension(File file, String newExtension) {
